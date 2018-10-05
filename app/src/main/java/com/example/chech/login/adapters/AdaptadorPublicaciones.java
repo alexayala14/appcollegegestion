@@ -1,4 +1,4 @@
-package com.example.chech.login;
+package com.example.chech.login.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.chech.login.Publicacion;
+import com.example.chech.login.R;
 
 import java.util.ArrayList;
 
