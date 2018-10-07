@@ -23,9 +23,10 @@ import android.widget.TextView;
 import com.example.chech.login.R;
 import com.example.chech.login.fragments.MensajesFragment;
 import com.example.chech.login.fragments.MisPublicacionesFragment;
+import com.example.chech.login.fragments.NuevaPublicacionFragment;
 import com.example.chech.login.fragments.PublicacionesFragment;
 
-public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MensajesFragment.OnFragmentInteractionListener{
+public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MensajesFragment.OnFragmentInteractionListener,NuevaPublicacionFragment.OnFragmentInteractionListener {
     PublicacionesFragment publicaciones;
     MisPublicacionesFragment misPublicaciones;
     MensajesFragment mensajes;

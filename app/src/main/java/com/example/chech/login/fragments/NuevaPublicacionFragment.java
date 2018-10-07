@@ -15,12 +15,12 @@ import com.example.chech.login.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MisPublicacionesFragment.OnFragmentInteractionListener} interface
+ * {@link NuevaPublicacionFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MisPublicacionesFragment#newInstance} factory method to
+ * Use the {@link NuevaPublicacionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MisPublicacionesFragment extends Fragment implements NuevaPublicacionFragment.OnFragmentInteractionListener {
+public class NuevaPublicacionFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,11 +31,10 @@ public class MisPublicacionesFragment extends Fragment implements NuevaPublicaci
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    Button btnPublicacion;
-    NuevaPublicacionFragment nuevaPublicacionFragment;
     View vista;
+    Button btnPublicar;
 
-    public MisPublicacionesFragment() {
+    public NuevaPublicacionFragment() {
         // Required empty public constructor
     }
 
@@ -45,11 +44,11 @@ public class MisPublicacionesFragment extends Fragment implements NuevaPublicaci
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MisPublicacionesFragment.
+     * @return A new instance of fragment NuevaPublicacionFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MisPublicacionesFragment newInstance(String param1, String param2) {
-        MisPublicacionesFragment fragment = new MisPublicacionesFragment();
+    public static NuevaPublicacionFragment newInstance(String param1, String param2) {
+        NuevaPublicacionFragment fragment = new NuevaPublicacionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -64,32 +63,27 @@ public class MisPublicacionesFragment extends Fragment implements NuevaPublicaci
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       vista=inflater.inflate(R.layout.fragment_mis_publicaciones, container, false);
-        btnPublicacion= vista.findViewById(R.id.idnuevaPublicacion);
-        btnPublicacion.setOnClickListener(new View.OnClickListener() {
+        vista=inflater.inflate(R.layout.fragment_nueva_publicacion, container, false);
+        Button btnPublicar =(Button) vista.findViewById(R.id.btnPublicar);
+        btnPublicar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // NuevaPublicacionFragment nuevaPublicacionFragment = new NuevaPublicacionFragment();
-
+                //MisPublicacionesFragment misPublicaciones=new MisPublicacionesFragment();
                 //getActivity().getSupportFragmentManager().beginTransaction()
-                  //      .replace(R.id.contenedor,nuevaPublicacionFragment)
+                  //      .replace(R.id.container,misPublicaciones)
                     //    .addToBackStack(null)
                       //  .commit();
-                FragmentTransaction nuevaPublicacionFragment = getFragmentManager().beginTransaction();
-                nuevaPublicacionFragment.replace(R.id.contenedor,new NuevaPublicacionFragment());
-                nuevaPublicacionFragment.commit();
-
+                FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
+                mispublicaciones.replace(R.id.contenedor,new MisPublicacionesFragment());
+                mispublicaciones.commit();
             }
         });
-
-
         return vista;
     }
 
@@ -115,11 +109,6 @@ public class MisPublicacionesFragment extends Fragment implements NuevaPublicaci
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     /**
