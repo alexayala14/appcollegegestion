@@ -21,12 +21,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.chech.login.R;
+import com.example.chech.login.fragments.DetalleFragment;
 import com.example.chech.login.fragments.MensajesFragment;
 import com.example.chech.login.fragments.MisPublicacionesFragment;
 import com.example.chech.login.fragments.NuevaPublicacionFragment;
 import com.example.chech.login.fragments.PublicacionesFragment;
 
-public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MensajesFragment.OnFragmentInteractionListener,NuevaPublicacionFragment.OnFragmentInteractionListener {
+public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MensajesFragment.OnFragmentInteractionListener,NuevaPublicacionFragment.OnFragmentInteractionListener,DetalleFragment.OnFragmentInteractionListener {
     PublicacionesFragment publicaciones;
     MisPublicacionesFragment misPublicaciones;
     MensajesFragment mensajes;
@@ -66,14 +67,14 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
     }
 

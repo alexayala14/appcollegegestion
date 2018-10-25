@@ -13,8 +13,9 @@ import com.example.chech.login.R;
 
 import java.util.ArrayList;
 
-public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublicaciones.ViewHolderPublicaciones> {
+public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublicaciones.ViewHolderPublicaciones> implements View.OnClickListener{
     ArrayList<Publicacion> listaPublicaciones;
+    private View.OnClickListener listener;
     public AdaptadorPublicaciones(ArrayList<Publicacion>listaPublicaciones){
         this.listaPublicaciones=listaPublicaciones;
     }
@@ -22,6 +23,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     @Override
     public ViewHolderPublicaciones onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_publicaciones,null,false);
+        view.setOnClickListener(this);
         return new ViewHolderPublicaciones(view);
     }
 
@@ -35,6 +37,16 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     @Override
     public int getItemCount() {
         return listaPublicaciones.size();
+    }
+
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener=listener;
+    }
+    @Override
+    public void onClick(View view) {
+        if(listener!=null){
+            listener.onClick(view);
+        }
     }
 
     public class ViewHolderPublicaciones extends RecyclerView.ViewHolder {

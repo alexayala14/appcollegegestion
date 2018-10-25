@@ -3,14 +3,16 @@ package com.example.chech.login;
 public class Publicacion {
     private String nombre;
     private String descripcion;
+    private String detalle;
     private int foto;
 
     public Publicacion(){
 
     }
-    public Publicacion(String nombre, String descripcion, int foto) {
+    public Publicacion(String nombre, String descripcion,String detalle,int foto) {
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.detalle=detalle;
         this.foto = foto;
     }
 
@@ -28,6 +30,14 @@ public class Publicacion {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
     }
 
     public int getFoto() {

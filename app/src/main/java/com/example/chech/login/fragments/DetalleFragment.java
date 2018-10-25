@@ -1,31 +1,32 @@
 package com.example.chech.login.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.example.chech.login.Publicacion;
 import com.example.chech.login.R;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NuevaPublicacionFragment.OnFragmentInteractionListener} interface
+ * {@link DetalleFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NuevaPublicacionFragment#newInstance} factory method to
+ * Use the {@link DetalleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NuevaPublicacionFragment extends Fragment {
+public class DetalleFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,13 +38,7 @@ public class NuevaPublicacionFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     View vista;
-    Button btnPublicar;
-    Button btnCancelar;
-    EditText textPublicacion;
-    EditText textAsunto;
-    RadioButton radioButton;
-
-    public NuevaPublicacionFragment() {
+    public DetalleFragment() {
         // Required empty public constructor
     }
 
@@ -53,11 +48,11 @@ public class NuevaPublicacionFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment NuevaPublicacionFragment.
+     * @return A new instance of fragment DetalleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NuevaPublicacionFragment newInstance(String param1, String param2) {
-        NuevaPublicacionFragment fragment = new NuevaPublicacionFragment();
+    public static DetalleFragment newInstance(String param1, String param2) {
+        DetalleFragment fragment = new DetalleFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -72,47 +67,59 @@ public class NuevaPublicacionFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+    }
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Publicacion");
+        Bundle b=getArguments();
+        final String descripcion=b.getString("descripcion", "DEFAULT_VALUE");
+        final String detalle=b.getString("detalle", "DEFAULT_VALUE");
+        builder.setMessage("Asunto:"+descripcion +"\n" + detalle);
+
+
+
+        builder.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dismiss();
+            }
+        });
+
+
+        builder.setNeutralButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dismiss();
+            }
+        });
+        builder.setNegativeButton("Modificar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dismiss();
+
+                /*FragmentTransaction nuevaPublicacionFragment = getFragmentManager().beginTransaction();
+                nuevaPublicacionFragment.replace(R.id.contenedor,new NuevaPublicacionFragment());
+                nuevaPublicacionFragment.commit();*/
+
+
+
+
+
+            }
+        });
+
+        return builder.create();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        vista=inflater.inflate(R.layout.fragment_nueva_publicacion, container, false);
-        Button btnCancelar=(Button)vista.findViewById(R.id.btnCancelar);
-        btnCancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
-                mispublicaciones.replace(R.id.contenedor,new MisPublicacionesFragment());
-                mispublicaciones.commit();
-            }
-        });
-        Button btnPublicar =(Button) vista.findViewById(R.id.btnPublicar);
-        btnPublicar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //MisPublicacionesFragment misPublicaciones=new MisPublicacionesFragment();
-                //getActivity().getSupportFragmentManager().beginTransaction()
-                  //      .replace(R.id.container,misPublicaciones)
-                    //    .addToBackStack(null)
-                      //  .commit();
-                EditText textAsunto=(EditText) vista.findViewById(R.id.editTextAsunto);
-                System.out.println(textAsunto.getText().toString());
-                EditText textPublicacion =(EditText) vista.findViewById(R.id.editTextPublicacion);
-                System.out.println(textPublicacion.getText().toString());
-                RadioGroup radioButton=(RadioGroup)vista.findViewById(R.id.radioGroup);
-                System.out.println(radioButton.getCheckedRadioButtonId());
-                
-                FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
-                mispublicaciones.replace(R.id.contenedor, new MisPublicacionesFragment());
-                mispublicaciones.addToBackStack(null);
-                mispublicaciones.commit();
-
-
-            }
-        });
+        vista=inflater.inflate(R.layout.fragment_detalle, container, false);
+        //getDialog().setTitle("Simple Dialog");
         return vista;
     }
 
@@ -139,14 +146,7 @@ public class NuevaPublicacionFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    public void obtenerinfo(){
-        Bundle b=getArguments();
-         String descripcion=b.getString("descripcion", "DEFAULT_VALUE");
-         String detalle=b.getString("detalle", "DEFAULT_VALUE");
-        textAsunto.setText(descripcion);
-        textPublicacion.setText(detalle);
 
-    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
