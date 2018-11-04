@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "120183039198",
+    "firebase_url": "https://appcollegegestion.firebaseio.com",
+    "project_id": "appcollegegestion",
+    "storage_bucket": "appcollegegestion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120183039198:android:7e1da233e15a9697",
+        "android_client_info": {
+          "package_name": "com.arz.chech.collegegestion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120183039198-jpd5pcon6dfbr02qbuha8vns94tit69v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.arz.chech.collegegestion",
+            "certificate_hash": "a5c461b7896b3cc644f80c0f40a008b6f301ef9d"
+          }
+        },
+        {
+          "client_id": "120183039198-3n209nj8c0ven8e8cfa495qfld3hf3p6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkCr8FlSJSAYYgcj9qxX5f8Tt0aKY7g8Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120183039198-3n209nj8c0ven8e8cfa495qfld3hf3p6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

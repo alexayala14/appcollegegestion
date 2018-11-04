@@ -23,4 +23,29 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="title_activity_inicio">AppCollege - Inicio</string>
+
+    <string name="title_activity_alumno">AppCollege - Inicio Alumno</string>
+
+    <string name="title_activity_consultar_usuarios">Usuarios en la BD</string>
+
+
+    -
+    <string-array name="datos">
+
+        <item>Administrador</item>
+
+        <item>Directivos</item>
+
+        <item>Docentes</item>
+
+        <item>Asistentes</item>
+
+        <item>Padres</item>
+
+    </string-array>
+
+    <string name="title_activity_registrar">Registrar</string>
 </resources>

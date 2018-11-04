@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".entidades.Administrador">
+
+    <TextView
+        android:layout_marginTop="30dp"
+        android:id="@+id/Text_nombreAdmin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:layout_gravity="center"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_agregarUsuarios"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:background="@drawable/alta"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_agregarUsuarios"
+            android:layout_alignEnd="@id/btn_agregarUsuarios"
+            android:layout_alignStart="@id/btn_agregarUsuarios"
+            android:textAlignment="center"
+            android:text="Agregar Usuario"
+            android:textSize="22dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_consultarUsuarios"
+            android:layout_alignEnd="@id/btn_consultarUsuarios"
+            android:layout_alignStart="@id/btn_consultarUsuarios"
+            android:text="Consultar Usuarios"
+            android:textAlignment="center"
+            android:textSize="22dp" />
+
+        <Button
+            android:id="@+id/btn_consultarUsuarios"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/buscar"/>
+    </RelativeLayout>
+</LinearLayout>
