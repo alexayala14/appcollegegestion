@@ -89,7 +89,7 @@ public class Login extends AppCompatActivity {
                                         UserDetails.username = user;
                                         UserDetails.password = pass;
                                         // Redirigir al activity
-                                        startActivity(new Intent(Login.this, Users.class));
+                                        startActivity(new Intent(Login.this, MenuPrincipalActivity.class));
                                     }
                                     else {
                                         // La contraseña es incorrecta
