@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +84,7 @@ public class NuevaPublicacionFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
-                mispublicaciones.replace(R.id.contenedor,new MisPublicacionesFragment());
+                mispublicaciones.replace(R.id.contenedor, new MisPublicacionesFragment());
                 mispublicaciones.commit();
             }
         });

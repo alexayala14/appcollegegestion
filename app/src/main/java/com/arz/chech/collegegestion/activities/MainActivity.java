@@ -1,5 +1,6 @@
 package com.arz.chech.collegegestion.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.arz.chech.collegegestion.UserDetails;
 import com.arz.chech.collegegestion.entidades.Administrador;
 import com.arz.chech.collegegestion.entidades.Alumno;
 import com.arz.chech.collegegestion.R;
@@ -21,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText et_rut, et_password;
     private Button btn_log, btn_log_alumno;
-
+    //firebase
+    String user, pass;
+    // URL del servicio firebase
+    String URL_FIREBASE = "https://appcollegegestion.firebaseio.com";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         btn_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Obtener valores de los controles firebase
+                user = et_rut.getText().toString();
+                pass = et_password.getText().toString();
+                /////
                 if (et_rut.getText().toString().isEmpty()){
                     Toast.makeText(MainActivity.this, "Debe ingresar rut", Toast.LENGTH_SHORT).show();
                 }else if (et_password.getText().toString().isEmpty()) {
@@ -47,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     final String rut = et_rut.getText().toString();
                     final String password = et_password.getText().toString();
+                    // URL del servicio Firebase
+                    String url = URL_FIREBASE+"/users.json";
+                    // ProgressDialog que se mostrara en espera del servicio
+                    final ProgressDialog pd = new ProgressDialog(MainActivity.this);
+                    pd.setMessage("Cargando...");
+                    pd.show();
+                    /////////
+
                     Response.Listener<String> responseListener = new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -62,18 +79,23 @@ public class MainActivity extends AppCompatActivity {
                                     String nombre = jsonResponse.getString("nombre");
                                     int id_perfil = jsonResponse.getInt("id_perfil");
                                     if(id_perfil == 1){
+                                        UserDetails.username = user;
+                                        UserDetails.password = pass;
                                         Intent intent = new Intent(MainActivity.this, Administrador.class);
                                         MainActivity.this.startActivity(intent);
                                     }else{
+                                        UserDetails.username = user;
+                                        UserDetails.password = pass;
                                         Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
                                         intent.putExtra("nombre", nombre);
                                         MainActivity.this.startActivity(intent);
                                     }
+
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
+                            pd.dismiss();
                         }
                     };
                     LoginRequest loginRequest = new LoginRequest(rut, password, responseListener);

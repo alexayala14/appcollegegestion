@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.activities.MenuPrincipalActivity;
 import com.arz.chech.collegegestion.activities.RecyclerUsuarios;
 import com.arz.chech.collegegestion.activities.Registrar;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 public class Administrador extends AppCompatActivity {
     private TextView Text_nombre;
-    Button btn_agregarUsuarios, btn_consultarUsuarios;
+    Button btn_agregarUsuarios, btn_consultarUsuarios,btn_publicacionesymensajes;
     ArrayList<String> listaUsuarios;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,14 @@ public class Administrador extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Administrador.this, RecyclerUsuarios.class);
+                Administrador.this.startActivity(intent);
+            }
+        });
+        btn_publicacionesymensajes=(Button)findViewById(R.id.mensajesPublicaciones);
+        btn_publicacionesymensajes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Administrador.this, MenuPrincipalActivity.class);
                 Administrador.this.startActivity(intent);
             }
         });

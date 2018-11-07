@@ -156,6 +156,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
             //return PlaceholderFragment.newInstance(position + 1);
             switch (position){
                 case 0:
+
                     publicaciones=new PublicacionesFragment();
                     return publicaciones;
                 case 1:

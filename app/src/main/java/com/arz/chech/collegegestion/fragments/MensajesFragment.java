@@ -143,7 +143,10 @@ public class MensajesFragment extends Fragment {
                 startActivity(new Intent(getContext(), Chat.class));
             }
         });
+        vaciar();
+        usersList.setAdapter(null);
         return vista;
+
     }
     // Funcion para obtener Nombres usuarios
 
@@ -212,14 +215,20 @@ public class MensajesFragment extends Fragment {
         pd.dismiss();
 
 
+
         //return vista;
     }
+    public void vaciar(){al.clear();}
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
+
         if (mListener != null) {
+
             mListener.onFragmentInteraction(uri);
+
         }
+
     }
 
     @Override

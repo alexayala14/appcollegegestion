@@ -109,6 +109,7 @@ public class MisPublicacionesFragment extends Fragment /*implements NuevaPublica
             public void onClick(View view) {
 
                 vaciar();
+                recyclerViewMisPublicaciones.setAdapter(null);
                 FragmentTransaction nuevaPublicacionFragment = getFragmentManager().beginTransaction();
                 nuevaPublicacionFragment.replace(R.id.contenedor,new NuevaPublicacionFragment());
                 nuevaPublicacionFragment.commit();
