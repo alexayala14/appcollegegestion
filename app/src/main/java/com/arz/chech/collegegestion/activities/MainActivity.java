@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_rut, et_password;
     private Button btn_log, btn_log_alumno;
     //firebase
-    String user, pass;
+    String user, pass,nom;
     // URL del servicio firebase
     String URL_FIREBASE = "https://appcollegegestion.firebaseio.com";
     @Override
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 // Obtener valores de los controles firebase
                 user = et_rut.getText().toString();
                 pass = et_password.getText().toString();
+
                 /////
                 if (et_rut.getText().toString().isEmpty()){
                     Toast.makeText(MainActivity.this, "Debe ingresar rut", Toast.LENGTH_SHORT).show();

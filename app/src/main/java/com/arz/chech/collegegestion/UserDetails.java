@@ -7,5 +7,7 @@ public class  UserDetails {
 
    public static String password = "";
 
+   public static String nombre = "";
+
    public static String chatWith = "";
 }
