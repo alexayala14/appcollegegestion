@@ -1,11 +1,21 @@
 package com.arz.chech.collegegestion.fragments;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +51,13 @@ public class NuevaPublicacionFragment extends Fragment {
     EditText textPublicacion;
     EditText textAsunto;
     RadioButton radioButton;
+
+
+    ////notificaciones
+    private PendingIntent pendingIntent;
+    private final static String CHANNEL_ID="NOTIFICACION";
+    private final static int NOTIFICACION_ID=0014;
+
 
     public NuevaPublicacionFragment() {
         // Required empty public constructor
@@ -109,10 +126,45 @@ public class NuevaPublicacionFragment extends Fragment {
                 mispublicaciones.addToBackStack(null);
                 mispublicaciones.commit();
 
+                /////notificacion
+                //setPendingIntent();
+                createNotificationChannel();
+                createNotification();
 
             }
         });
         return vista;
+    }
+
+    private void setPendingIntent(){
+        Intent intent = new Intent(getActivity(),PublicacionesFragment.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+        stackBuilder.addParentStack(PublicacionesFragment.class);
+        stackBuilder.addNextIntent(intent);
+        pendingIntent=stackBuilder.getPendingIntent(1,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name ="Notificacion";
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,name,NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager =(NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }
+    }
+
+    private void createNotification(){
+        NotificationCompat.Builder builder= new NotificationCompat.Builder(getContext(),CHANNEL_ID);
+        builder.setSmallIcon(R.drawable.common_google_signin_btn_icon_dark);
+        builder.setContentTitle("Notificacion android");
+        builder.setContentText("Cosasa quie van");
+        builder.setColor(Color.CYAN);
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builder.setVibrate(new long[]{1000,1000,1000,1000});
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getContext());
+        notificationManagerCompat.notify(NOTIFICACION_ID,builder.build());
     }
 
     // TODO: Rename method, update argument and hook method into UI event

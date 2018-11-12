@@ -1,6 +1,17 @@
 package com.arz.chech.collegegestion.activities;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -15,6 +26,7 @@ import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.UserDetails;
+import com.arz.chech.collegegestion.fragments.PublicacionesFragment;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -33,6 +45,10 @@ public class Chat extends AppCompatActivity {
     ScrollView scrollView;
     Firebase reference1,reference2;
     SimpleDateFormat sdf;
+    ////notificaciones
+    private PendingIntent pendingIntent;
+    private final static String CHANNEL_ID="NOTIFICACION";
+    private final static int NOTIFICACION_ID=0014;
     //URL del servicio de firebase
     String URL_FIREBASE="https://appcollegegestion.firebaseio.com";
     @Override
@@ -69,6 +85,16 @@ public class Chat extends AppCompatActivity {
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
                     messageArea.setText("");
+
+
+                    /////notificacion
+                    //setPendingIntent();
+
+                    /*Intent intent = new Intent(Chat.this,Chat.class);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(Chat.this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                    notificacion.setContentIntent(pendingIntent);*/
+
+
                 }
             }
         });
@@ -88,7 +114,13 @@ public class Chat extends AppCompatActivity {
                 }
                 else{
                     addMessageBox(UserDetails.chatWith , message,time, 2);
+
+                    ///notificaciones
+
+                    createNotificationChannel();
+                    createNotification(message);
                 }
+
             }
 
             @Override
@@ -111,7 +143,45 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+
+
     }
+
+    //no se utiliza se tiene que verificar al tocar la notificacion que remome a donde llego el msj
+    private void setPendingIntent(){
+        Intent intent = new Intent(Chat.this,Chat.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(Chat.class);
+        stackBuilder.addNextIntent(intent);
+        pendingIntent=stackBuilder.getPendingIntent(1,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name ="Notificacion";
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,name,NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager =(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }
+    }
+
+    private void createNotification( String message){
+        NotificationCompat.Builder builder= new NotificationCompat.Builder(this,CHANNEL_ID);
+        builder.setSmallIcon(R.drawable.common_google_signin_btn_icon_dark);
+        builder.setContentTitle("APPCOLLEGE nuevo mensaje");
+        builder.setContentText(message);
+        builder.setColor(Color.CYAN);
+        builder.setPriority(NotificationCompat.PRIORITY_MAX);
+        builder.setVibrate(new long[]{1000,1000,1000,1000});
+        builder.setDefaults(Notification.DEFAULT_SOUND);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(NOTIFICACION_ID,builder.build());
+        Intent intent = new Intent(Chat.this,Chat.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(Chat.this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+    }
+
     // Añadir mensajes
     public void addMessageBox(String name,String message,String time, int type){
         // Crear controles de forma dinamica
