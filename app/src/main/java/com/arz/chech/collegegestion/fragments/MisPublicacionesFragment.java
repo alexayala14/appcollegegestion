@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -52,10 +53,6 @@ public class MisPublicacionesFragment extends Fragment {
     NuevaPublicacionFragment nuevaPublicacionFragment;
     View vista;
 
-
-
-
-
     public MisPublicacionesFragment() {
         // Required empty public constructor
     }
@@ -85,15 +82,12 @@ public class MisPublicacionesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       vista=inflater.inflate(R.layout.fragment_mis_publicaciones, container, false);
+        vista=inflater.inflate(R.layout.fragment_mis_publicaciones, container, false);
         listaPublicaciones = new ArrayList<>();
         recyclerViewMisPublicaciones=vista.findViewById(R.id.RecycleridMis);
         recyclerViewMisPublicaciones.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -118,19 +112,13 @@ public class MisPublicacionesFragment extends Fragment {
         btnPublicacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 vaciar();
                 recyclerViewMisPublicaciones.setAdapter(null);
                 FragmentTransaction nuevaPublicacionFragment = getFragmentManager().beginTransaction();
                 nuevaPublicacionFragment.replace(R.id.contenedor,new NuevaPublicacionFragment());
                 nuevaPublicacionFragment.commit();
-
-
-
             }
         });
-
-
         return vista;
     }
 
@@ -235,8 +223,6 @@ public class MisPublicacionesFragment extends Fragment {
     private void vaciar(){
         listaPublicaciones.clear();
     }
-
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

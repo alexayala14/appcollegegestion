@@ -24,9 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private EditText et_rut, et_password;
     private Button btn_log, btn_log_alumno;
     //firebase
-    String user, pass,nom;
+    static String user;
+    String pass, nom;
     // URL del servicio firebase
     String URL_FIREBASE = "https://appcollegegestion.firebaseio.com";
+
+    public String getUser() {
+        return user;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+
         btn_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Obtener valores de los controles firebase
                 user = et_rut.getText().toString();
                 pass = et_password.getText().toString();
-
                 /////
                 if (et_rut.getText().toString().isEmpty()){
                     Toast.makeText(MainActivity.this, "Debe ingresar rut", Toast.LENGTH_SHORT).show();

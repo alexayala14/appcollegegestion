@@ -49,7 +49,6 @@ public class Registrar extends AppCompatActivity {
             public void onClick(View v) {
                 user = campoRut.getText().toString();
                 pass = campoContraseña.getText().toString();
-
                 if (campoNombre.getText().toString().isEmpty()){
                     Toast.makeText(Registrar.this, "Debe ingresar nombre", Toast.LENGTH_SHORT).show();
                 }else if (campoApellido.getText().toString().isEmpty()) {

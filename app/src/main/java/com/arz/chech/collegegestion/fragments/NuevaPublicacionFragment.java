@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.activities.MainActivity;
+import com.arz.chech.collegegestion.activities.PublicacionRequest;
+import com.arz.chech.collegegestion.activities.RegisterRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,8 +61,8 @@ public class NuevaPublicacionFragment extends Fragment {
     Button btnCancelar;
     EditText textPublicacion;
     EditText textAsunto;
-    RadioButton radioButton;
-
+    RadioGroup radioGroup;
+    int selected;
 
     ////notificaciones
     private PendingIntent pendingIntent;
@@ -92,8 +103,7 @@ public class NuevaPublicacionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         vista=inflater.inflate(R.layout.fragment_nueva_publicacion, container, false);
         Button btnCancelar=(Button)vista.findViewById(R.id.btnCancelar);
@@ -105,36 +115,71 @@ public class NuevaPublicacionFragment extends Fragment {
                 mispublicaciones.commit();
             }
         });
+        textAsunto=(EditText) vista.findViewById(R.id.editTextAsunto);
+        textPublicacion =(EditText) vista.findViewById(R.id.editTextPublicacion);
+        radioGroup=(RadioGroup) vista.findViewById(R.id.radioGroup);
         Button btnPublicar =(Button) vista.findViewById(R.id.btnPublicar);
         btnPublicar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 //MisPublicacionesFragment misPublicaciones=new MisPublicacionesFragment();
                 //getActivity().getSupportFragmentManager().beginTransaction()
-                  //      .replace(R.id.container,misPublicaciones)
-                    //    .addToBackStack(null)
-                      //  .commit();
-                EditText textAsunto=(EditText) vista.findViewById(R.id.editTextAsunto);
-                System.out.println(textAsunto.getText().toString());
-                EditText textPublicacion =(EditText) vista.findViewById(R.id.editTextPublicacion);
-                System.out.println(textPublicacion.getText().toString());
-                RadioGroup radioButton=(RadioGroup)vista.findViewById(R.id.radioGroup);
-                System.out.println(radioButton.getCheckedRadioButtonId());
-                
-                FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
-                mispublicaciones.replace(R.id.contenedor, new MisPublicacionesFragment());
-                mispublicaciones.addToBackStack(null);
-                mispublicaciones.commit();
-
+                //      .replace(R.id.container,misPublicaciones)
+                //    .addToBackStack(null)
+                //  .commit();
+                if (textAsunto.getText().toString().isEmpty()){
+                    Toast.makeText(view.getContext(), "Debe ingresar nombre", Toast.LENGTH_SHORT).show();
+                }else if (textPublicacion.getText().toString().isEmpty()) {
+                    Toast.makeText(view.getContext(), "Debe ingresar apellido", Toast.LENGTH_SHORT).show();
+                }else if (radioGroup.getCheckedRadioButtonId() == -1) {
+                    Toast.makeText(view.getContext(), "Debe ingresar rut", Toast.LENGTH_SHORT).show();
+                }else {
+                    final String rut = new MainActivity().getUser();
+                    final String asunto = textAsunto.getText().toString();
+                    final String descripcion = textPublicacion.getText().toString();
+                    switch (radioGroup.getCheckedRadioButtonId()) {
+                        case R.id.radioButtonAlta:
+                            selected = 1;
+                            break;
+                        case R.id.radioButtonMedia:
+                            selected = 2;
+                            break;
+                        case R.id.radioButtonBaja:
+                            selected = 3;
+                            break;
+                    }
+                    final String id_prioridad = String.valueOf(selected);
+                    Response.Listener<String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean success = jsonResponse.getBoolean("success");
+                                if (success){
+                                    Toast.makeText(view.getContext(), "Publicación agregada..", Toast.LENGTH_SHORT).show();
+                                    FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
+                                    mispublicaciones.replace(R.id.contenedor, new MisPublicacionesFragment());
+                                    mispublicaciones.addToBackStack(null);
+                                    mispublicaciones.commit();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    PublicacionRequest publicacionRequest = new PublicacionRequest(rut, id_prioridad, asunto, descripcion, responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(view.getContext());
+                    queue.add(publicacionRequest);
+                }
                 /////notificacion
                 //setPendingIntent();
                 createNotificationChannel();
                 createNotification();
 
-            }
-        });
+                }
+            });
         return vista;
-    }
+        }
 
     private void setPendingIntent(){
         Intent intent = new Intent(getActivity(),PublicacionesFragment.class);

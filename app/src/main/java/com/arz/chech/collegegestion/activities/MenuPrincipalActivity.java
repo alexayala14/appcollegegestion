@@ -130,8 +130,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_menu_principal, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
@@ -156,7 +155,6 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
             //return PlaceholderFragment.newInstance(position + 1);
             switch (position){
                 case 0:
-
                     publicaciones=new PublicacionesFragment();
                     return publicaciones;
                 case 1:
