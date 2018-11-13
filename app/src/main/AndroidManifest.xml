@@ -45,6 +45,8 @@
         <activity android:name=".activities.Registers"/>
         <activity android:name=".activities.Users"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <service android:name=".services.ServiceMensajes"
+            android:enabled="true"/>
     </application>
 
 </manifest>

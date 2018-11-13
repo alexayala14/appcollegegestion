@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.UserDetails;
 import com.arz.chech.collegegestion.fragments.PublicacionesFragment;
+import com.arz.chech.collegegestion.services.ServiceMensajes;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -64,7 +65,9 @@ public class Chat extends AppCompatActivity {
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
-        // ASiganar context a la variable Firebase
+        scrollView.post( new Runnable() { @Override public void run() { scrollView.fullScroll(View.FOCUS_DOWN); } });
+
+                // ASiganar context a la variable Firebase
         Firebase.setAndroidContext(this);
         // Asignar ruta de las URL
         reference1 = new Firebase(URL_FIREBASE + "/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
@@ -72,6 +75,7 @@ public class Chat extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 // Obtener Mensaje del EditText
                 String messageText = messageArea.getText().toString();
                 // Validar que el mensaje no sea nullo
@@ -87,12 +91,7 @@ public class Chat extends AppCompatActivity {
                     messageArea.setText("");
 
 
-                    /////notificacion
-                    //setPendingIntent();
 
-                    /*Intent intent = new Intent(Chat.this,Chat.class);
-                    PendingIntent pendingIntent = PendingIntent.getActivity(Chat.this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-                    notificacion.setContentIntent(pendingIntent);*/
 
 
                 }
@@ -102,6 +101,7 @@ public class Chat extends AppCompatActivity {
         reference1.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
                 // Obtener mensajes
                 Map map = dataSnapshot.getValue(Map.class);
                 // Asignar mensajes a las variables
@@ -144,17 +144,12 @@ public class Chat extends AppCompatActivity {
             }
         });
 
+       startService(new Intent(this,ServiceMensajes.class));
+
 
     }
 
-    //no se utiliza se tiene que verificar al tocar la notificacion que remome a donde llego el msj
-    private void setPendingIntent(){
-        Intent intent = new Intent(Chat.this,Chat.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(Chat.class);
-        stackBuilder.addNextIntent(intent);
-        pendingIntent=stackBuilder.getPendingIntent(1,PendingIntent.FLAG_UPDATE_CURRENT);
-    }
+
     private void createNotificationChannel(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name ="Notificacion";
