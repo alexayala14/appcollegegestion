@@ -2,17 +2,17 @@ package com.arz.chech.collegegestion;
 
 public class Publicacion {
     private String nombre;
+    private String asunto;
     private String descripcion;
-    private String detalle;
     private int foto;
 
     public Publicacion(){
-
     }
-    public Publicacion(String nombre, String descripcion,String detalle,int foto) {
+
+    public Publicacion(String nombre, String asunto, String descripcion, int foto) {
         this.nombre = nombre;
+        this.asunto = asunto;
         this.descripcion = descripcion;
-        this.detalle=detalle;
         this.foto = foto;
     }
 
@@ -24,20 +24,20 @@ public class Publicacion {
         this.nombre = nombre;
     }
 
+    public String getAsunto() {
+        return asunto;
+    }
+
+    public void setAsunto(String asunto) {
+        this.asunto = asunto;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public String getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(String detalle) {
-        this.detalle = detalle;
     }
 
     public int getFoto() {

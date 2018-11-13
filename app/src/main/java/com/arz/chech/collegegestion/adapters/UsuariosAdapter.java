@@ -46,10 +46,10 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.Usuari
 
         public UsuariosHolder(View itemView) {
             super(itemView);
-            txtNombre = (TextView) itemView.findViewById(R.id.txtNombre);
-            txtApellido = (TextView) itemView.findViewById(R.id.txtApellido);
-            txtRut = (TextView) itemView.findViewById(R.id.txtRut);
-            txtPerfil = (TextView) itemView.findViewById(R.id.txtPerfil);
+            txtNombre = itemView.findViewById(R.id.txtNombre);
+            txtApellido = itemView.findViewById(R.id.txtApellido);
+            txtRut = itemView.findViewById(R.id.txtRut);
+            txtPerfil = itemView.findViewById(R.id.txtPerfil);
         }
     }
 }

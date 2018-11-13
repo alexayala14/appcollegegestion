@@ -14,7 +14,9 @@ import com.arz.chech.collegegestion.R;
 import java.util.ArrayList;
 
 public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublicaciones.ViewHolderPublicaciones> implements View.OnClickListener{
+
     ArrayList<Publicacion> listaPublicaciones;
+
     private View.OnClickListener listener;
     public AdaptadorPublicaciones(ArrayList<Publicacion>listaPublicaciones){
         this.listaPublicaciones=listaPublicaciones;
@@ -30,7 +32,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     @Override
     public void onBindViewHolder(@NonNull ViewHolderPublicaciones holder, int position) {
         holder.txt_nombre.setText(listaPublicaciones.get(position).getNombre());
-        holder.txt_descripcion.setText(listaPublicaciones.get(position).getDescripcion());
+        holder.txt_descripcion.setText(listaPublicaciones.get(position).getAsunto());
         holder.foto.setImageResource(listaPublicaciones.get(position).getFoto());
     }
 
