@@ -175,11 +175,12 @@ public class Chat extends AppCompatActivity {
         builder.setVibrate(new long[]{1000,1000,1000,1000});
         builder.setDefaults(Notification.DEFAULT_SOUND);
 
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-        notificationManagerCompat.notify(NOTIFICACION_ID,builder.build());
+
         Intent intent = new Intent(Chat.this,Chat.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(Chat.this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(NOTIFICACION_ID,builder.build());
     }
 
     // Añadir mensajes
