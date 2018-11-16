@@ -18,7 +18,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.entidades.Administrador;
+import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.firebase.client.Firebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +32,7 @@ public class Registrar extends AppCompatActivity {
     Button btn_registrar;
     String user, pass;
     ProgressDialog pd;
-    // URL del servicio firebase
-    String URL_FIREBASE = "https://appcollegegestion.firebaseio.com";
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,43 +66,65 @@ public class Registrar extends AppCompatActivity {
                     final String password = campoContraseña.getText().toString();
                     final String perfil = String.valueOf(campoPerfil.getSelectedItemPosition()+1);
                     pd = new ProgressDialog(Registrar.this);
-
                     pd.setMessage("Cargando...");
-
                     pd.show();
-                    String url = URL_FIREBASE + "/users.json";
-                    Response.Listener < String > responseListener = new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    // Obtener referencia del archivo JSON Users
-                                    Firebase reference = new Firebase(URL_FIREBASE + "/users");
-                                    try {
-                                        JSONObject jsonResponse = new JSONObject(response);
-                                        boolean success = jsonResponse.getBoolean("success");
-                                        if (success) {
-                                            Toast.makeText(Registrar.this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-                                            reference.child(user).child("password").setValue(pass);
-                                            Intent intent = new Intent(Registrar.this, Administrador.class);
-                                            Registrar.this.startActivity(intent);
-                                        } else {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(Registrar.this);
-                                            builder.setMessage("Ya existe el usuario en la Base de Datos")
-                                                    .setNegativeButton("Reintentar", null)
-                                                    .create().show();
-                                        }
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    pd.dismiss();
-
+                    Response.Listener <String> responseListener = new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean success = jsonResponse.getBoolean("success");
+                                if (success) {
+                                    databaseReference = FirebaseDatabase.getInstance().getReference("Usuarios");
+                                    DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, validarPerfilFirebase(perfil), password);
+                                    String clave = databaseReference.push().getKey();
+                                    databaseReference.child(clave).setValue(datosUsuario);
+                                    Toast.makeText(Registrar.this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(Registrar.this, Administrador.class);
+                                    Registrar.this.startActivity(intent);
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(Registrar.this);
+                                    builder.setMessage("Ya existe el usuario en la Base de Datos")
+                                            .setNegativeButton("Reintentar", null)
+                                            .create().show();
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            pd.dismiss();
 
-                            };
+                        }
+                    };
                     RegisterRequest registerRequest = new RegisterRequest(nombre, apellido, rut, password, perfil, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(Registrar.this);
                     queue.add(registerRequest);
                 }
             }
         });
+    }
+
+    private String validarPerfilFirebase(String perfil){
+        switch (perfil) {
+            case "1":
+                perfil = "Administrador";
+                break;
+            case "2":
+                perfil = "Directivos";
+                break;
+            case "3":
+                perfil = "Docentes";
+                break;
+            case "4":
+                perfil = "Asistentes";
+                break;
+            case "5":
+                perfil = "Padres";
+                break;
+            default:
+                perfil = "";
+                break;
+        }
+
+        return perfil;
     }
 }
