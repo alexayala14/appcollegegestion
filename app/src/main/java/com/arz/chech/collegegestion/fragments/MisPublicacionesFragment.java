@@ -158,9 +158,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Toast.makeText(getContext(), "No se puede conectar " + error.toString(), Toast.LENGTH_LONG).show();
-        System.out.println();
-        Log.d("Error: ",  error.toString());
+        //Toast.makeText(getContext(), "No hay publicaciones en la BD!", Toast.LENGTH_LONG).show();
         progress.hide();
     }
 

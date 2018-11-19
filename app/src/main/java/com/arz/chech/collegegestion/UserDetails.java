@@ -9,5 +9,7 @@ public class  UserDetails {
 
    public static String nombre = "";
 
+   public static String apellido = "";
+
    public static String chatWith = "";
 }

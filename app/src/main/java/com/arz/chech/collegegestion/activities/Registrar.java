@@ -75,7 +75,7 @@ public class Registrar extends AppCompatActivity {
                                 JSONObject jsonResponse = new JSONObject(response);
                                 boolean success = jsonResponse.getBoolean("success");
                                 if (success) {
-                                    databaseReference = FirebaseDatabase.getInstance().getReference("Usuarios");
+                                    databaseReference = FirebaseDatabase.getInstance().getReference("usuarios");
                                     DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, validarPerfilFirebase(perfil), password);
                                     String clave = databaseReference.push().getKey();
                                     databaseReference.child(clave).setValue(datosUsuario);
@@ -119,9 +119,6 @@ public class Registrar extends AppCompatActivity {
                 break;
             case "5":
                 perfil = "Padres";
-                break;
-            default:
-                perfil = "";
                 break;
         }
 

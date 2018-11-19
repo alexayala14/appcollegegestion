@@ -65,17 +65,19 @@ public class Chat extends AppCompatActivity {
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
-        scrollView.post( new Runnable() { @Override public void run() { scrollView.fullScroll(View.FOCUS_DOWN); } });
-
-                // ASiganar context a la variable Firebase
+        scrollView.post( new Runnable() {
+            @Override public void run() {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
+        // ASiganar context a la variable Firebase
         Firebase.setAndroidContext(this);
         // Asignar ruta de las URL
-        reference1 = new Firebase(URL_FIREBASE + "/messages/" + UserDetails.username + "_" + UserDetails.chatWith);
-        reference2 = new Firebase(URL_FIREBASE + "/messages/" + UserDetails.chatWith + "_" + UserDetails.username);
+        reference1 = new Firebase(URL_FIREBASE + "/messages/" + UserDetails.nombre + " "  + UserDetails.apellido + "_" + UserDetails.chatWith);
+        reference2 = new Firebase(URL_FIREBASE + "/messages/" + UserDetails.chatWith + "_" + UserDetails.nombre + " "  + UserDetails.apellido);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // Obtener Mensaje del EditText
                 String messageText = messageArea.getText().toString();
                 // Validar que el mensaje no sea nullo
@@ -89,11 +91,6 @@ public class Chat extends AppCompatActivity {
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
                     messageArea.setText("");
-
-
-
-
-
                 }
             }
         });
@@ -110,10 +107,10 @@ public class Chat extends AppCompatActivity {
                 String time = map.get("time").toString();
                 // Si el usuario es igual al usuario logeado añadira la etiqueta "You"
                 if(userName.equals(UserDetails.username)){
-                    addMessageBox("You " , message,time, 1);
+                    addMessageBox("Tu " , message,time, 1);
                 }
                 else{
-                    addMessageBox(UserDetails.chatWith , message,time, 2);
+                    addMessageBox(UserDetails.chatWith , message, time, 2);
 
                     ///notificaciones
 
@@ -220,5 +217,10 @@ public class Chat extends AppCompatActivity {
         layout.addView(textmsg);
         layout.addView(texttime);
         scrollView.fullScroll(View.FOCUS_DOWN);
+        scrollView.post( new Runnable() {
+            @Override public void run() {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
     }
 }

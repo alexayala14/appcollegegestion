@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,12 @@ import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.UserDetails;
 import com.arz.chech.collegegestion.activities.Chat;
 import com.arz.chech.collegegestion.activities.Users;
+import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,17 +59,13 @@ public class MensajesFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     View vista;
     ListView usersList;
-
     TextView noUsersText;
-
     ArrayList al = new ArrayList<>();
-
     int totalUsers = 0;
-
     ProgressDialog pd;
 
     // Variable del servicio Firebase
-
+    DatabaseReference databaseReference;
     String URL_FIREBASE = "https://appcollegegestion.firebaseio.com";
 
     public MensajesFragment() {
@@ -102,39 +105,47 @@ public class MensajesFragment extends Fragment {
         // Inflate the layout for this fragment
         vista=inflater.inflate(R.layout.fragment_mensajes, container, false);
         // Obtener referencia de los objetos en las variables
-
         usersList = (ListView)vista.findViewById(R.id.usersList);
-
         noUsersText = (TextView)vista.findViewById(R.id.noUsersText);
-
         // Iniciar progressDialog
-
         pd = new ProgressDialog(getContext());
-
         pd.setMessage("Cargando...");
-
         pd.show();
-
-        // Variable para hacer referencia al archivo JSON del servicio Firebase
-
-        String url = URL_FIREBASE + "/users.json";
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("usuarios");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onResponse(String response) {
-                // Funcion para obtener los nombre de los usuarios Loggueados
-
-                doOnSuccess(response);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot datasnapshot: dataSnapshot.getChildren()){
+                    DatosUsuario datosUsuario = datasnapshot.getValue(DatosUsuario.class);
+                    if (!datosUsuario.getRut().equals(UserDetails.username)) {
+                        al.add(datosUsuario.toString());
+                        totalUsers++;
+                    }else {
+                        UserDetails.nombre = datosUsuario.getNombre();
+                        UserDetails.apellido = datosUsuario.getApellido();
+                    }
+                }
+                if(totalUsers < 1){
+                    // Mostrar TextView y Ocultar ListView
+                    noUsersText.setVisibility(View.VISIBLE);
+                    usersList.setVisibility(View.GONE);
+                }
+                else{
+                    // Ocultar TextView y Mostrar ListView
+                    noUsersText.setVisibility(View.GONE);
+                    usersList.setVisibility(View.VISIBLE);
+                    // Añadir usuarios al ListView
+                    usersList.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, al));
+                }
+                // Finalizar el progressDialog
+                pd.dismiss();
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println("" + error);
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-
-        RequestQueue rQueue = Volley.newRequestQueue(getContext());
-
-        rQueue.add(request);
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -148,87 +159,14 @@ public class MensajesFragment extends Fragment {
         return vista;
 
     }
-    // Funcion para obtener Nombres usuarios
 
-    public void doOnSuccess(String s){
-
-        try {
-
-            JSONObject obj = new JSONObject(s);
-
-            // Obtiene los nombres de la devolucion del request JSON
-
-            Iterator i = obj.keys();
-
-            String key = "";
-
-            // Añadir los nombres a la variable ArrayList
-
-            while(i.hasNext()){
-
-                key = i.next().toString();
-
-                if(!key.equals(UserDetails.username)) {
-
-                    al.add(key);
-
-                }
-
-                totalUsers++;
-
-            }
-
-        } catch (JSONException e) {
-
-            e.printStackTrace();
-
-        }
-
-        // Si la cantidad de usuarios es menor a 0 mostrara el mensaje de que no hay usuarios
-
-        if(totalUsers <=1){
-
-            // Mostrar TextView y Ocultar ListView
-
-            noUsersText.setVisibility(View.VISIBLE);
-
-            usersList.setVisibility(View.GONE);
-
-        }
-
-        else{
-
-            // Ocultar TextView y Mostrar ListView
-
-            noUsersText.setVisibility(View.GONE);
-
-            usersList.setVisibility(View.VISIBLE);
-
-            // Añadir usuarios al ListView
-
-            usersList.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, al));
-
-        }
-
-        // Finalizar el progressDialog
-
-        pd.dismiss();
-
-
-
-        //return vista;
-    }
     public void vaciar(){al.clear();}
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-
         if (mListener != null) {
-
             mListener.onFragmentInteraction(uri);
-
         }
-
     }
 
     @Override
