@@ -117,6 +117,11 @@ public class Chat extends AppCompatActivity {
                     createNotificationChannel();
                     createNotification(message);
                 }
+                scrollView.post( new Runnable() {
+                    @Override public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
 
             }
 
