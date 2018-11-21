@@ -29,7 +29,7 @@ import org.json.JSONObject;
 public class Registrar extends AppCompatActivity {
     EditText campoNombre, campoApellido, campoRut, campoContraseña;
     Spinner campoPerfil;
-    Button btn_registrar;
+    Button btn_registrar, btn_atras;
     String user, pass;
     ProgressDialog pd;
     DatabaseReference databaseReference;
@@ -44,6 +44,13 @@ public class Registrar extends AppCompatActivity {
         campoContraseña = (EditText) findViewById(R.id.EditT_Password);
         campoPerfil = (Spinner) findViewById(R.id.comboPerfiles);
         btn_registrar = (Button) findViewById(R.id.btn_registrarUsuario);
+        btn_atras = (Button) findViewById(R.id.btn_atras_registro);
+        btn_atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         // Aplicar el contecto a Firebase
         Firebase.setAndroidContext(this);
         btn_registrar.setOnClickListener(new View.OnClickListener() {
@@ -80,9 +87,11 @@ public class Registrar extends AppCompatActivity {
                                     String clave = databaseReference.push().getKey();
                                     databaseReference.child(clave).setValue(datosUsuario);
                                     Toast.makeText(Registrar.this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(Registrar.this, Administrador.class);
-                                    Registrar.this.startActivity(intent);
+                                    vaciarCampos();
+                                    //Intent intent = new Intent(Registrar.this, Administrador.class);
+                                    //Registrar.this.startActivity(intent);
                                 } else {
+                                    vaciarCampos();
                                     AlertDialog.Builder builder = new AlertDialog.Builder(Registrar.this);
                                     builder.setMessage("Ya existe el usuario en la Base de Datos")
                                             .setNegativeButton("Reintentar", null)
@@ -123,5 +132,12 @@ public class Registrar extends AppCompatActivity {
         }
 
         return perfil;
+    }
+
+    private void vaciarCampos(){
+        campoNombre.getText().clear();
+        campoApellido.getText().clear();
+        campoContraseña.getText().clear();
+        campoRut.getText().clear();
     }
 }
