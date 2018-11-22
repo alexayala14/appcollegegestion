@@ -21,16 +21,19 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     public AdaptadorPublicaciones(ArrayList<Publicacion>listaPublicaciones){
         this.listaPublicaciones=listaPublicaciones;
     }
-    @NonNull
+
     @Override
-    public ViewHolderPublicaciones onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_publicaciones,null,false);
+    public ViewHolderPublicaciones onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_publicaciones, viewGroup,false);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(layoutParams);
         view.setOnClickListener(this);
         return new ViewHolderPublicaciones(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderPublicaciones holder, int position) {
+    public void onBindViewHolder(ViewHolderPublicaciones holder, int position) {
         holder.txt_nombre.setText(listaPublicaciones.get(position).getNombre());
         holder.txt_descripcion.setText(listaPublicaciones.get(position).getAsunto());
         holder.foto.setImageResource(listaPublicaciones.get(position).getFoto());
@@ -54,7 +57,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     public class ViewHolderPublicaciones extends RecyclerView.ViewHolder {
         TextView txt_nombre,txt_descripcion;
         ImageView foto;
-        public ViewHolderPublicaciones(@NonNull View itemView) {
+        public ViewHolderPublicaciones(View itemView) {
             super(itemView);
             txt_nombre = itemView.findViewById(R.id.idNombre);
             txt_descripcion = itemView.findViewById(R.id.idInfo);

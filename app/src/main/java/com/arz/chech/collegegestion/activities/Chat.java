@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,8 +24,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.UserDetails;
-import com.arz.chech.collegegestion.fragments.PublicacionesFragment;
 import com.arz.chech.collegegestion.services.ServiceMensajes;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;

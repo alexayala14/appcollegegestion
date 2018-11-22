@@ -1,6 +1,5 @@
 package com.arz.chech.collegegestion.fragments;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -10,12 +9,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,7 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.Publicacion;
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.activities.MainActivity;
+import com.arz.chech.collegegestion.activities.UserDetails;
 import com.arz.chech.collegegestion.adapters.AdaptadorPublicaciones;
 
 import org.json.JSONArray;
@@ -109,6 +106,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
             @Override
             public void onClick(View view) {
                 vaciar();
+                btnPublicacion.setVisibility(View.GONE);
                 recyclerViewMisPublicaciones.setAdapter(null);
                 FragmentTransaction nuevaPublicacionFragment = getFragmentManager().beginTransaction();
                 nuevaPublicacionFragment.replace(R.id.contenedor,new NuevaPublicacionFragment());
@@ -122,7 +120,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
         progress = new ProgressDialog(getContext());
         progress.setMessage("Consultando...");
         progress.show();
-        String userRut = new MainActivity().getUser();
+        String userRut = UserDetails.username;
         String url = "http://miltonzambra.com/ConsultaPublicacionesPropias.php?rut=" + userRut;
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         request.add(jsonObjectRequest);

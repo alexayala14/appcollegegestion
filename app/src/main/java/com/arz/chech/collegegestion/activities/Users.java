@@ -30,7 +30,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.UserDetails;
 
 import org.json.JSONException;
 

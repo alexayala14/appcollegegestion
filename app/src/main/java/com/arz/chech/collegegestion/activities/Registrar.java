@@ -67,10 +67,10 @@ public class Registrar extends AppCompatActivity {
                 }else if (campoContraseña.getText().toString().isEmpty()) {
                     Toast.makeText(Registrar.this, "Debe ingresar contraseña", Toast.LENGTH_SHORT).show();
                 }else{
-                    final String nombre = campoNombre.getText().toString();
-                    final String apellido = campoApellido.getText().toString();
-                    final String rut = campoRut.getText().toString();
-                    final String password = campoContraseña.getText().toString();
+                    final String nombre = campoNombre.getText().toString().trim();
+                    final String apellido = campoApellido.getText().toString().trim();
+                    final String rut = campoRut.getText().toString().trim();
+                    final String password = campoContraseña.getText().toString().trim();
                     final String perfil = String.valueOf(campoPerfil.getSelectedItemPosition()+1);
                     pd = new ProgressDialog(Registrar.this);
                     pd.setMessage("Cargando...");

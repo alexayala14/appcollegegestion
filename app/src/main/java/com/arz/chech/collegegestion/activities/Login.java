@@ -18,7 +18,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.UserDetails;
 
 
 import org.json.JSONException;
@@ -87,7 +86,6 @@ public class Login extends AppCompatActivity {
                                     else if(obj.getJSONObject(user).getString("password").equals(pass)){
                                         // Asignar los valores a variables globales
                                         UserDetails.username = user;
-                                        UserDetails.password = pass;
                                         // Redirigir al activity
                                         startActivity(new Intent(Login.this, MenuPrincipalActivity.class));
                                     }

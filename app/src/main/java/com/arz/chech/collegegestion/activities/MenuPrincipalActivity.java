@@ -1,5 +1,6 @@
 package com.arz.chech.collegegestion.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.fragments.DetalleFragment;
@@ -93,6 +95,10 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            MainActivity.cambiar_mantener_sesion(MenuPrincipalActivity.this, false);
+            Intent intent = new Intent(MenuPrincipalActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
             return true;
         }
 

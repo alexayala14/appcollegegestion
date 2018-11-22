@@ -12,17 +12,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -30,9 +27,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.activities.MainActivity;
+import com.arz.chech.collegegestion.activities.UserDetails;
 import com.arz.chech.collegegestion.activities.PublicacionRequest;
-import com.arz.chech.collegegestion.activities.RegisterRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -134,7 +130,7 @@ public class NuevaPublicacionFragment extends Fragment {
                 }else if (radioGroup.getCheckedRadioButtonId() == -1) {
                     Toast.makeText(view.getContext(), "Debe ingresar rut", Toast.LENGTH_SHORT).show();
                 }else {
-                    final String rut = new MainActivity().getUser();
+                    final String rut = UserDetails.username;
                     final String asunto = textAsunto.getText().toString();
                     final String descripcion = textPublicacion.getText().toString();
                     switch (radioGroup.getCheckedRadioButtonId()) {
@@ -159,7 +155,6 @@ public class NuevaPublicacionFragment extends Fragment {
                                     Toast.makeText(view.getContext(), "Publicación agregada..", Toast.LENGTH_SHORT).show();
                                     FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
                                     mispublicaciones.replace(R.id.contenedor, new MisPublicacionesFragment());
-                                    mispublicaciones.addToBackStack(null);
                                     mispublicaciones.commit();
                                 }
                             } catch (JSONException e) {
@@ -175,7 +170,6 @@ public class NuevaPublicacionFragment extends Fragment {
                 //setPendingIntent();
                 createNotificationChannel();
                 createNotification();
-
                 }
             });
         return vista;

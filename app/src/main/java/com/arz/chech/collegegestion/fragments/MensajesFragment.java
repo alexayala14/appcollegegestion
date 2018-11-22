@@ -15,16 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.UserDetails;
+import com.arz.chech.collegegestion.activities.UserDetails;
 import com.arz.chech.collegegestion.activities.Chat;
-import com.arz.chech.collegegestion.activities.Users;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,11 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,7 +55,6 @@ public class MensajesFragment extends Fragment {
 
     // Variable del servicio Firebase
     DatabaseReference databaseReference;
-    String URL_FIREBASE = "https://appcollegegestion.firebaseio.com";
 
     public MensajesFragment() {
         // Required empty public constructor
@@ -157,7 +145,6 @@ public class MensajesFragment extends Fragment {
         vaciar();
         usersList.setAdapter(null);
         return vista;
-
     }
 
     public void vaciar(){al.clear();}
