@@ -11,4 +11,5 @@ public class UserDetails {
 
    public static String chatWith = "";
 
+   public static String token = "";
 }

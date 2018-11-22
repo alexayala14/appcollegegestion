@@ -26,25 +26,24 @@ public class MainActivity extends AppCompatActivity {
     private Button btn_log, btn_log_alumno;
     private String user;
     private String pass;
-    private static final String STRING_PREFERENCES = "collegegestion.sharedpreferences";
-    private static final String PREFERENCE_ESTADO_SESION = "collegegestion.sesion.activa";
-    private static final String PREFERENCE_ESTADO_ID_PERFIL = "collegegestion.sesion.id_perfil";
-    private static final String PREFERENCE_USUARIO = "collegegestion.sesion.usuario";
     private boolean sesion;
     private int log;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (obtener_mantener_sesion()){
-            if (obtener_id_sesion() != 1){
-                UserDetails.username = obtener_usuario();
+        if (Preferences.obtenerPreferenceBoolean(this, Preferences.PREFERENCE_ESTADO_SESION)){
+            if (Preferences.obtenerPreferenceInt(this, Preferences.PREFERENCE_ESTADO_ID_PERFIL)!= 1){
+                UserDetails.username = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_USUARIO);
+                UserDetails.token = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
                 Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
                 startActivity(intent);
                 finish();
             }else{
-                UserDetails.username = obtener_usuario();
+                UserDetails.username = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_USUARIO);
+                UserDetails.token = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
                 Intent intent = new Intent(MainActivity.this, Administrador.class);
                 startActivity(intent);
                 finish();
@@ -65,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Obtener valores de los controles firebase
-                user = et_rut.getText().toString();
-                pass = et_password.getText().toString();
+                user = et_rut.getText().toString().trim();
+                pass = et_password.getText().toString().trim();
                 /////
                 if (et_rut.getText().toString().isEmpty()){
                     Toast.makeText(MainActivity.this, "Debe ingresar rut", Toast.LENGTH_SHORT).show();
@@ -91,16 +90,22 @@ public class MainActivity extends AppCompatActivity {
                                             .create().show();
                                 } else {
                                     int id_perfil = jsonResponse.getInt("id_perfil");
+                                    token = jsonResponse.getString("token");
                                     log = id_perfil;
                                     sesion = true;
-                                    guardar_mantener_sesion();
+                                    Preferences.savePreferenceBoolean(MainActivity.this, sesion, Preferences.PREFERENCE_ESTADO_SESION);
+                                    Preferences.savePreferenceString(MainActivity.this, token, Preferences.PREFERENCE_TOKEN);
+                                    Preferences.savePreferenceInt(MainActivity.this, log, Preferences.PREFERENCE_ESTADO_ID_PERFIL);
+                                    Preferences.savePreferenceString(MainActivity.this, user, Preferences.PREFERENCE_USUARIO);
                                     if(id_perfil == 1){
                                         UserDetails.username = user;
+                                        UserDetails.token = token;
                                         Intent intent = new Intent(MainActivity.this, Administrador.class);
                                         startActivity(intent);
                                         finish();
                                     }else{
                                         UserDetails.username = user;
+                                        UserDetails.token = token;
                                         Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
                                         startActivity(intent);
                                         finish();
@@ -119,32 +124,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void guardar_mantener_sesion(){
-        SharedPreferences preferences = getSharedPreferences(STRING_PREFERENCES, MODE_PRIVATE);
-        preferences.edit().putBoolean(PREFERENCE_ESTADO_SESION, sesion).apply();
-        preferences.edit().putInt(PREFERENCE_ESTADO_ID_PERFIL, log).apply();
-        preferences.edit().putString(PREFERENCE_USUARIO, user).apply();
-    }
-
-    private boolean obtener_mantener_sesion(){
-        SharedPreferences preferences = getSharedPreferences(STRING_PREFERENCES, MODE_PRIVATE);
-        return preferences.getBoolean(PREFERENCE_ESTADO_SESION, false);
-    }
-
-    private int obtener_id_sesion(){
-        SharedPreferences preferences = getSharedPreferences(STRING_PREFERENCES, MODE_PRIVATE);
-        return preferences.getInt(PREFERENCE_ESTADO_ID_PERFIL, -1);
-    }
-
-    private String obtener_usuario(){
-        SharedPreferences preferences = getSharedPreferences(STRING_PREFERENCES, MODE_PRIVATE);
-        return preferences.getString(PREFERENCE_USUARIO, "");
-    }
-
-    public static void cambiar_mantener_sesion(Context c, Boolean b){
-        SharedPreferences preferences = c.getSharedPreferences(STRING_PREFERENCES, MODE_PRIVATE);
-        preferences.edit().putBoolean(PREFERENCE_ESTADO_SESION, b).apply();
     }
 }

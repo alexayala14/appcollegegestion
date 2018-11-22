@@ -124,11 +124,11 @@ public class NuevaPublicacionFragment extends Fragment {
                 //    .addToBackStack(null)
                 //  .commit();
                 if (textAsunto.getText().toString().isEmpty()){
-                    Toast.makeText(view.getContext(), "Debe ingresar nombre", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Debe ingresar Asunto", Toast.LENGTH_SHORT).show();
                 }else if (textPublicacion.getText().toString().isEmpty()) {
-                    Toast.makeText(view.getContext(), "Debe ingresar apellido", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "La publicacion no puede estar vacia", Toast.LENGTH_SHORT).show();
                 }else if (radioGroup.getCheckedRadioButtonId() == -1) {
-                    Toast.makeText(view.getContext(), "Debe ingresar rut", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "Seleccion la prioridad por favor", Toast.LENGTH_SHORT).show();
                 }else {
                     final String rut = UserDetails.username;
                     final String asunto = textAsunto.getText().toString();

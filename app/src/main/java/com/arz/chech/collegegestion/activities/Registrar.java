@@ -72,6 +72,8 @@ public class Registrar extends AppCompatActivity {
                     final String rut = campoRut.getText().toString().trim();
                     final String password = campoContraseña.getText().toString().trim();
                     final String perfil = String.valueOf(campoPerfil.getSelectedItemPosition()+1);
+                    databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                    String clave = databaseReference.push().getKey();
                     pd = new ProgressDialog(Registrar.this);
                     pd.setMessage("Cargando...");
                     pd.show();
@@ -82,19 +84,16 @@ public class Registrar extends AppCompatActivity {
                                 JSONObject jsonResponse = new JSONObject(response);
                                 boolean success = jsonResponse.getBoolean("success");
                                 if (success) {
-                                    databaseReference = FirebaseDatabase.getInstance().getReference("usuarios");
-                                    DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, validarPerfilFirebase(perfil), password);
-                                    String clave = databaseReference.push().getKey();
-                                    databaseReference.child(clave).setValue(datosUsuario);
+                                    String token = jsonResponse.getString("token");
+                                    DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, validarPerfilFirebase(perfil));
+                                    databaseReference.child(token).setValue(datosUsuario);
                                     Toast.makeText(Registrar.this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
                                     vaciarCampos();
-                                    //Intent intent = new Intent(Registrar.this, Administrador.class);
-                                    //Registrar.this.startActivity(intent);
                                 } else {
                                     vaciarCampos();
                                     AlertDialog.Builder builder = new AlertDialog.Builder(Registrar.this);
                                     builder.setMessage("Ya existe el usuario en la Base de Datos")
-                                            .setNegativeButton("Reintentar", null)
+                                            .setNegativeButton("Aceptar", null)
                                             .create().show();
                                 }
                             } catch (JSONException e) {
@@ -104,7 +103,7 @@ public class Registrar extends AppCompatActivity {
 
                         }
                     };
-                    RegisterRequest registerRequest = new RegisterRequest(nombre, apellido, rut, password, perfil, responseListener);
+                    RegisterRequest registerRequest = new RegisterRequest(nombre, apellido, rut, password, clave, perfil, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(Registrar.this);
                     queue.add(registerRequest);
                 }
@@ -130,7 +129,6 @@ public class Registrar extends AppCompatActivity {
                 perfil = "Padres";
                 break;
         }
-
         return perfil;
     }
 

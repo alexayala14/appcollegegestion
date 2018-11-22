@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.MainActivity;
 import com.arz.chech.collegegestion.activities.MenuPrincipalActivity;
+import com.arz.chech.collegegestion.activities.Preferences;
 import com.arz.chech.collegegestion.activities.RecyclerUsuarios;
 import com.arz.chech.collegegestion.activities.Registrar;
 
@@ -25,7 +26,10 @@ public class Administrador extends AppCompatActivity {
         btn_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.cambiar_mantener_sesion(Administrador.this, false);
+                Preferences.savePreferenceBoolean(Administrador.this, false, Preferences.PREFERENCE_ESTADO_SESION);
+                Preferences.savePreferenceInt(Administrador.this, -1, Preferences.PREFERENCE_ESTADO_ID_PERFIL);
+                Preferences.savePreferenceString(Administrador.this, "", Preferences.PREFERENCE_TOKEN);
+                Preferences.savePreferenceString(Administrador.this,"", Preferences.PREFERENCE_USUARIO);
                 Intent intent = new Intent(Administrador.this, MainActivity.class);
                 startActivity(intent);
                 finish();

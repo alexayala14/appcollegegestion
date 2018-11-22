@@ -21,6 +21,7 @@
     <string name="tab_text_1">Publicaciones</string>
     <string name="tab_text_2">Mis Publicaciones</string>
     <string name="tab_text_3">Mensajes</string>
+    <string name="tab_text_4">Chatear</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

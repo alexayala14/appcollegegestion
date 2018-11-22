@@ -4,15 +4,12 @@ public class DatosUsuario {
     private String nombre;
     private String apellido;
     private String rut;
-    private String password;
     private String perfil;
 
-
-    public DatosUsuario(String nombre, String apellido, String rut, String perfil, String password) {
+    public DatosUsuario(String nombre, String apellido, String rut, String perfil) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.rut = rut;
-        this.password = password;
         this.perfil = perfil;
     }
 
@@ -41,14 +38,6 @@ public class DatosUsuario {
 
     public void setRut(String rut) {
         this.rut = rut;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPerfil() {

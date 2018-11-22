@@ -18,10 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.fragments.ChatFragment;
 import com.arz.chech.collegegestion.fragments.DetalleFragment;
+import com.arz.chech.collegegestion.fragments.FriendsFragment;
 import com.arz.chech.collegegestion.fragments.MensajesFragment;
 import com.arz.chech.collegegestion.fragments.MisPublicacionesFragment;
 import com.arz.chech.collegegestion.fragments.NuevaPublicacionFragment;
@@ -30,7 +31,8 @@ import com.arz.chech.collegegestion.fragments.PublicacionesFragment;
 public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MensajesFragment.OnFragmentInteractionListener,NuevaPublicacionFragment.OnFragmentInteractionListener,DetalleFragment.OnFragmentInteractionListener {
     PublicacionesFragment publicaciones;
     MisPublicacionesFragment misPublicaciones;
-    MensajesFragment mensajes;
+    FriendsFragment mensajes;
+    ChatFragment chat;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -95,10 +97,14 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            MainActivity.cambiar_mantener_sesion(MenuPrincipalActivity.this, false);
+            Preferences.savePreferenceBoolean(MenuPrincipalActivity.this, false, Preferences.PREFERENCE_ESTADO_SESION);
+            Preferences.savePreferenceInt(MenuPrincipalActivity.this, -1, Preferences.PREFERENCE_ESTADO_ID_PERFIL);
+            Preferences.savePreferenceString(MenuPrincipalActivity.this, "", Preferences.PREFERENCE_TOKEN);
+            Preferences.savePreferenceString(MenuPrincipalActivity.this,"", Preferences.PREFERENCE_USUARIO);
             Intent intent = new Intent(MenuPrincipalActivity.this, MainActivity.class);
-            startActivity(intent);
+            mViewPager.setAdapter(null);
             finish();
+            startActivity(intent);
             return true;
         }
 
@@ -167,7 +173,10 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
                     misPublicaciones=new MisPublicacionesFragment();
                     return misPublicaciones;
                 case 2:
-                    mensajes =new MensajesFragment();
+                    mensajes = new FriendsFragment();
+                    return mensajes;
+                case 3:
+                    mensajes = new FriendsFragment();
                     return mensajes;
             }
             return null;
@@ -176,8 +185,9 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
+
         @Override
         public CharSequence getPageTitle(int position){
             switch (position){
@@ -186,6 +196,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
                 case 1:
                     return "Mis Publicaciones";
                 case 2:
+                    return "Chatear";
+                case 3:
                     return "Mensajes";
             }
             return null;

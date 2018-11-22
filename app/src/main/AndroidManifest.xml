@@ -41,7 +41,8 @@
         <activity
             android:name=".activities.RecyclerUsuarios"
             android:label="@string/title_activity_consultar_usuarios"/>
-        <activity android:name=".activities.Chat"/>
+        <activity android:name=".activities.ChatActivity"
+            android:parentActivityName=".activities.MenuPrincipalActivity"/>
         <activity android:name=".activities.Registers"/>
         <activity android:name=".activities.Users"/>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />

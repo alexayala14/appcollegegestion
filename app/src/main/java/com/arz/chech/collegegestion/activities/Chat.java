@@ -56,8 +56,8 @@ public class Chat extends AppCompatActivity {
         // Crear formato de fecha y hora
         sdf = new SimpleDateFormat("EEE, MMM d 'AT' HH:mm a");
         // Obtener referencia de controles
-        layout = (LinearLayout) findViewById(R.id.layout1);
-        layout_2 = (RelativeLayout)findViewById(R.id.layout2);
+        //layout = (LinearLayout) findViewById(R.id.layout1);
+        //layout_2 = (RelativeLayout)findViewById(R.id.layout2);
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
@@ -104,7 +104,7 @@ public class Chat extends AppCompatActivity {
                 String time = map.get("time").toString();
                 // Si el usuario es igual al usuario logeado añadira la etiqueta "You"
                 if(userName.equals(UserDetails.username)){
-                    addMessageBox("Tu " , message,time, 1);
+                    addMessageBox("Tu " , message, time, 1);
                 }
                 else{
                     addMessageBox(UserDetails.chatWith , message, time, 2);
@@ -143,7 +143,7 @@ public class Chat extends AppCompatActivity {
             }
         });
 
-       startService(new Intent(this,ServiceMensajes.class));
+        startService(new Intent(this,ServiceMensajes.class));
 
 
     }
