@@ -27,9 +27,6 @@ public class Administrador extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Preferences.savePreferenceBoolean(Administrador.this, false, Preferences.PREFERENCE_ESTADO_SESION);
-                Preferences.savePreferenceInt(Administrador.this, -1, Preferences.PREFERENCE_ESTADO_ID_PERFIL);
-                Preferences.savePreferenceString(Administrador.this, "", Preferences.PREFERENCE_TOKEN);
-                Preferences.savePreferenceString(Administrador.this,"", Preferences.PREFERENCE_USUARIO);
                 Intent intent = new Intent(Administrador.this, MainActivity.class);
                 startActivity(intent);
                 finish();

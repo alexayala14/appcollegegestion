@@ -1,4 +1,4 @@
-package com.arz.chech.collegegestion;
+package com.arz.chech.collegegestion.entidades;
 
 public class Publicacion {
     private String nombre;

@@ -124,9 +124,9 @@ public class ChatActivity extends AppCompatActivity {
         //------- IMAGE STORAGE ---------
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
+        //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
         loadMessages();
         mTitleView.setText(userName + " " + userApellido);
-
         mRootRef.child("Chat").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -321,7 +321,9 @@ public class ChatActivity extends AppCompatActivity {
 
             mChatMessageView.setText("");
 
+            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
             mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
+            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
             mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
             mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                 @Override

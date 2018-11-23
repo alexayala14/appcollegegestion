@@ -58,8 +58,8 @@ public class Chat extends AppCompatActivity {
         // Obtener referencia de controles
         //layout = (LinearLayout) findViewById(R.id.layout1);
         //layout_2 = (RelativeLayout)findViewById(R.id.layout2);
-        sendButton = (ImageView)findViewById(R.id.sendButton);
-        messageArea = (EditText)findViewById(R.id.messageArea);
+        sendButton = (ImageView)findViewById(R.id.chat_send_btn);
+        messageArea = (EditText)findViewById(R.id.chat_message_view);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
         scrollView.fullScroll(View.FOCUS_DOWN);
         scrollView.post( new Runnable() {

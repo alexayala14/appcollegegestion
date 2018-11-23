@@ -32,18 +32,18 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/user_single_name"
         android:layout_below="@+id/user_single_name"
-        android:layout_marginTop="10dp"
-        android:text="User default Status" />
+        android:layout_marginTop="8dp"
+        android:text="Presiona para chatear" />
 
-    <ImageView
-        android:id="@+id/user_single_online_icon"
-        android:layout_width="8dp"
+    <TextView
+        android:id="@+id/user_single_time"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/user_single_name"
-        android:layout_marginLeft="10dp"
-        android:layout_toEndOf="@+id/user_single_name"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/online_icon" />
+        android:layout_centerInParent="true"
+        android:layout_alignBaseline="@id/user_single_name"
+        android:layout_marginRight="9dp"
+        android:textSize="11sp"
+        android:layout_alignParentEnd="true"/>
 
     <TextView
         android:layout_width="match_parent"

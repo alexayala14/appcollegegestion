@@ -27,9 +27,6 @@
             android:label="@string/title_activity_menu_principal"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".entidades.Usuario"
-            android:label="@string/title_activity_inicio"/>
-        <activity
             android:name=".entidades.Administrador"
             android:label="@string/title_activity_inicio"/>
         <activity
@@ -42,6 +39,8 @@
             android:name=".activities.RecyclerUsuarios"
             android:label="@string/title_activity_consultar_usuarios"/>
         <activity android:name=".activities.ChatActivity"
+            android:parentActivityName=".activities.MenuPrincipalActivity"/>
+        <activity android:name=".activities.FriendsActivity"
             android:parentActivityName=".activities.MenuPrincipalActivity"/>
         <activity android:name=".activities.Registers"/>
         <activity android:name=".activities.Users"/>
