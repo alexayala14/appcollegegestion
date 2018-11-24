@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ public class FriendsActivity extends AppCompatActivity {
     private DatabaseReference mFriendsDatabase;
     private DatabaseReference mConvDatabase;
     private SwipeRefreshLayout mRefreshLayout;
+    private LinearLayoutManager mLinearLayout;
     ProgressDialog pd;
 
 
@@ -67,8 +69,9 @@ public class FriendsActivity extends AppCompatActivity {
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.keepSynced(true);
         mRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.friends_swipe_layout);
+        mLinearLayout = new LinearLayoutManager(this);
         mFriendsList.setHasFixedSize(true);
-        mFriendsList.setLayoutManager(new LinearLayoutManager(this));
+        mFriendsList.setLayoutManager(mLinearLayout);
         pd = new ProgressDialog(this);
         pd.setMessage("Cargando...");
         pd.show();
@@ -156,6 +159,17 @@ public class FriendsActivity extends AppCompatActivity {
         };
 
         mFriendsList.setAdapter(friendsRecyclerViewAdapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder {

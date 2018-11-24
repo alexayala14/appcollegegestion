@@ -157,7 +157,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
     @Override
     public void onErrorResponse(VolleyError error) {
         //Toast.makeText(getContext(), "No hay publicaciones en la BD!", Toast.LENGTH_LONG).show();
-        progress.hide();
+        progress.dismiss();
     }
 
     @Override
@@ -175,7 +175,6 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
                 publicacion.setFoto(R.drawable.hombre);
                 listaPublicaciones.add(publicacion);
             }
-            progress.hide();
             AdaptadorPublicaciones adapter = new AdaptadorPublicaciones(listaPublicaciones);
             adapter.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -193,6 +192,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        progress.dismiss();
     }
 
     /*@Override
