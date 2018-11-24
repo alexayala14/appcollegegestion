@@ -1,6 +1,9 @@
 package com.arz.chech.collegegestion.adapters;
 
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,14 +11,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.activities.ChatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.UsuariosHolder> {
+public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.UsuariosHolder> implements View.OnClickListener{
 
-    List<UsuarioList> listaUsuarios;
+    ArrayList<UsuarioList> listaUsuarios;
 
-    public UsuariosAdapter(List<UsuarioList> listaUsuarios){
+    private View.OnClickListener listener;
+    public UsuariosAdapter(ArrayList<UsuarioList> listaUsuarios){
         this.listaUsuarios = listaUsuarios;
     }
 
@@ -25,6 +31,7 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.Usuari
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         vista.setLayoutParams(layoutParams);
+        vista.setOnClickListener(this);
         return new UsuariosHolder(vista);
     }
 
@@ -39,6 +46,17 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.Usuari
     @Override
     public int getItemCount() {
         return listaUsuarios.size();
+    }
+
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener=listener;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(listener!=null){
+            listener.onClick(view);
+        }
     }
 
     public class UsuariosHolder extends RecyclerView.ViewHolder{

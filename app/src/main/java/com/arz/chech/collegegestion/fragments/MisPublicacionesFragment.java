@@ -214,4 +214,13 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    //ACTUALIZA EL FRAGMENT
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
+    }
 }

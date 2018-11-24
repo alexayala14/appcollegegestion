@@ -133,8 +133,8 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Toast.makeText(getContext(), "No hay publicaciones en la BD!", Toast.LENGTH_LONG).show();
-        progress.hide();
+        //Toast.makeText(getContext(), "No hay publicaciones en la BD!", Toast.LENGTH_LONG).show();
+        progress.dismiss();
     }
 
     @Override
@@ -153,7 +153,6 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
                 publicacion.setFoto(R.drawable.hombre);
                 listaPublicaciones.add(publicacion);
             }
-            progress.hide();
             AdaptadorPublicaciones adapter = new AdaptadorPublicaciones(listaPublicaciones);
             adapter.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -172,6 +171,7 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        progress.dismiss();
     }
 
     /**
@@ -187,5 +187,15 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+
+    //ACTUALIZA EL FRAGMENT
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
     }
 }

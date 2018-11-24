@@ -1,11 +1,19 @@
 package com.arz.chech.collegegestion.activities;
 
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -14,9 +22,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.UsuarioList;
 import com.arz.chech.collegegestion.adapters.UsuariosAdapter;
-import com.arz.chech.collegegestion.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,9 +49,9 @@ public class RecyclerUsuarios extends AppCompatActivity implements Response.List
         recyclerUsuarios = (RecyclerView) findViewById(R.id.idRecycler);
         recyclerUsuarios.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerUsuarios.setHasFixedSize(true);
+        recyclerUsuarios.setItemAnimator(new DefaultItemAnimator());
 
         request = Volley.newRequestQueue(this);
-
         cargarWebService();
     }
 
@@ -82,6 +91,29 @@ public class RecyclerUsuarios extends AppCompatActivity implements Response.List
             }
             progress.hide();
             UsuariosAdapter adapter = new UsuariosAdapter(listaUsuarios);
+            adapter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CharSequence options[] = new CharSequence[]{"Modificar", "Eliminar"};
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(RecyclerUsuarios.this);
+                    builder.setTitle("Select Options");
+                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //Click Event for each item.
+                            if(i == 0){
+                                Intent profileIntent = new Intent(RecyclerUsuarios.this, MenuPrincipalActivity.class);
+                                startActivity(profileIntent);
+                            }
+                            if(i == 1){
+                                Intent chatIntent = new Intent(RecyclerUsuarios.this, MenuPrincipalActivity.class);
+                                startActivity(chatIntent);
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+            });
             recyclerUsuarios.setAdapter(adapter);
 
         } catch (JSONException e) {
