@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.fragments.ChatsFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +47,6 @@ public class FriendsActivity extends AppCompatActivity {
     private SwipeRefreshLayout mRefreshLayout;
     private LinearLayoutManager mLinearLayout;
     ProgressDialog pd;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +146,8 @@ public class FriendsActivity extends AppCompatActivity {
                                     chatIntent.putExtra("user_name", userName);
                                     chatIntent.putExtra("user_apellido", userApellido);
                                     startActivity(chatIntent);
+                                    ChatsFragment.noExistMensajes.setVisibility(View.GONE);
+                                    Preferences.savePreferenceBoolean(FriendsActivity.this, true, Preferences.PREFERENCE_MENSAJES);
                                     finish();
                                 }
                             });

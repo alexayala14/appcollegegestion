@@ -1,6 +1,5 @@
 package com.arz.chech.collegegestion.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,10 +20,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.arz.chech.collegegestion.entidades.Publicacion;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.UserDetails;
 import com.arz.chech.collegegestion.adapters.AdaptadorPublicaciones;
+import com.arz.chech.collegegestion.entidades.Publicacion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,13 +49,13 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
     private String mParam1;
     private String mParam2;
     private OnFragmentInteractionListener mListener;
+    static TextView noExistsMisPublicaciones;
     Button btnPublicacion;
     View vista;
 
     //PRUEBA BD
     RecyclerView recyclerViewMisPublicaciones;
     ArrayList<Publicacion> listaPublicaciones;
-    ProgressDialog progress;
     RequestQueue request;
     JsonObjectRequest jsonObjectRequest;
 
@@ -96,6 +96,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
         // Inflate the layout for this fragment
         vista = inflater.inflate(R.layout.fragment_mis_publicaciones, container, false);
         listaPublicaciones = new ArrayList<>();
+        noExistsMisPublicaciones = (TextView) vista.findViewById(R.id.no_exist_mis_publicaciones);
         recyclerViewMisPublicaciones = vista.findViewById(R.id.RecycleridMis);
         recyclerViewMisPublicaciones.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewMisPublicaciones.setHasFixedSize(true);
@@ -109,7 +110,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
                 btnPublicacion.setVisibility(View.GONE);
                 recyclerViewMisPublicaciones.setAdapter(null);
                 FragmentTransaction nuevaPublicacionFragment = getFragmentManager().beginTransaction();
-                nuevaPublicacionFragment.replace(R.id.contenedor,new NuevaPublicacionFragment());
+                nuevaPublicacionFragment.replace(R.id.contenedor, new NuevaPublicacionFragment());
                 nuevaPublicacionFragment.commit();
             }
         });
@@ -117,9 +118,6 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
     }
 
     private void cargarWebService() {
-        progress = new ProgressDialog(getContext());
-        progress.setMessage("Consultando...");
-        progress.show();
         String userRut = UserDetails.username;
         String url = "http://miltonzambra.com/ConsultaPublicacionesPropias.php?rut=" + userRut;
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
@@ -157,7 +155,7 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
     @Override
     public void onErrorResponse(VolleyError error) {
         //Toast.makeText(getContext(), "No hay publicaciones en la BD!", Toast.LENGTH_LONG).show();
-        progress.dismiss();
+        //progress.dismiss();
     }
 
     @Override
@@ -165,34 +163,40 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
         Publicacion publicacion = null;
         JSONArray json = response.optJSONArray("publicaciones");
         try {
-            for (int i=0; i<json.length(); i++){
-                publicacion = new Publicacion();
-                JSONObject jsonObject = null;
-                jsonObject = json.getJSONObject(i);
-                publicacion.setNombre(jsonObject.optString("nombre") + " " + jsonObject.optString("apellido"));
-                publicacion.setAsunto(jsonObject.optString("asunto"));
-                publicacion.setDescripcion(jsonObject.optString("descripcion"));
-                publicacion.setFoto(R.drawable.hombre);
-                listaPublicaciones.add(publicacion);
-            }
-            AdaptadorPublicaciones adapter = new AdaptadorPublicaciones(listaPublicaciones);
-            adapter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fm = getFragmentManager();
-                    DetalleFragment dialogFragment = new DetalleFragment ();
-                    Bundle b = new Bundle();
-                    b.putString("descripcion",listaPublicaciones.get(recyclerViewMisPublicaciones.getChildAdapterPosition(view)).getAsunto()+"\n");
-                    b.putString ("detalle", listaPublicaciones.get(recyclerViewMisPublicaciones.getChildAdapterPosition(view)).getDescripcion());
-                    dialogFragment.setArguments(b);
-                    dialogFragment.show(fm, "Sample Fragment");
+            Boolean success = response.getBoolean("success");
+            if (success){
+                for (int i=0; i<json.length(); i++){
+                    publicacion = new Publicacion();
+                    JSONObject jsonObject = null;
+                    jsonObject = json.getJSONObject(i);
+                    publicacion.setNombre(jsonObject.optString("nombre") + " " + jsonObject.optString("apellido"));
+                    publicacion.setAsunto(jsonObject.optString("asunto"));
+                    publicacion.setDescripcion(jsonObject.optString("descripcion"));
+                    publicacion.setFoto(R.drawable.hombre);
+                    listaPublicaciones.add(publicacion);
                 }
-            });
-            recyclerViewMisPublicaciones.setAdapter(adapter);
+                AdaptadorPublicaciones adapter = new AdaptadorPublicaciones(listaPublicaciones);
+                adapter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        FragmentManager fm = getFragmentManager();
+                        DetalleFragment dialogFragment = new DetalleFragment ();
+                        Bundle b = new Bundle();
+                        b.putString("descripcion",listaPublicaciones.get(recyclerViewMisPublicaciones.getChildAdapterPosition(view)).getAsunto()+"\n");
+                        b.putString ("detalle", listaPublicaciones.get(recyclerViewMisPublicaciones.getChildAdapterPosition(view)).getDescripcion());
+                        dialogFragment.setArguments(b);
+                        dialogFragment.show(fm, "Sample Fragment");
+                    }
+                });
+                noExistsMisPublicaciones.setVisibility(View.GONE);
+                recyclerViewMisPublicaciones.setAdapter(adapter);
+            }else {
+                noExistsMisPublicaciones.setVisibility(View.VISIBLE);
+                recyclerViewMisPublicaciones.setAdapter(null);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        progress.dismiss();
     }
 
     /*@Override
@@ -213,14 +217,5 @@ public class MisPublicacionesFragment extends Fragment implements Response.Liste
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    //ACTUALIZA EL FRAGMENT
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-        }
     }
 }

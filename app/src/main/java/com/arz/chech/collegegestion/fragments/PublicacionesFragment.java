@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -46,8 +47,8 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
+    static TextView noExistsPublicaciones;
     RecyclerView recyclerViewPublicaciones;
     ArrayList<Publicacion> listaPublicaciones;
     ProgressDialog progress;
@@ -91,17 +92,19 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
         // Inflate the layout for this fragment
         vista = inflater.inflate(R.layout.fragment_publicaciones, container, false);
         listaPublicaciones = new ArrayList<>();
+        noExistsPublicaciones = (TextView) vista.findViewById(R.id.no_exist_publicaciones);
         recyclerViewPublicaciones = vista.findViewById(R.id.Recyclerid);
         recyclerViewPublicaciones.setLayoutManager(new LinearLayoutManager(getContext()));
         request = Volley.newRequestQueue(getContext());
+        progress = new ProgressDialog(getContext());
+        progress.setMessage("Consultando...");
+        progress.show();
         cargarWebService();
+        progress.hide();
         return vista;
     }
 
     private void cargarWebService() {
-        progress = new ProgressDialog(getContext());
-        progress.setMessage("Consultando...");
-        progress.show();
         String url = "http://miltonzambra.com/ConsultarPublicaciones.php";
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
         request.add(jsonObjectRequest);
@@ -134,44 +137,48 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
     @Override
     public void onErrorResponse(VolleyError error) {
         //Toast.makeText(getContext(), "No hay publicaciones en la BD!", Toast.LENGTH_LONG).show();
-        progress.dismiss();
     }
 
     @Override
     public void onResponse(JSONObject response) {
         Publicacion publicacion = null;
         JSONArray json = response.optJSONArray("publicaciones");
-
         try {
-            for (int i=0; i<json.length(); i++){
-                publicacion = new Publicacion();
-                JSONObject jsonObject = null;
-                jsonObject = json.getJSONObject(i);
-                publicacion.setNombre(jsonObject.optString("nombre") + " " + jsonObject.optString("apellido"));
-                publicacion.setAsunto(jsonObject.optString("asunto"));
-                publicacion.setDescripcion(jsonObject.optString("descripcion"));
-                publicacion.setFoto(R.drawable.hombre);
-                listaPublicaciones.add(publicacion);
-            }
-            AdaptadorPublicaciones adapter = new AdaptadorPublicaciones(listaPublicaciones);
-            adapter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //Toast.makeText(getContext(),"mensaje: "+listaPublicaciones.get(recyclerViewPublicaciones.getChildAdapterPosition(view)).getDescripcion(),Toast.LENGTH_LONG).show();
-                    FragmentManager fm = getFragmentManager();
-                    DetalleFragment dialogFragment = new DetalleFragment ();
-                    Bundle b = new Bundle();
-                    b.putString("descripcion",listaPublicaciones.get(recyclerViewPublicaciones.getChildAdapterPosition(view)).getAsunto()+"\n");
-                    b.putString ("detalle", listaPublicaciones.get(recyclerViewPublicaciones.getChildAdapterPosition(view)).getDescripcion());
-                    dialogFragment.setArguments(b);
-                    dialogFragment.show(fm, "Sample Fragment");
+            Boolean success = response.getBoolean("success");
+            if (success){
+                for (int i=0; i<json.length(); i++){
+                    publicacion = new Publicacion();
+                    JSONObject jsonObject = null;
+                    jsonObject = json.getJSONObject(i);
+                    publicacion.setNombre(jsonObject.optString("nombre") + " " + jsonObject.optString("apellido"));
+                    publicacion.setAsunto(jsonObject.optString("asunto"));
+                    publicacion.setDescripcion(jsonObject.optString("descripcion"));
+                    publicacion.setFoto(R.drawable.hombre);
+                    listaPublicaciones.add(publicacion);
                 }
-            });
-            recyclerViewPublicaciones.setAdapter(adapter);
+                AdaptadorPublicaciones adapter = new AdaptadorPublicaciones(listaPublicaciones);
+                adapter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Toast.makeText(getContext(),"mensaje: "+listaPublicaciones.get(recyclerViewPublicaciones.getChildAdapterPosition(view)).getDescripcion(),Toast.LENGTH_LONG).show();
+                        FragmentManager fm = getFragmentManager();
+                        DetalleFragment dialogFragment = new DetalleFragment ();
+                        Bundle b = new Bundle();
+                        b.putString("descripcion",listaPublicaciones.get(recyclerViewPublicaciones.getChildAdapterPosition(view)).getAsunto()+"\n");
+                        b.putString ("detalle", listaPublicaciones.get(recyclerViewPublicaciones.getChildAdapterPosition(view)).getDescripcion());
+                        dialogFragment.setArguments(b);
+                        dialogFragment.show(fm, "Sample Fragment");
+                    }
+                });
+                noExistsPublicaciones.setVisibility(View.GONE);
+                recyclerViewPublicaciones.setAdapter(adapter);
+            }else {
+                noExistsPublicaciones.setVisibility(View.VISIBLE);
+                recyclerViewPublicaciones.setAdapter(null);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        progress.dismiss();
     }
 
     /**
@@ -194,7 +201,7 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
+        if (isVisibleToUser && vista != null){
             getFragmentManager().beginTransaction().detach(this).attach(this).commit();
         }
     }

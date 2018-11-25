@@ -1,5 +1,6 @@
 package com.arz.chech.collegegestion.fragments;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -59,6 +61,7 @@ public class NuevaPublicacionFragment extends Fragment {
     EditText textAsunto;
     RadioGroup radioGroup;
     int selected;
+    TextView noExistsMisPublicaciones;
 
     ////notificaciones
     private PendingIntent pendingIntent;
@@ -111,6 +114,8 @@ public class NuevaPublicacionFragment extends Fragment {
                 mispublicaciones.commit();
             }
         });
+
+        noExistsMisPublicaciones = (TextView) vista.findViewById(R.id.no_exist_mis_publicaciones);
         textAsunto=(EditText) vista.findViewById(R.id.editTextAsunto);
         textPublicacion =(EditText) vista.findViewById(R.id.editTextPublicacion);
         radioGroup=(RadioGroup) vista.findViewById(R.id.radioGroup);
@@ -156,6 +161,7 @@ public class NuevaPublicacionFragment extends Fragment {
                                     FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
                                     mispublicaciones.replace(R.id.contenedor, new MisPublicacionesFragment());
                                     mispublicaciones.commit();
+                                    MisPublicacionesFragment.noExistsMisPublicaciones.setVisibility(View.GONE);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

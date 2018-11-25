@@ -45,7 +45,7 @@ public class ChatsFragment extends Fragment {
     private DatabaseReference mMessageDatabase;
     private DatabaseReference mUsersDatabase;
     FloatingActionButton fab;
-    private FirebaseAuth mAuth;
+    public static TextView noExistMensajes;
 
     private String mCurrent_user_id;
 
@@ -119,7 +119,7 @@ public class ChatsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mMainView = inflater.inflate(R.layout.fragment_chat, container, false);
-
+        noExistMensajes = (TextView) mMainView.findViewById(R.id.no_exist_msj);
         mConvList = (RecyclerView) mMainView.findViewById(R.id.conv_list);
 
         mCurrent_user_id = Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_TOKEN);
@@ -154,7 +154,6 @@ public class ChatsFragment extends Fragment {
             }
         });
         Query conversationQuery = mConvDatabase.orderByChild("timestamp");
-
         FirebaseRecyclerAdapter<Conv, ConvViewHolder> firebaseConvAdapter = new FirebaseRecyclerAdapter<Conv, ConvViewHolder>(
                 Conv.class,
                 R.layout.users_single_layout,
@@ -163,13 +162,11 @@ public class ChatsFragment extends Fragment {
         ) {
             @Override
             protected void populateViewHolder(final ConvViewHolder convViewHolder, final Conv conv, int i) {
-
                 final String list_user_id = getRef(i).getKey();
                 Query lastMessageQuery = null;
                 if (list_user_id != null) {
                     lastMessageQuery = mMessageDatabase.child(list_user_id).limitToLast(1);
                 }
-
                 if (lastMessageQuery != null) {
                     lastMessageQuery.addChildEventListener(new ChildEventListener() {
                         @Override
@@ -192,7 +189,6 @@ public class ChatsFragment extends Fragment {
                         }
                     });
                 }
-
                 //Toast.makeText(getContext(), mFriendsDatabase.child(list_user_id).toString(), Toast.LENGTH_LONG).show();
                 if (list_user_id != null) {
                     mUsersDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
@@ -200,9 +196,7 @@ public class ChatsFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             final String userName = dataSnapshot.child("nombre").getValue().toString();
                             final String userApellido = dataSnapshot.child("apellido").getValue().toString();
-
                             convViewHolder.setName(userName, userApellido);
-
                             convViewHolder.mView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
@@ -214,7 +208,6 @@ public class ChatsFragment extends Fragment {
                                 }
                             });
                         }
-
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
@@ -223,9 +216,12 @@ public class ChatsFragment extends Fragment {
 
             }
         };
-
+        if (Preferences.obtenerPreferenceBoolean(getContext(), Preferences.PREFERENCE_MENSAJES)){
+            noExistMensajes.setVisibility(View.GONE);
+        }else {
+            noExistMensajes.setVisibility(View.VISIBLE);
+        }
         mConvList.setAdapter(firebaseConvAdapter);
-
     }
 
     public static class ConvViewHolder extends RecyclerView.ViewHolder {
