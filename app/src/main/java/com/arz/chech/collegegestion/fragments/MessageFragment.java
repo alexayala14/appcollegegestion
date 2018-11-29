@@ -1,0 +1,135 @@
+package com.arz.chech.collegegestion.fragments;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.activities.FriendsActivity;
+import com.arz.chech.collegegestion.activities.Messages;
+import com.arz.chech.collegegestion.activities.Preferences;
+import com.arz.chech.collegegestion.adapters.MessagesAdapter;
+import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.model.Chatlist;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class MessageFragment extends Fragment{
+
+    private RecyclerView recyclerView;
+    private MessagesAdapter messagesAdapter;
+    private List<DatosUsuario> mUsers;
+    private String mCurrent_user_id;
+    private DatabaseReference databaseReference;
+    private List<Chatlist> usersList;
+    private FloatingActionButton fab;
+    private TextView noExistenMensajes;
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        recyclerView = view.findViewById(R.id.conv_list);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        mCurrent_user_id = Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_TOKEN);
+        noExistenMensajes = (TextView) view.findViewById(R.id.no_exist_msj);
+
+        // Floating Button
+        fab = (FloatingActionButton) view.findViewById(R.id.my_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
+            @Override
+            public void onClick(View view) {
+                Intent chatIntent = new Intent(getContext(), FriendsActivity.class);
+                startActivity(chatIntent);
+            }
+        });
+
+        //
+        usersList = new ArrayList<>();
+        mUsers = new ArrayList<>();
+        messagesAdapter = new MessagesAdapter(getContext(), mUsers);
+        recyclerView.setAdapter(messagesAdapter);
+
+        //
+        databaseReference = FirebaseDatabase.getInstance().getReference("Chatlist").child(mCurrent_user_id);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usersList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
+                    usersList.add(chatlist);
+                }
+                chatList();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return view;
+    }
+
+    private void chatList() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mUsers.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    DatosUsuario user = snapshot.getValue(DatosUsuario.class);
+                    for (Chatlist chatlist: usersList){
+                        if (user.getToken().equals(chatlist.getId())){
+                            mUsers.add(user);
+                        }
+                    }
+                }
+                if (mUsers.isEmpty()){
+                    noExistenMensajes.setVisibility(View.VISIBLE);
+                }else {
+                    noExistenMensajes.setVisibility(View.GONE);
+                }
+                messagesAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+}

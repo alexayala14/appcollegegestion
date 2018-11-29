@@ -6,6 +6,7 @@ public class Messages {
     private long time;
     private boolean seen;
     private String from;
+    private String receiver;
 
     public Messages(String from) {
         this.from = from;
@@ -19,11 +20,21 @@ public class Messages {
         this.from = from;
     }
 
-    public Messages(String message, String type, long time, boolean seen) {
+    public Messages(String from, String receiver, String message, String type, long time, boolean seen) {
+        this.from = from;
+        this.receiver = receiver;
         this.message = message;
         this.type = type;
         this.time = time;
         this.seen = seen;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public String getMessage() {

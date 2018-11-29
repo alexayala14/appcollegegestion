@@ -5,15 +5,26 @@ public class DatosUsuario {
     private String apellido;
     private String rut;
     private String perfil;
+    private String token;
 
-    public DatosUsuario(String nombre, String apellido, String rut, String perfil) {
+    public DatosUsuario(String nombre, String apellido, String rut, String perfil, String token) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.rut = rut;
         this.perfil = perfil;
+        this.token = token;
     }
 
     public DatosUsuario() {
+
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getNombre() {

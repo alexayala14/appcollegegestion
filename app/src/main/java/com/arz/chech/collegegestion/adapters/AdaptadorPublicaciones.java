@@ -46,7 +46,6 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     public void setOnClickListener(View.OnClickListener listener){
         this.listener=listener;
     }
-
     @Override
     public void onClick(View view) {
         if(listener!=null){

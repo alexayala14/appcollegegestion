@@ -1,4 +1,4 @@
-package com.arz.chech.collegegestion.activities;
+    package com.arz.chech.collegegestion.activities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.adapters.FriendsAdapter;
+import com.arz.chech.collegegestion.adapters.AllUsersAdapter;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,26 +23,25 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class FriendsActivity extends AppCompatActivity {
+public class AllUsersActivity extends AppCompatActivity {
 
     private Toolbar mChatToolbar;
-    private RecyclerView mFriendsList;
+    private RecyclerView mAllUsersList;
     private ArrayList<DatosUsuario> datosUsuarios;
-    private String mCurrent_user_id;
     private LinearLayoutManager mLinearLayout;
     private DatabaseReference mUsersDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friends);
+        setContentView(R.layout.activity_recycler_usuarios);
         mLinearLayout = new LinearLayoutManager(this);
-        mFriendsList = (RecyclerView) findViewById(R.id.act_friends_list);
-        mFriendsList.setHasFixedSize(true);
-        mFriendsList.setLayoutManager(mLinearLayout);
+        mAllUsersList = (RecyclerView) findViewById(R.id.act_allUsers_list);
+        mAllUsersList.setHasFixedSize(true);
+        mAllUsersList.setLayoutManager(mLinearLayout);
 
         // TOOLBAR
-        mChatToolbar = (Toolbar) findViewById(R.id.friends_app_bar);
+        mChatToolbar = (Toolbar) findViewById(R.id.allUsers_app_bar);
         setSupportActionBar(mChatToolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -54,21 +53,17 @@ public class FriendsActivity extends AppCompatActivity {
 
         //
         datosUsuarios = new ArrayList<>();
-        mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 datosUsuarios.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
-                    if (!mCurrent_user_id.equals(usuario.getToken())){
-                        datosUsuarios.add(usuario);
-                    }
+                    datosUsuarios.add(usuario);
                 }
-                FriendsAdapter friendsAdapter = new FriendsAdapter(FriendsActivity.this, datosUsuarios);
-                mFriendsList.setAdapter(friendsAdapter);
+                AllUsersAdapter friendsAdapter = new AllUsersAdapter(AllUsersActivity.this, datosUsuarios);
+                mAllUsersList.setAdapter(friendsAdapter);
             }
 
             @Override

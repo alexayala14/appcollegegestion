@@ -96,11 +96,7 @@ public class PublicacionesFragment extends Fragment implements Response.Listener
         recyclerViewPublicaciones = vista.findViewById(R.id.Recyclerid);
         recyclerViewPublicaciones.setLayoutManager(new LinearLayoutManager(getContext()));
         request = Volley.newRequestQueue(getContext());
-        progress = new ProgressDialog(getContext());
-        progress.setMessage("Consultando...");
-        progress.show();
         cargarWebService();
-        progress.hide();
         return vista;
     }
 

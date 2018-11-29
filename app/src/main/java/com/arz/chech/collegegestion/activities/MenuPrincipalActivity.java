@@ -20,16 +20,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.fragments.ChatsFragment;
+import com.arz.chech.collegegestion.fragments.MessageFragment;
 import com.arz.chech.collegegestion.fragments.DetalleFragment;
 import com.arz.chech.collegegestion.fragments.MisPublicacionesFragment;
 import com.arz.chech.collegegestion.fragments.NuevaPublicacionFragment;
 import com.arz.chech.collegegestion.fragments.PublicacionesFragment;
 
-public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,ChatsFragment.OnFragmentInteractionListener,NuevaPublicacionFragment.OnFragmentInteractionListener,DetalleFragment.OnFragmentInteractionListener {
+public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MessageFragment.OnFragmentInteractionListener,NuevaPublicacionFragment.OnFragmentInteractionListener,DetalleFragment.OnFragmentInteractionListener {
     PublicacionesFragment publicaciones;
     MisPublicacionesFragment misPublicaciones;
-    ChatsFragment mensajes;
+    MessageFragment mensajes;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -166,7 +166,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
                     misPublicaciones=new MisPublicacionesFragment();
                     return misPublicaciones;
                 case 2:
-                    mensajes = new ChatsFragment();
+                    mensajes = new MessageFragment();
                     return mensajes;
             }
             return null;
