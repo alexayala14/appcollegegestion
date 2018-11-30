@@ -10,30 +10,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.FriendsActivity;
-import com.arz.chech.collegegestion.activities.Messages;
 import com.arz.chech.collegegestion.activities.Preferences;
 import com.arz.chech.collegegestion.adapters.MessagesAdapter;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
-import com.arz.chech.collegegestion.model.Chatlist;
+import com.arz.chech.collegegestion.notifications.Token;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class MessageFragment extends Fragment{
@@ -43,7 +38,8 @@ public class MessageFragment extends Fragment{
     private List<DatosUsuario> mUsers;
     private String mCurrent_user_id;
     private DatabaseReference databaseReference;
-    private List<Chatlist> usersList;
+    private List<String> usersList;
+    private List<String> eliminados;
     private FloatingActionButton fab;
     private TextView noExistenMensajes;
 
@@ -78,14 +74,13 @@ public class MessageFragment extends Fragment{
         recyclerView.setAdapter(messagesAdapter);
 
         //
-        databaseReference = FirebaseDatabase.getInstance().getReference("Chatlist").child(mCurrent_user_id);
+        databaseReference = FirebaseDatabase.getInstance().getReference("Chat").child(mCurrent_user_id);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Chatlist chatlist = snapshot.getValue(Chatlist.class);
-                    usersList.add(chatlist);
+                    usersList.add(snapshot.getKey());
                 }
                 chatList();
             }
@@ -96,8 +91,17 @@ public class MessageFragment extends Fragment{
             }
         });
 
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
         return view;
     }
+
+    private void updateToken(String token){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(token);
+        reference.child(Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_TOKEN)).setValue(token1);
+    }
+
 
     private void chatList() {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -107,11 +111,22 @@ public class MessageFragment extends Fragment{
                 mUsers.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario user = snapshot.getValue(DatosUsuario.class);
-                    for (Chatlist chatlist: usersList){
-                        if (user.getToken().equals(chatlist.getId())){
-                            mUsers.add(user);
+                    if (snapshot.child("estaEliminado").exists()){
+                        for (String usuario: usersList){
+                            if (user.getToken().equals(usuario)){
+                                if (!user.isEstaEliminado()){
+                                    mUsers.add(user);
+                                }
+                            }
+                        }
+                    }else{
+                        for (String usuario: usersList){
+                            if (user.getToken().equals(usuario)){
+                                mUsers.add(user);
+                            }
                         }
                     }
+
                 }
                 if (mUsers.isEmpty()){
                     noExistenMensajes.setVisibility(View.VISIBLE);

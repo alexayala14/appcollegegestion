@@ -55,17 +55,26 @@ public class FriendsActivity extends AppCompatActivity {
         //
         datosUsuarios = new ArrayList<>();
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
-        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 datosUsuarios.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
-                    if (!mCurrent_user_id.equals(usuario.getToken())){
-                        datosUsuarios.add(usuario);
+                    if (snapshot.child("estaEliminado").exists()){
+                        if (!mCurrent_user_id.equals(usuario.getToken())){
+                            if (!usuario.isEstaEliminado()){
+                                datosUsuarios.add(usuario);
+                            }
+                        }
+                    }else{
+                        if (!mCurrent_user_id.equals(usuario.getToken())){
+                            datosUsuarios.add(usuario);
+                        }
                     }
+
                 }
                 FriendsAdapter friendsAdapter = new FriendsAdapter(FriendsActivity.this, datosUsuarios);
                 mFriendsList.setAdapter(friendsAdapter);

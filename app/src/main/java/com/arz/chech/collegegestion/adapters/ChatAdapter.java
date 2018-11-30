@@ -25,7 +25,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>{
 
     private String nombreReceiver, apellidoReceiver;
     private List<Messages> mChat;
-    private List<String> mUsers;
     private static String dateFormat = "hh:mm a";
     private static String añoFormat = "dd-MM-yy";
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);

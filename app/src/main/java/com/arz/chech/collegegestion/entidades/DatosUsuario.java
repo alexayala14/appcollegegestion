@@ -6,17 +6,27 @@ public class DatosUsuario {
     private String rut;
     private String perfil;
     private String token;
+    private boolean estaEliminado;
 
-    public DatosUsuario(String nombre, String apellido, String rut, String perfil, String token) {
+    public DatosUsuario(String nombre, String apellido, String rut, String perfil, boolean estaEliminado, String token) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.rut = rut;
         this.perfil = perfil;
+        this.estaEliminado = estaEliminado;
         this.token = token;
     }
 
     public DatosUsuario() {
 
+    }
+
+    public boolean isEstaEliminado() {
+        return estaEliminado;
+    }
+
+    public void setEstaEliminado(boolean estaEliminado) {
+        this.estaEliminado = estaEliminado;
     }
 
     public String getToken() {

@@ -73,7 +73,7 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHo
                         }
                         if(i == 1){
                             eliminarWebService(datosUsuario.getToken());
-                            mUsersDatabase.child(datosUsuario.getToken()).removeValue();
+                            mUsersDatabase.child(datosUsuario.getToken()).child("estaEliminado").setValue(true);
                         }
                     }
                 });

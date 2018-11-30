@@ -1,6 +1,5 @@
 package com.arz.chech.collegegestion.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -19,10 +17,18 @@ import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.ChatAdapter;
+import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.fragments.APIService;
+import com.arz.chech.collegegestion.notifications.Client;
+import com.arz.chech.collegegestion.notifications.Data;
+import com.arz.chech.collegegestion.notifications.MyResponse;
+import com.arz.chech.collegegestion.notifications.Sender;
+import com.arz.chech.collegegestion.notifications.Token;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -34,11 +40,14 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
     private Toolbar mChatToolbar;
-    private DatabaseReference mRootRef;
+    private DatabaseReference mRootRef, reference;
     private CircleImageView mProfileImage;
     private String mCurrentUserId;
     //private ImageButton mChatAddBtn;
@@ -52,6 +61,8 @@ public class ChatActivity extends AppCompatActivity {
     private String userid;
     private String userName;
     private String userApellido;
+    private APIService apiService;
+    private boolean notify = false;
 
     // Storage Firebase
     private StorageReference mImageStorage;
@@ -74,7 +85,8 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        mMessagesList = findViewById(R.id.recyclerViewChat);
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+        mMessagesList = (RecyclerView) findViewById(R.id.recyclerViewChat);
         mMessagesList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
@@ -129,6 +141,7 @@ public class ChatActivity extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                notify = true;
                 sendMessage();
             }
         });
@@ -156,12 +169,14 @@ public class ChatActivity extends AppCompatActivity {
                     messagesList.add(message);
                 }
                 mAdapter.notifyDataSetChanged();
+                mMessagesList.scrollToPosition(messagesList.size()-1);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
     }
+
 
     private void sendMessage() {
         String message = text_send.getText().toString();
@@ -186,9 +201,6 @@ public class ChatActivity extends AppCompatActivity {
 
             text_send.setText("");
 
-
-            mRootRef.child("Chatlist").child(mCurrentUserId).child(userid).child("id").setValue(userid);
-            mRootRef.child("Chatlist").child(mCurrentUserId).child(userid).child("timestamp").setValue(ServerValue.TIMESTAMP);
             mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
             mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("timestamp").setValue(ServerValue.TIMESTAMP);
             mRootRef.child("Chat").child(userid).child(mCurrentUserId).child("seen").setValue(false);
@@ -206,5 +218,58 @@ public class ChatActivity extends AppCompatActivity {
             Toast.makeText(ChatActivity.this, "No puede enviar un mensaje vacío", Toast.LENGTH_SHORT).show();
         }
 
+        final String msg = message.trim();
+
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(mCurrentUserId);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DatosUsuario user = dataSnapshot.getValue(DatosUsuario.class);
+                if (notify) {
+                    sendNotifiaction(userid, user.getNombre() + " " + user.getApellido(), msg);
+                }
+                notify = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mMessagesList.scrollToPosition(messagesList.size()-1);
+    }
+
+    private void sendNotifiaction(String receiver, final String username, final String message){
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "Nuevo Mensaje!", userid);
+
+                    Sender sender = new Sender(data, token.getToken());
+
+                    apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                        @Override
+                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                            if (response.code() == 200){
+                                if (response.body().success != 1){
+                                    Toast.makeText(ChatActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 }

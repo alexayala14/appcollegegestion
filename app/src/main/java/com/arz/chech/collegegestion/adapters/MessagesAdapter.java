@@ -115,8 +115,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
                 switch (theLastMessage){
                     case  "default":
-                        last_msg.setText("No Message");
-                        last_time.setText("00:00 AM");
+                        last_msg.setText("No hay mensajes");
+                        last_time.setText("");
                         break;
 
                     default:

@@ -85,7 +85,7 @@ public class Registrar extends AppCompatActivity {
                                 boolean success = jsonResponse.getBoolean("success");
                                 if (success) {
                                     String token = jsonResponse.getString("token");
-                                    DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, validarPerfilFirebase(perfil), token);
+                                    DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, validarPerfilFirebase(perfil), false, token);
                                     databaseReference.child(token).setValue(datosUsuario);
                                     Toast.makeText(Registrar.this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
                                     vaciarCampos();
