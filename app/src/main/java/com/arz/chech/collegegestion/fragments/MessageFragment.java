@@ -39,9 +39,11 @@ public class MessageFragment extends Fragment{
     private String mCurrent_user_id;
     private DatabaseReference databaseReference;
     private List<String> usersList;
-    private List<String> eliminados;
     private FloatingActionButton fab;
     private TextView noExistenMensajes;
+
+    public MessageFragment() {
+    }
 
     @Nullable
     @Override

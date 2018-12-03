@@ -102,17 +102,32 @@ public class ChatActivity extends AppCompatActivity {
         displayName = (TextView) findViewById(R.id.display_name);
         Intent intent = getIntent();
         userid = intent.getStringExtra("user_id");
-        userName = intent.getStringExtra("user_name");
-        userApellido = intent.getStringExtra("user_apellido");
+
         //
 
         //------- IMAGE STORAGE ---------
         mImageStorage = FirebaseStorage.getInstance().getReference();
         mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
+
+
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DatosUsuario datosUsuario = dataSnapshot.getValue(DatosUsuario.class);
+                userName = datosUsuario.getNombre();
+                userApellido = datosUsuario.getApellido();
+                displayName.setText(userName + " " + userApellido);
+                mAdapter.enviarDatos(userName, userApellido);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
         readMessages();
-        displayName.setText(userName + " " + userApellido);
-        mAdapter.enviarDatos(userName, userApellido);
         mRootRef.child("Chat").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -226,7 +241,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DatosUsuario user = dataSnapshot.getValue(DatosUsuario.class);
                 if (notify) {
-                    sendNotifiaction(userid, user.getNombre() + " " + user.getApellido(), msg);
+                    sendNotification(userid, user.getNombre() + " " + user.getApellido(), msg);
                 }
                 notify = false;
             }
@@ -240,7 +255,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }
 
-    private void sendNotifiaction(String receiver, final String username, final String message){
+    private void sendNotification(String receiver, final String username, final String message){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -257,7 +272,7 @@ public class ChatActivity extends AppCompatActivity {
                         public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
                             if (response.code() == 200){
                                 if (response.body().success != 1){
-                                    Toast.makeText(ChatActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
