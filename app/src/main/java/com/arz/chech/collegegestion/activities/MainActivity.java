@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private String user;
     private String pass;
     private boolean sesion;
+    private String nom;
+    private String ape;
     private int log;
     private String token;
 
@@ -91,21 +93,29 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     int id_perfil = jsonResponse.getInt("id_perfil");
                                     token = jsonResponse.getString("token");
+                                    nom=jsonResponse.getString("nombre");
+                                    ape=jsonResponse.getString("apellido");
                                     log = id_perfil;
                                     sesion = true;
                                     Preferences.savePreferenceBoolean(MainActivity.this, sesion, Preferences.PREFERENCE_ESTADO_SESION);
                                     Preferences.savePreferenceString(MainActivity.this, token, Preferences.PREFERENCE_TOKEN);
                                     Preferences.savePreferenceInt(MainActivity.this, log, Preferences.PREFERENCE_ESTADO_ID_PERFIL);
                                     Preferences.savePreferenceString(MainActivity.this, user, Preferences.PREFERENCE_USUARIO);
+                                    Preferences.savePreferenceString(MainActivity.this, nom, Preferences.PREFERENCE_NOMBRE);
+                                    Preferences.savePreferenceString(MainActivity.this, ape, Preferences.PREFERENCE_APELLIDO);
                                     if(id_perfil == 1){
                                         UserDetails.username = user;
                                         UserDetails.token = token;
+                                        UserDetails.nombre=nom;
+                                        UserDetails.apellido=ape;
                                         Intent intent = new Intent(MainActivity.this, Administrador.class);
                                         startActivity(intent);
                                         finish();
                                     }else{
                                         UserDetails.username = user;
                                         UserDetails.token = token;
+                                        UserDetails.nombre=nom;
+                                        UserDetails.apellido=ape;
                                         Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
                                         startActivity(intent);
                                         finish();

@@ -95,6 +95,11 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Preferences.savePreferenceBoolean(MenuPrincipalActivity.this, false, Preferences.PREFERENCE_ESTADO_SESION);
+            Preferences.savePreferenceString(MenuPrincipalActivity.this,null,Preferences.PREFERENCE_TOKEN);
+            Preferences.savePreferenceInt(MenuPrincipalActivity.this,-1,Preferences.PREFERENCE_ESTADO_ID_PERFIL);
+            Preferences.savePreferenceString(MenuPrincipalActivity.this,null,Preferences.PREFERENCE_USUARIO);
+            Preferences.savePreferenceString(MenuPrincipalActivity.this, null, Preferences.PREFERENCE_NOMBRE);
+            Preferences.savePreferenceString(MenuPrincipalActivity.this, null, Preferences.PREFERENCE_APELLIDO);
             Intent intent = new Intent(MenuPrincipalActivity.this, MainActivity.class);
             startActivity(intent);
             finish();

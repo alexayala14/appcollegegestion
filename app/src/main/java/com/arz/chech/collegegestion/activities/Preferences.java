@@ -10,6 +10,8 @@ public class Preferences {
     public static final String PREFERENCE_ESTADO_ID_PERFIL = "collegegestion.sesion.id_perfil";
     public static final String PREFERENCE_USUARIO = "collegegestion.sesion.usuario";
     public static final String PREFERENCE_TOKEN = "collegegestion.sesion.token";
+    public static final String PREFERENCE_NOMBRE = "collegegestion.sesion.nombre";
+    public static final String PREFERENCE_APELLIDO = "collegegestion.sesion.apellido";
     public static final String PREFERENCE_MENSAJES = "collegegestion.sesion.mensajes";
 
     public static void savePreferenceInt(Context c, int b, String key){

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
@@ -27,8 +28,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.activities.ChatActivity;
+import com.arz.chech.collegegestion.activities.Preferences;
 import com.arz.chech.collegegestion.activities.UserDetails;
 import com.arz.chech.collegegestion.activities.PublicacionRequest;
+import com.arz.chech.collegegestion.adapters.UsuarioList;
+import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,6 +69,12 @@ public class NuevaPublicacionFragment extends Fragment {
     EditText textAsunto;
     RadioGroup radioGroup;
     int selected;
+
+    private DatabaseReference mRootRef, reference;
+    private String userid;
+    private String userName;
+    private String userApellido;
+    private String mCurrentUserId;
 
     ////notificaciones
     private PendingIntent pendingIntent;
@@ -95,6 +111,26 @@ public class NuevaPublicacionFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+       /* mRootRef = FirebaseDatabase.getInstance().getReference();
+        mCurrentUserId = Preferences.obtenerPreferenceString(getActivity(), Preferences.PREFERENCE_TOKEN);
+        Intent intent = getActivity().getIntent();
+        userid = intent.getStringExtra("user_id");
+        mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DatosUsuario datosUsuario = dataSnapshot.getValue(DatosUsuario.class);
+                userName = datosUsuario.getNombre();
+                userApellido = datosUsuario.getApellido();
+               // mAdapter.enviarDatos(userName, userApellido);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
 
     }
 
@@ -166,6 +202,8 @@ public class NuevaPublicacionFragment extends Fragment {
                     RequestQueue queue = Volley.newRequestQueue(view.getContext());
                     queue.add(publicacionRequest);
                 }
+
+
                 /////notificacion
                 //setPendingIntent();
                 createNotificationChannel();
@@ -195,8 +233,8 @@ public class NuevaPublicacionFragment extends Fragment {
     private void createNotification(){
         NotificationCompat.Builder builder= new NotificationCompat.Builder(getContext(),CHANNEL_ID);
         builder.setSmallIcon(R.drawable.common_google_signin_btn_icon_dark);
-        builder.setContentTitle("Notificacion android");
-        builder.setContentText("Cosasa quie van");
+        builder.setContentTitle("Publicacion AppCollege");
+        builder.setContentText(Preferences.obtenerPreferenceString(getContext(),Preferences.PREFERENCE_NOMBRE)+" "+ Preferences.obtenerPreferenceString(getContext(),Preferences.PREFERENCE_APELLIDO)+":"+textAsunto.getText().toString());
         builder.setColor(Color.CYAN);
         builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
         builder.setVibrate(new long[]{1000,1000,1000,1000});
