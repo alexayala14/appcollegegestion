@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
@@ -27,13 +28,27 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.notifications.Client;
+import com.arz.chech.collegegestion.notifications.Data;
+import com.arz.chech.collegegestion.notifications.MyResponse;
+import com.arz.chech.collegegestion.notifications.Sender;
+import com.arz.chech.collegegestion.notifications.Token;
 import com.arz.chech.collegegestion.preferences.Preferences;
 import com.arz.chech.collegegestion.entidades.UserDetails;
 import com.arz.chech.collegegestion.request.PublicacionRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +76,8 @@ public class NuevaPublicacionFragment extends Fragment {
     EditText textAsunto;
     RadioGroup radioGroup;
     int selected;
+    private APIService apiService;
+
 
     private DatabaseReference mRootRef, reference;
     private String userid;
@@ -103,32 +120,12 @@ public class NuevaPublicacionFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-       /* mRootRef = FirebaseDatabase.getInstance().getReference();
-        mCurrentUserId = Preferences.obtenerPreferenceString(getActivity(), Preferences.PREFERENCE_TOKEN);
-        Intent intent = getActivity().getIntent();
-        userid = intent.getStringExtra("user_id");
-        mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DatosUsuario datosUsuario = dataSnapshot.getValue(DatosUsuario.class);
-                userName = datosUsuario.getNombre();
-                userApellido = datosUsuario.getApellido();
-               // mAdapter.enviarDatos(userName, userApellido);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
         vista=inflater.inflate(R.layout.fragment_nueva_publicacion, container, false);
         Button btnCancelar=(Button)vista.findViewById(R.id.btnCancelar);
         btnCancelar.setOnClickListener(new View.OnClickListener() {
@@ -139,10 +136,14 @@ public class NuevaPublicacionFragment extends Fragment {
                 mispublicaciones.commit();
             }
         });
+        userName = Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_NOMBRE);
+        userApellido = Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_APELLIDO);
+        mCurrentUserId = Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_TOKEN);
         textAsunto=(EditText) vista.findViewById(R.id.editTextAsunto);
         textPublicacion =(EditText) vista.findViewById(R.id.editTextPublicacion);
         radioGroup=(RadioGroup) vista.findViewById(R.id.radioGroup);
         Button btnPublicar =(Button) vista.findViewById(R.id.btnPublicar);
+        mRootRef = FirebaseDatabase.getInstance().getReference().child("Users");
         btnPublicar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -180,7 +181,23 @@ public class NuevaPublicacionFragment extends Fragment {
                                 JSONObject jsonResponse = new JSONObject(response);
                                 boolean success = jsonResponse.getBoolean("success");
                                 if (success){
-                                    Toast.makeText(view.getContext(), "Publicación agregada..", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(view.getContext(), "Publicación agregada..", Toast.LENGTH_SHORT).show();
+                                    mRootRef.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                                                DatosUsuario datosUsuario = snapshot.getValue(DatosUsuario.class);
+                                                if (!datosUsuario.getToken().equals(mCurrentUserId)){
+                                                    sendNotification(datosUsuario.getToken(), asunto);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
                                     FragmentTransaction mispublicaciones = getFragmentManager().beginTransaction();
                                     mispublicaciones.replace(R.id.contenedor, new MisPublicacionesFragment());
                                     mispublicaciones.commit();
@@ -194,46 +211,40 @@ public class NuevaPublicacionFragment extends Fragment {
                     RequestQueue queue = Volley.newRequestQueue(view.getContext());
                     queue.add(publicacionRequest);
                 }
-
-
-                /////notificacion
-                //setPendingIntent();
-                createNotificationChannel();
-                createNotification();
                 }
             });
         return vista;
         }
 
-    private void setPendingIntent(){
-        Intent intent = new Intent(getActivity(),PublicacionesFragment.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-        stackBuilder.addParentStack(PublicacionesFragment.class);
-        stackBuilder.addNextIntent(intent);
-        pendingIntent=stackBuilder.getPendingIntent(1,PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-    private void createNotificationChannel(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name ="Notificacion";
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,name,NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager notificationManager =(NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-
-        }
-    }
-
-    private void createNotification(){
-        NotificationCompat.Builder builder= new NotificationCompat.Builder(getContext(),CHANNEL_ID);
-        builder.setSmallIcon(R.drawable.common_google_signin_btn_icon_dark);
-        builder.setContentTitle("Publicacion AppCollege");
-        builder.setContentText(Preferences.obtenerPreferenceString(getContext(),Preferences.PREFERENCE_NOMBRE)+" "+ Preferences.obtenerPreferenceString(getContext(),Preferences.PREFERENCE_APELLIDO)+":"+textAsunto.getText().toString());
-        builder.setColor(Color.CYAN);
-        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        builder.setVibrate(new long[]{1000,1000,1000,1000});
-        builder.setDefaults(Notification.DEFAULT_SOUND);
-
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(getContext());
-        notificationManagerCompat.notify(NOTIFICACION_ID,builder.build());
+    private void sendNotification(final String receiver, final String asunto){
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, "Asunto: " + asunto, "Nueva Publicacion!", receiver);
+                    Sender sender = new Sender(data, token.getToken());
+                    apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                        @Override
+                        public void onResponse(Call<MyResponse> call, retrofit2.Response<MyResponse> response) {
+                            if (response.code() == 200){
+                                if (response.body().success != 1){
+                                    Toast.makeText(getContext(), "Failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -259,14 +270,7 @@ public class NuevaPublicacionFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    public void obtenerinfo(){
-        Bundle b=getArguments();
-         String descripcion=b.getString("descripcion", "DEFAULT_VALUE");
-         String detalle=b.getString("detalle", "DEFAULT_VALUE");
-        textAsunto.setText(descripcion);
-        textPublicacion.setText(detalle);
 
-    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
