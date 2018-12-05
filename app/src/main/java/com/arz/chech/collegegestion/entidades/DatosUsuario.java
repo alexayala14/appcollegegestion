@@ -18,7 +18,6 @@ public class DatosUsuario {
     }
 
     public DatosUsuario() {
-
     }
 
     public boolean isEstaEliminado() {

@@ -37,6 +37,9 @@
         <activity
             android:name=".activities.AllUsersActivity"
             android:label="@string/title_activity_consultar_usuarios"/>
+        <activity
+            android:name=".activities.ModifyUsersActivity"
+            android:label="@string/title_activity_modificar_usuarios"/>
 
         <activity android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.MenuPrincipalActivity"/>

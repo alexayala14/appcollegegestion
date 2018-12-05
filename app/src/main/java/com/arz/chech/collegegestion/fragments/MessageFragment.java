@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.FriendsActivity;
-import com.arz.chech.collegegestion.activities.Preferences;
+import com.arz.chech.collegegestion.preferences.Preferences;
 import com.arz.chech.collegegestion.adapters.MessagesAdapter;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.notifications.Token;

@@ -60,7 +60,9 @@ public class AllUsersActivity extends AppCompatActivity {
                 datosUsuarios.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
-                    datosUsuarios.add(usuario);
+                    if (!usuario.isEstaEliminado()){
+                        datosUsuarios.add(usuario);
+                    }
                 }
                 AllUsersAdapter friendsAdapter = new AllUsersAdapter(AllUsersActivity.this, datosUsuarios);
                 mAllUsersList.setAdapter(friendsAdapter);

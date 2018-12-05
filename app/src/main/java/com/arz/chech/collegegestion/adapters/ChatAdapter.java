@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.activities.Messages;
-import com.arz.chech.collegegestion.activities.Preferences;
+import com.arz.chech.collegegestion.entidades.Messages;
+import com.arz.chech.collegegestion.preferences.Preferences;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

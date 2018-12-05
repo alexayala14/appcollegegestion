@@ -1,4 +1,4 @@
-package com.arz.chech.collegegestion.activities;
+package com.arz.chech.collegegestion.request;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
@@ -6,10 +6,10 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterRequest extends StringRequest {
-    private static final String REGISTER_REQUEST_URL="http://miltonzambra.com/Register.php";
+public class ModifyRequest extends StringRequest {
+    private static final String REGISTER_REQUEST_URL="http://miltonzambra.com/ModificarUsuario.php";
     private Map<String, String> params;
-    public RegisterRequest(String nombre, String apellido, String rut, String password, String token, String id_perfil, Response.Listener<String> listener){
+    public ModifyRequest(String nombre, String apellido, String rut, String password, String token, String id_perfil, Response.Listener<String> listener){
         super(Method.POST, REGISTER_REQUEST_URL, listener, null);
         params = new HashMap<>();
         params.put("nombre", nombre);

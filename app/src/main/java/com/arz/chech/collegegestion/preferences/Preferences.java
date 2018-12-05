@@ -1,4 +1,4 @@
-package com.arz.chech.collegegestion.activities;
+package com.arz.chech.collegegestion.preferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -12,7 +12,6 @@ public class Preferences {
     public static final String PREFERENCE_TOKEN = "collegegestion.sesion.token";
     public static final String PREFERENCE_NOMBRE = "collegegestion.sesion.nombre";
     public static final String PREFERENCE_APELLIDO = "collegegestion.sesion.apellido";
-    public static final String PREFERENCE_MENSAJES = "collegegestion.sesion.mensajes";
 
     public static void savePreferenceInt(Context c, int b, String key){
         SharedPreferences preferences = c.getSharedPreferences(STRING_PREFERENCES, c.MODE_PRIVATE);

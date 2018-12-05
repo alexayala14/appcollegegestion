@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
-import com.arz.chech.collegegestion.activities.UserDetails;
+import com.arz.chech.collegegestion.entidades.UserDetails;
 import com.arz.chech.collegegestion.adapters.AdaptadorPublicaciones;
 import com.arz.chech.collegegestion.entidades.Publicacion;
 

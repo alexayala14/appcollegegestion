@@ -1,4 +1,4 @@
-package com.arz.chech.collegegestion.activities;
+package com.arz.chech.collegegestion.entidades;
 
 public class Conv {
 

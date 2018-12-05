@@ -11,10 +11,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import com.arz.chech.collegegestion.activities.ChatActivity;
-import com.arz.chech.collegegestion.activities.Preferences;
+import com.arz.chech.collegegestion.preferences.Preferences;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

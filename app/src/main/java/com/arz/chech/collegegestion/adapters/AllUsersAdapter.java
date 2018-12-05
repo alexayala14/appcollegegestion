@@ -1,5 +1,6 @@
 package com.arz.chech.collegegestion.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.MenuPrincipalActivity;
+import com.arz.chech.collegegestion.activities.ModifyUsersActivity;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -67,9 +69,14 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHo
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //Click Event for each item.
                         if(i == 0){
-                            Intent profileIntent = new Intent(mContext, MenuPrincipalActivity.class);
+                            Intent profileIntent = new Intent(mContext, ModifyUsersActivity.class);
+                            profileIntent.putExtra("nombre", datosUsuario.getNombre());
+                            profileIntent.putExtra("apellido", datosUsuario.getApellido());
+                            profileIntent.putExtra("rut", datosUsuario.getRut());
+                            profileIntent.putExtra("perfil", datosUsuario.getPerfil());
+                            profileIntent.putExtra("token", datosUsuario.getToken());
                             mContext.startActivity(profileIntent);
-                            mUsersDatabase.child(datosUsuario.getToken()).removeValue();
+                            ((Activity)mContext).finish();
                         }
                         if(i == 1){
                             eliminarWebService(datosUsuario.getToken());

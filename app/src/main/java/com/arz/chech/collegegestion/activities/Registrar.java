@@ -1,7 +1,6 @@
 package com.arz.chech.collegegestion.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -11,14 +10,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.toolbox.StringRequest;
 import com.arz.chech.collegegestion.R;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.arz.chech.collegegestion.entidades.Administrador;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.request.RegisterRequest;
 import com.firebase.client.Firebase;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -85,7 +82,7 @@ public class Registrar extends AppCompatActivity {
                                 boolean success = jsonResponse.getBoolean("success");
                                 if (success) {
                                     String token = jsonResponse.getString("token");
-                                    DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, validarPerfilFirebase(perfil), false, token);
+                                    DatosUsuario datosUsuario = new DatosUsuario(nombre, apellido, rut, perfil, false, token);
                                     databaseReference.child(token).setValue(datosUsuario);
                                     Toast.makeText(Registrar.this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
                                     vaciarCampos();
@@ -109,27 +106,6 @@ public class Registrar extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private String validarPerfilFirebase(String perfil){
-        switch (perfil) {
-            case "1":
-                perfil = "Administrador";
-                break;
-            case "2":
-                perfil = "Directivos";
-                break;
-            case "3":
-                perfil = "Docentes";
-                break;
-            case "4":
-                perfil = "Asistentes";
-                break;
-            case "5":
-                perfil = "Padres";
-                break;
-        }
-        return perfil;
     }
 
     private void vaciarCampos(){

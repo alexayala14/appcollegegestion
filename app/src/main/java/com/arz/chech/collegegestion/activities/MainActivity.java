@@ -1,9 +1,7 @@
 package com.arz.chech.collegegestion.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +15,10 @@ import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.entidades.Administrador;
 import com.arz.chech.collegegestion.entidades.Alumno;
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.entidades.UserDetails;
+import com.arz.chech.collegegestion.preferences.Preferences;
+import com.arz.chech.collegegestion.request.LoginRequest;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -93,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     int id_perfil = jsonResponse.getInt("id_perfil");
                                     token = jsonResponse.getString("token");
-                                    nom=jsonResponse.getString("nombre");
-                                    ape=jsonResponse.getString("apellido");
+                                    nom = jsonResponse.getString("nombre");
+                                    ape = jsonResponse.getString("apellido");
                                     log = id_perfil;
                                     sesion = true;
                                     Preferences.savePreferenceBoolean(MainActivity.this, sesion, Preferences.PREFERENCE_ESTADO_SESION);

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.ChatActivity;
-import com.arz.chech.collegegestion.activities.Preferences;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 
 import java.util.ArrayList;

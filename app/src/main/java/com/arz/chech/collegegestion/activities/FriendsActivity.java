@@ -15,6 +15,7 @@ import android.view.View;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.FriendsAdapter;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.preferences.Preferences;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

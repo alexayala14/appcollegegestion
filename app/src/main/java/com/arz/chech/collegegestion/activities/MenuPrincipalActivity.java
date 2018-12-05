@@ -25,6 +25,7 @@ import com.arz.chech.collegegestion.fragments.DetalleFragment;
 import com.arz.chech.collegegestion.fragments.MisPublicacionesFragment;
 import com.arz.chech.collegegestion.fragments.NuevaPublicacionFragment;
 import com.arz.chech.collegegestion.fragments.PublicacionesFragment;
+import com.arz.chech.collegegestion.preferences.Preferences;
 
 public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MessageFragment.OnFragmentInteractionListener,NuevaPublicacionFragment.OnFragmentInteractionListener,DetalleFragment.OnFragmentInteractionListener {
     PublicacionesFragment publicaciones;

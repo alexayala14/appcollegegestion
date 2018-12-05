@@ -1,4 +1,4 @@
-package com.arz.chech.collegegestion.activities;
+package com.arz.chech.collegegestion.request;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
