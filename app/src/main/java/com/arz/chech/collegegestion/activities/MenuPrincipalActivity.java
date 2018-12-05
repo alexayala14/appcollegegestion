@@ -1,5 +1,7 @@
 package com.arz.chech.collegegestion.activities;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -101,6 +103,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
             Preferences.savePreferenceString(MenuPrincipalActivity.this,null,Preferences.PREFERENCE_USUARIO);
             Preferences.savePreferenceString(MenuPrincipalActivity.this, null, Preferences.PREFERENCE_NOMBRE);
             Preferences.savePreferenceString(MenuPrincipalActivity.this, null, Preferences.PREFERENCE_APELLIDO);
+            NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            noti.cancelAll();
             Intent intent = new Intent(MenuPrincipalActivity.this, MainActivity.class);
             startActivity(intent);
             finish();

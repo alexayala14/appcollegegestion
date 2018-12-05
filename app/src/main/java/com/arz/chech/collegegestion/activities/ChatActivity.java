@@ -66,6 +66,7 @@ public class ChatActivity extends AppCompatActivity {
     private APIService apiService;
     private boolean notify = false;
 
+
     // Storage Firebase
     private StorageReference mImageStorage;
 
@@ -243,6 +244,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DatosUsuario user = dataSnapshot.getValue(DatosUsuario.class);
                 if (notify) {
+
                     sendNotification(userid, user.getNombre() + " " + user.getApellido(), msg);
                 }
                 notify = false;

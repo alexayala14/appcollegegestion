@@ -1,6 +1,8 @@
 package com.arz.chech.collegegestion.entidades;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -55,6 +57,8 @@ public class Administrador extends AppCompatActivity implements Response.ErrorLi
                 Preferences.savePreferenceString(Administrador.this,null,Preferences.PREFERENCE_USUARIO);
                 Preferences.savePreferenceString(Administrador.this, null, Preferences.PREFERENCE_NOMBRE);
                 Preferences.savePreferenceString(Administrador.this, null, Preferences.PREFERENCE_APELLIDO);
+                NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                noti.cancelAll();
                 Intent intent = new Intent(Administrador.this, MainActivity.class);
                 startActivity(intent);
                 finish();

@@ -75,6 +75,7 @@ public class NuevaPublicacionFragment extends Fragment {
     EditText textPublicacion;
     EditText textAsunto;
     RadioGroup radioGroup;
+
     int selected;
     private APIService apiService;
 
@@ -189,6 +190,7 @@ public class NuevaPublicacionFragment extends Fragment {
                                                 DatosUsuario datosUsuario = snapshot.getValue(DatosUsuario.class);
                                                 if (!datosUsuario.getToken().equals(mCurrentUserId)){
                                                     sendNotification(datosUsuario.getToken(), asunto);
+
                                                 }
                                             }
                                         }
