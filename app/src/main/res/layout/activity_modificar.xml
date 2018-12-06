@@ -85,6 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Actualizar"
+                    android:background="@drawable/material_button"
                     android:layout_alignParentStart="true"/>
 
                 <Button
@@ -92,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:background="@android:drawable/ic_menu_revert"
+                    android:background="@drawable/material_button"
                     android:text="Atrás"/>
             </RelativeLayout>
         </LinearLayout>

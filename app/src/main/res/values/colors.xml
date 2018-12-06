@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#AD1457</color>
+    <color name="colorPrimaryDark">#880E4F</color>
+    <color name="colorAccent">#009688</color>
 
     <!--reds-->
     <color name="md_red_50">#FFEBEE</color>
@@ -181,7 +181,7 @@
     <color name="md_light_green_A700">#64DD17</color>
 
     <!-- lime-->
-    <color name="md_lime_50">#F9FBE7</color>
+    <color name="md_lime_50">#f9fbe7</color>
     <color name="md_lime_100">#F0F4C3</color>
     <color name="md_lime_200">#E6EE9C</color>
     <color name="md_lime_300">#DCE775</color>

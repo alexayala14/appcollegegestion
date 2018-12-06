@@ -45,8 +45,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:background="@drawable/material_button"
         android:layout_above="@id/btn_iniciar_alumno"
-        android:text="Iniciar Sesión" />
+        android:hint="Iniciar Sesión" />
 
     <Button
         android:id="@+id/btn_iniciar_alumno"
@@ -54,5 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:text="Iniciar Sesión como alumno" />
+        android:background="@drawable/material_button"
+        android:hint="Iniciar Sesión como alumno" />
 </RelativeLayout>

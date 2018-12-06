@@ -80,19 +80,23 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <Button
                     android:id="@+id/btn_registrarUsuario"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dar alta al usuario"
-                    android:layout_alignParentStart="true"/>
+                    android:layout_width="112dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:background="@drawable/material_button"
+                    android:text="AGREGAR"
+                    android:textSize="14dp" />
 
                 <Button
                     android:id="@+id/btn_atras_registro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:background="@android:drawable/ic_menu_revert"
+                    android:background="@drawable/material_button"
+
                     android:text="Atrás"/>
             </RelativeLayout>
         </LinearLayout>

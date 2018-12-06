@@ -87,27 +87,25 @@ public class DetalleFragment extends DialogFragment {
         });
 
 
-        builder.setNeutralButton("Eliminar", new DialogInterface.OnClickListener() {
+       /* builder.setNeutralButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dismiss();
             }
-        });
-        builder.setNegativeButton("Modificar", new DialogInterface.OnClickListener() {
+        });*/
+       /* builder.setNegativeButton("Modificar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dismiss();
 
-                /*FragmentTransaction nuevaPublicacionFragment = getFragmentManager().beginTransaction();
-                nuevaPublicacionFragment.replace(R.id.contenedor,new NuevaPublicacionFragment());
-                nuevaPublicacionFragment.commit();*/
+
 
 
 
 
 
             }
-        });
+        });*/
 
         return builder.create();
     }

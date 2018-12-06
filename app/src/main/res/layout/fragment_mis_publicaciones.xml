@@ -19,6 +19,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></LinearLayout>
+
     <Button
         android:id="@+id/idnuevaPublicacion"
         android:layout_width="wrap_content"
@@ -27,9 +28,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/material_button"
         android:text="Nueva Publicacion"
         android:textAppearance="@android:style/TextAppearance.Widget.DropDownItem"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
