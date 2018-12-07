@@ -61,7 +61,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
 
         // PARA NOTIFICACION
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-        Toast.makeText(NuevaPublicacionActivity.this, UserDetails.token, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(NuevaPublicacionActivity.this, UserDetails.token, Toast.LENGTH_SHORT).show();
         userName = Preferences.obtenerPreferenceString(NuevaPublicacionActivity.this, Preferences.PREFERENCE_NOMBRE);
         userApellido = Preferences.obtenerPreferenceString(NuevaPublicacionActivity.this, Preferences.PREFERENCE_APELLIDO);
         mCurrentUserId = Preferences.obtenerPreferenceString(NuevaPublicacionActivity.this, Preferences.PREFERENCE_TOKEN);
