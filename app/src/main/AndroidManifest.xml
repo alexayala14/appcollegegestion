@@ -29,9 +29,6 @@
             android:name=".entidades.Administrador"
             android:label="@string/title_activity_inicio"/>
         <activity
-            android:name=".entidades.Alumno"
-            android:label="@string/title_activity_alumno"/>
-        <activity
             android:name=".activities.Registrar"
             android:label="@string/title_activity_registrar"/>
         <activity
@@ -41,11 +38,17 @@
             android:name=".activities.ModifyUsersActivity"
             android:label="@string/title_activity_modificar_usuarios"/>
 
+        <activity
+            android:name=".activities.ModifyPublicacionActivity"
+            android:label="@string/title_activity_modificar_publicaciones"/>
+
         <activity android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.MenuPrincipalActivity"/>
 
         <activity android:name=".activities.FriendsActivity"
             android:parentActivityName=".activities.MenuPrincipalActivity"/>
+
+        <activity android:name=".activities.NuevaPublicacionActivity"/>
 
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
 

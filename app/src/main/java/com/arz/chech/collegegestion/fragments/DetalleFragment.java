@@ -73,9 +73,9 @@ public class DetalleFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Publicacion");
         Bundle b=getArguments();
-        final String descripcion=b.getString("descripcion", "DEFAULT_VALUE");
-        final String detalle=b.getString("detalle", "DEFAULT_VALUE");
-        builder.setMessage("Asunto:"+descripcion +"\n" + detalle);
+        final String descripcion = b.getString("descripcion", "DEFAULT_VALUE");
+        final String detalle = b.getString("detalle", "DEFAULT_VALUE");
+        builder.setMessage("Asunto: "+descripcion +"\n" + detalle);
 
 
 

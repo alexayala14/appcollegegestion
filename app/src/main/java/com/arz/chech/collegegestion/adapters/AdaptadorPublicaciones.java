@@ -1,41 +1,114 @@
 package com.arz.chech.collegegestion.adapters;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.arz.chech.collegegestion.activities.ModifyPublicacionActivity;
+import com.arz.chech.collegegestion.activities.ModifyUsersActivity;
+import com.arz.chech.collegegestion.activities.NuevaPublicacionActivity;
 import com.arz.chech.collegegestion.entidades.Publicacion;
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.fragments.DetalleFragment;
+import com.arz.chech.collegegestion.preferences.Preferences;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublicaciones.ViewHolderPublicaciones> implements View.OnClickListener{
+public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublicaciones.ViewHolder>{
 
     ArrayList<Publicacion> listaPublicaciones;
+    private Context mContext;
+    FragmentManager fm;
+    private DatabaseReference mPublicacionDatabase;
+    private String mCurrentUserId;
 
-    private View.OnClickListener listener;
-    public AdaptadorPublicaciones(ArrayList<Publicacion>listaPublicaciones){
+    public AdaptadorPublicaciones(Context context, ArrayList<Publicacion>listaPublicaciones, FragmentManager fm){
+        this.mContext = context;
         this.listaPublicaciones=listaPublicaciones;
+        this.fm = fm;
     }
 
     @Override
-    public ViewHolderPublicaciones onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_publicaciones, viewGroup,false);
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_list_publicaciones, viewGroup,false);
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(layoutParams);
-        view.setOnClickListener(this);
-        return new ViewHolderPublicaciones(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolderPublicaciones holder, int position) {
-        holder.txt_nombre.setText(listaPublicaciones.get(position).getNombre());
-        holder.txt_descripcion.setText(listaPublicaciones.get(position).getAsunto());
-        holder.foto.setImageResource(listaPublicaciones.get(position).getFoto());
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final Publicacion publicacion = listaPublicaciones.get(position);
+        holder.txt_nombre.setText(publicacion.getNombre());
+        holder.txt_descripcion.setText(publicacion.getAsunto());
+        holder.foto.setImageResource(R.drawable.hombre);
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DetalleFragment dialogFragment = new DetalleFragment ();
+                Bundle b = new Bundle();
+                b.putString("descripcion", listaPublicaciones.get(position).getAsunto()+"\n");
+                b.putString ("detalle", listaPublicaciones.get(position).getDescripcion());
+                dialogFragment.setArguments(b);
+                dialogFragment.show(fm, "Sample Fragment");
+            }
+        });
+
+        mCurrentUserId = Preferences.obtenerPreferenceString(mContext, Preferences.PREFERENCE_TOKEN);
+        final int id_perfil = Preferences.obtenerPreferenceInt(mContext, Preferences.PREFERENCE_ESTADO_ID_PERFIL);
+        mPublicacionDatabase = FirebaseDatabase.getInstance().getReference().child("Publicaciones");
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (id_perfil == 1){
+                    mostrarOpciones(publicacion);
+                }else {
+                    if (publicacion.getTokenUser().equals(mCurrentUserId)){
+                        mostrarOpciones(publicacion);
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
+    private void mostrarOpciones(final Publicacion publicacion){
+        CharSequence options[] = new CharSequence[]{"Modificar", "Eliminar"};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Elija una opción");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Click Event for each item.
+                if(i == 0){
+                    Intent profileIntent = new Intent(mContext, ModifyPublicacionActivity.class);
+                    profileIntent.putExtra("tokenPubli", publicacion.getTokenPubli());
+                    profileIntent.putExtra("asunto", publicacion.getAsunto());
+                    profileIntent.putExtra("descripcion", publicacion.getDescripcion());
+                    profileIntent.putExtra("prioridad", publicacion.getPrioridad());
+                    mContext.startActivity(profileIntent);
+                }
+                if(i == 1){
+                    mPublicacionDatabase.child(publicacion.getTokenPubli()).child("estaEliminado").setValue(true);
+                }
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -43,21 +116,15 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
         return listaPublicaciones.size();
     }
 
-    public void setOnClickListener(View.OnClickListener listener){
-        this.listener=listener;
-    }
-    @Override
-    public void onClick(View view) {
-        if(listener!=null){
-            listener.onClick(view);
-        }
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        View mView;
 
-    public class ViewHolderPublicaciones extends RecyclerView.ViewHolder {
         TextView txt_nombre,txt_descripcion;
         ImageView foto;
-        public ViewHolderPublicaciones(View itemView) {
+
+        public ViewHolder(View itemView) {
             super(itemView);
+            mView = itemView;
             txt_nombre = itemView.findViewById(R.id.idNombre);
             txt_descripcion = itemView.findViewById(R.id.idInfo);
             foto = itemView.findViewById(R.id.idImagen);

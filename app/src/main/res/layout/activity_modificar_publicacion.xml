@@ -37,7 +37,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <Button
-        android:id="@+id/btnPublicar"
+        android:id="@+id/btnActualizar"
         android:layout_width="117dp"
         android:layout_height="43dp"
         android:layout_marginStart="36dp"
@@ -45,7 +45,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/material_button"
-        android:text="Publicar"
+        android:text="Actualizar"
         android:textAppearance="@android:style/TextAppearance.Widget.DropDownItem"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         app:layout_constraintBottom_toBottomOf="parent"

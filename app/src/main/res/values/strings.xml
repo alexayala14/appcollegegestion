@@ -35,6 +35,8 @@
 
     <string name="title_activity_modificar_usuarios">Modificar usuarios en la BD</string>
 
+    <string name="title_activity_modificar_publicaciones">Modificar publicaciones en la BD</string>
+
     -
     <string-array name="datos">
 

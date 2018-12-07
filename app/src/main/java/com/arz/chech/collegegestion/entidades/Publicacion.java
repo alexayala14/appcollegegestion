@@ -1,19 +1,67 @@
 package com.arz.chech.collegegestion.entidades;
 
-public class Publicacion {
+public class Publicacion{
     private String nombre;
     private String asunto;
     private String descripcion;
-    private int foto;
+    private boolean estaEliminado;
+    private long timestamp;
+    private String tokenUser;
+    private String tokenPubli;
+    private int prioridad;
 
     public Publicacion(){
     }
 
-    public Publicacion(String nombre, String asunto, String descripcion, int foto) {
+    public Publicacion(String nombre, String asunto, String descripcion, int prioridad, long time, boolean estaEliminado, String tokenUser, String tokenPubli) {
         this.nombre = nombre;
         this.asunto = asunto;
         this.descripcion = descripcion;
-        this.foto = foto;
+        this.prioridad = prioridad;
+        this.timestamp = time;
+        this.estaEliminado = estaEliminado;
+        this.tokenUser = tokenUser;
+        this.tokenPubli = tokenPubli;
+    }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public String getTokenUser() {
+        return tokenUser;
+    }
+
+    public void setTokenUser(String tokenUser) {
+        this.tokenUser = tokenUser;
+    }
+
+    public String getTokenPubli() {
+        return tokenPubli;
+    }
+
+    public void setTokenPubli(String tokenPubli) {
+        this.tokenPubli = tokenPubli;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public boolean isEstaEliminado() {
+        return estaEliminado;
+    }
+
+    public void setEstaEliminado(boolean estaEliminado) {
+        this.estaEliminado = estaEliminado;
     }
 
     public String getNombre() {
@@ -38,13 +86,5 @@ public class Publicacion {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public int getFoto() {
-        return foto;
-    }
-
-    public void setFoto(int foto) {
-        this.foto = foto;
     }
 }

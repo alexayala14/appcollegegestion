@@ -14,7 +14,6 @@ import android.support.v4.app.NotificationCompat;
 
 import com.arz.chech.collegegestion.activities.ChatActivity;
 import com.arz.chech.collegegestion.activities.MenuPrincipalActivity;
-import com.arz.chech.collegegestion.fragments.NuevaPublicacionFragment;
 import com.arz.chech.collegegestion.preferences.Preferences;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -36,16 +35,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         if (firebaseUser != null && sented.equals(firebaseUser)){
             if (!currentUser.equals(user)) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-                        sendOreoNotification(remoteMessage);
-
-
-
+                    sendOreoNotification(remoteMessage);
                 } else {
-
                     sendNotification(remoteMessage);
-
-
                 }
             }
         }
@@ -53,78 +45,67 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
     private void sendOreoNotification(RemoteMessage remoteMessage){
 
-            String user = remoteMessage.getData().get("user");
-            String icon = remoteMessage.getData().get("icon");
-            String title = remoteMessage.getData().get("title");
-            String body = remoteMessage.getData().get("body");
+        String user = remoteMessage.getData().get("user");
+        String icon = remoteMessage.getData().get("icon");
+        String title = remoteMessage.getData().get("title");
+        String body = remoteMessage.getData().get("body");
 
-            RemoteMessage.Notification notification = remoteMessage.getNotification();
-            int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
+        int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        Intent intent = new Intent(this, MenuPrincipalActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("user_id", user);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            Intent intent = new Intent(this, MenuPrincipalActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("user_id", user);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+        OreoNotification oreoNotification = new OreoNotification(this);
+        Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
+                defaultSound, icon);
 
-            Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        int i = 0;
+        if (j > 0){
+            i = j;
+        }
 
-            OreoNotification oreoNotification = new OreoNotification(this);
-            Notification.Builder builder = oreoNotification.getOreoNotification(title, body, pendingIntent,
-                    defaultSound, icon);
-
-            int i = 0;
-            if (j > 0) {
-                i = j;
-            }
-
-            oreoNotification.getManager().notify(i, builder.build());
-
-
+        oreoNotification.getManager().notify(i, builder.build());
 
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
 
-            String user = remoteMessage.getData().get("user");
-            String icon = remoteMessage.getData().get("icon");
-            String title = remoteMessage.getData().get("title");
-            String body = remoteMessage.getData().get("body");
+        String user = remoteMessage.getData().get("user");
+        String icon = remoteMessage.getData().get("icon");
+        String title = remoteMessage.getData().get("title");
+        String body = remoteMessage.getData().get("body");
 
-            RemoteMessage.Notification notification = remoteMessage.getNotification();
-            int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
+        int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+        Intent intent = new Intent(this, MenuPrincipalActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("user_id", user);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            Intent intent = new Intent(this, MenuPrincipalActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("user_id", user);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(Integer.parseInt(icon))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSound(defaultSound)
+                .setContentIntent(pendingIntent);
+        NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, j, intent, PendingIntent.FLAG_ONE_SHOT);
-            Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(Integer.parseInt(icon))
-                    .setContentTitle(title)
-                    .setContentText(body)
-                    .setAutoCancel(true)
-                    .setSound(defaultSound)
-                    .setContentIntent(pendingIntent);
-            NotificationManager noti = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        int i = 0;
+        if (j > 0){
+            i = j;
+        }
 
-            int i = 0;
-            if (j > 0) {
-                i = j;
-            }
-
-            noti.notify(i, builder.build());
-
-
-
-
-
+        noti.notify(i, builder.build());
     }
-
 }

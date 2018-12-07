@@ -13,7 +13,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.arz.chech.collegegestion.entidades.Administrador;
-import com.arz.chech.collegegestion.entidades.Alumno;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.entidades.UserDetails;
 import com.arz.chech.collegegestion.preferences.Preferences;
@@ -25,7 +24,7 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     private EditText et_rut, et_password;
-    private Button btn_log, btn_log_alumno;
+    private Button btn_log;
     private String user;
     private String pass;
     private boolean sesion;
@@ -56,14 +55,6 @@ public class MainActivity extends AppCompatActivity {
         et_rut = (EditText) findViewById(R.id.et_rut);
         et_password = (EditText) findViewById(R.id.et_pw);
         btn_log = (Button) findViewById(R.id.btn_iniciar);
-        btn_log_alumno = (Button) findViewById(R.id.btn_iniciar_alumno);
-        btn_log_alumno.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Alumno.class);
-                MainActivity.this.startActivity(intent);
-            }
-        });
         btn_log.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,18 +97,10 @@ public class MainActivity extends AppCompatActivity {
                                     Preferences.savePreferenceString(MainActivity.this, nom, Preferences.PREFERENCE_NOMBRE);
                                     Preferences.savePreferenceString(MainActivity.this, ape, Preferences.PREFERENCE_APELLIDO);
                                     if(id_perfil == 1){
-                                        UserDetails.username = user;
-                                        UserDetails.token = token;
-                                        UserDetails.nombre=nom;
-                                        UserDetails.apellido=ape;
                                         Intent intent = new Intent(MainActivity.this, Administrador.class);
                                         startActivity(intent);
                                         finish();
                                     }else{
-                                        UserDetails.username = user;
-                                        UserDetails.token = token;
-                                        UserDetails.nombre=nom;
-                                        UserDetails.apellido=ape;
                                         Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
                                         startActivity(intent);
                                         finish();

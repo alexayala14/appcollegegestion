@@ -33,7 +33,7 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHo
 
     private ArrayList<DatosUsuario> datosUsuarioList;
     private Context mContext;
-    private DatabaseReference mUsersDatabase, mConvDatabase;
+    private DatabaseReference mUsersDatabase;
     RequestQueue requestQueue;
     JsonObjectRequest jsonObjectRequest;
 
@@ -57,7 +57,6 @@ public class AllUsersAdapter extends RecyclerView.Adapter<AllUsersAdapter.ViewHo
         viewHolder.setRut(datosUsuario.getRut());
         viewHolder.setPerfil(datosUsuario.getPerfil());
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        mConvDatabase = FirebaseDatabase.getInstance().getReference().child("Chat");
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
