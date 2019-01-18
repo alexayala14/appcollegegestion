@@ -1,11 +1,13 @@
 package com.arz.chech.collegegestion.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -79,6 +81,29 @@ public class ModifyPublicacionActivity extends AppCompatActivity {
         ((RadioButton)radioGroup.getChildAt(prioridad)).setChecked(true);
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                switch(checkedId) {
+                    case R.id.radioButtonAlta:
+                        selected = 1;
+                        System.out.println("Es 1");
+                        ocultarteclado();
+                        break;
+                    case R.id.radioButtonMedia:
+                        selected = 2;
+                        System.out.println("Es 2");
+                        ocultarteclado();
+                        break;
+                    case R.id.radioButtonBaja:
+                        selected = 3;
+                        System.out.println("Es 3");
+                        ocultarteclado();
+                        break;
+                }
+            }
+        });
         btnActualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -113,6 +138,14 @@ public class ModifyPublicacionActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void ocultarteclado(){
+        View view = this.getCurrentFocus();
+        if (view != null){
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        }
     }
 
 }

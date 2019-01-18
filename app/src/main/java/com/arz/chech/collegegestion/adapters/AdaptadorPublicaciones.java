@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -53,8 +54,29 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Publicacion publicacion = listaPublicaciones.get(position);
-        holder.txt_nombre.setText(publicacion.getNombre());
-        holder.txt_descripcion.setText(publicacion.getAsunto());
+        if(publicacion.getPrioridad()==1){
+
+            holder.txt_descripcion.setText(publicacion.getAsunto());
+            holder.txt_descripcion.setTextColor(Color.parseColor("#B71C1C"));
+            holder.txt_nombre.setText(publicacion.getNombre());
+            holder.txt_nombre.setTextColor(Color.parseColor("#B71C1C"));
+
+        }
+        if(publicacion.getPrioridad()==2){
+            holder.txt_descripcion.setText(publicacion.getAsunto());
+            holder.txt_descripcion.setTextColor(Color.parseColor("#FDD835"));
+            holder.txt_nombre.setText(publicacion.getNombre());
+            holder.txt_nombre.setTextColor(Color.parseColor("#FDD835"));
+        }
+        if(publicacion.getPrioridad()==3){
+            holder.txt_descripcion.setText(publicacion.getAsunto());
+            holder.txt_descripcion.setTextColor(Color.parseColor("#1A237E"));
+            holder.txt_nombre.setText(publicacion.getNombre());
+            holder.txt_nombre.setTextColor(Color.parseColor("#1A237E"));
+        }
+
+        //holder.txt_nombre.setText(publicacion.getNombre());
+        //holder.txt_descripcion.setText(publicacion.getAsunto());
         holder.foto.setImageResource(R.drawable.hombre);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -52,7 +52,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
-        Intent intent = new Intent(this, MenuPrincipalActivity.class);
+        Intent intent = new Intent(this, ChatActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user);
         intent.putExtras(bundle);
@@ -84,7 +84,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
-        Intent intent = new Intent(this, MenuPrincipalActivity.class);
+        Intent intent = new Intent(this,ChatActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user);
         intent.putExtras(bundle);

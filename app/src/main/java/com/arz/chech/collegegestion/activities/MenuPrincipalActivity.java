@@ -32,6 +32,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
     PublicacionesFragment publicaciones;
     MisPublicacionesFragment misPublicaciones;
     MessageFragment mensajes;
+    private int num;
+    private  int numper;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -64,9 +66,14 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        num= Preferences.obtenerPreferenceInt(MenuPrincipalActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL);
+        if(num == 5 || num == 4){
+            tabLayout.removeTabAt(2);
+            tabLayout.removeTabAt(1);
+        }
+
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -184,6 +191,18 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
         @Override
         public int getCount() {
             // Show 3 total pages.
+
+           /* try { numper=Integer.parseInt(Preferences.PREFERENCE_ESTADO_ID_PERFIL);} catch(NumberFormatException nfe) {}
+            if(numper == 1){
+                num=3;
+            }
+            if(numper == 2){
+                num=3;
+            }
+            if(numper == 5){
+                num=2;
+            }*/
+
             return 3;
         }
 

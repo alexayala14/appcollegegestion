@@ -77,7 +77,7 @@
     <EditText
         android:id="@+id/editTextPublicacion"
         android:layout_width="322dp"
-        android:layout_height="127dp"
+        android:layout_height="106dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"

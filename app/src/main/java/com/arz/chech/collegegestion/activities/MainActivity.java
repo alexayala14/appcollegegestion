@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private int log;
     private String token;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,15 +98,17 @@ public class MainActivity extends AppCompatActivity {
                                     Preferences.savePreferenceString(MainActivity.this, user, Preferences.PREFERENCE_USUARIO);
                                     Preferences.savePreferenceString(MainActivity.this, nom, Preferences.PREFERENCE_NOMBRE);
                                     Preferences.savePreferenceString(MainActivity.this, ape, Preferences.PREFERENCE_APELLIDO);
+
                                     if(id_perfil == 1){
                                         Intent intent = new Intent(MainActivity.this, Administrador.class);
                                         startActivity(intent);
                                         finish();
-                                    }else{
+                                    }if(id_perfil == 2 || id_perfil == 3||id_perfil == 4||id_perfil == 5){
                                         Intent intent = new Intent(MainActivity.this, MenuPrincipalActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
+                                    else { Toast.makeText(MainActivity.this,"El perfil seleccionado no tiene permisos para usar la aplicacion",Toast.LENGTH_LONG).show();}
 
                                 }
                             } catch (JSONException e) {
