@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.arz.chech.collegegestion">
-
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,60 +14,62 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.NuevoGrupoActivity"></activity>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.LAUNCHER"/>
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.MenuPrincipalActivity"
             android:label="@string/title_activity_menu_principal"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".entidades.Administrador"
-            android:label="@string/title_activity_inicio"/>
+            android:label="@string/title_activity_inicio" />
         <activity
             android:name=".activities.Registrar"
-            android:label="@string/title_activity_registrar"/>
+            android:label="@string/title_activity_registrar" />
         <activity
             android:name=".activities.AllUsersActivity"
-            android:label="@string/title_activity_consultar_usuarios"/>
+            android:label="@string/title_activity_consultar_usuarios" />
         <activity
             android:name=".activities.ModifyUsersActivity"
-            android:label="@string/title_activity_modificar_usuarios"/>
-
+            android:label="@string/title_activity_modificar_usuarios" />
         <activity
             android:name=".activities.ModifyPublicacionActivity"
-            android:label="@string/title_activity_modificar_publicaciones"/>
+            android:label="@string/title_activity_modificar_publicaciones" />
+        <activity
+            android:name=".activities.ChatActivity"
+            android:parentActivityName=".activities.MenuPrincipalActivity" />
+        <activity
+            android:name=".activities.FriendsActivity"
+            android:parentActivityName=".activities.MenuPrincipalActivity" />
+        <activity android:name=".activities.NuevaPublicacionActivity" />
 
-        <activity android:name=".activities.ChatActivity"
-            android:parentActivityName=".activities.MenuPrincipalActivity"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".activities.FriendsActivity"
-            android:parentActivityName=".activities.MenuPrincipalActivity"/>
-
-        <activity android:name=".activities.NuevaPublicacionActivity"/>
-
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
-
-        <service android:name=".notifications.MyFirebaseIdService"
+        <service
+            android:name=".notifications.MyFirebaseIdService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".notifications.MyFirebaseMessaging"
+        <service
+            android:name=".notifications.MyFirebaseMessaging"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

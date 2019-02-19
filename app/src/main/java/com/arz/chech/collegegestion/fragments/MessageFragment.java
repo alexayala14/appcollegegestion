@@ -39,8 +39,10 @@ public class MessageFragment extends Fragment{
     private String mCurrent_user_id;
     private DatabaseReference databaseReference;
     private List<String> usersList;
+    private List<String> groupList;
     private FloatingActionButton fab;
     private TextView noExistenMensajes;
+    private DatabaseReference groupRef;
 
     public MessageFragment() {
     }
@@ -70,11 +72,12 @@ public class MessageFragment extends Fragment{
         });
 
         //
+        groupList =new ArrayList<>();
         usersList = new ArrayList<>();
         mUsers = new ArrayList<>();
         messagesAdapter = new MessagesAdapter(getContext(), mUsers);
         recyclerView.setAdapter(messagesAdapter);
-
+        groupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
         //
         databaseReference = FirebaseDatabase.getInstance().getReference("Chat").child(mCurrent_user_id);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -85,6 +88,7 @@ public class MessageFragment extends Fragment{
                     usersList.add(snapshot.getKey());
                 }
                 chatList();
+                //groupList();
             }
 
             @Override
@@ -96,6 +100,45 @@ public class MessageFragment extends Fragment{
         updateToken(FirebaseInstanceId.getInstance().getToken());
 
         return view;
+    }
+
+    private void groupList() {
+        groupRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                mUsers.clear();
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    DatosUsuario user = snapshot.getValue(DatosUsuario.class);
+                    if (snapshot.child("estaEliminado").exists()){
+                        for (String grupo: groupList){
+                            if (user.getToken().equals(grupo)){
+                                if (!user.isEstaEliminado()){
+                                    mUsers.add(user);
+                                }
+                            }
+                        }
+                    }else{
+                        for (String grupo: groupList){
+                            if (user.getToken().equals(grupo)){
+                                mUsers.add(user);
+                            }
+                        }
+                    }
+
+                }
+                if (mUsers.isEmpty()){
+                    noExistenMensajes.setVisibility(View.VISIBLE);
+                }else {
+                    noExistenMensajes.setVisibility(View.GONE);
+                }
+                messagesAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void updateToken(String token){
