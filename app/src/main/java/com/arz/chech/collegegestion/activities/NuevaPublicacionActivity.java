@@ -2,10 +2,12 @@ package com.arz.chech.collegegestion.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.hardware.input.InputManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +25,7 @@ import com.arz.chech.collegegestion.entidades.UserDetails;
 import com.arz.chech.collegegestion.fragments.APIService;
 import com.arz.chech.collegegestion.notifications.Client;
 import com.arz.chech.collegegestion.notifications.Data;
+import com.arz.chech.collegegestion.notifications.MyFirebaseMessaging;
 import com.arz.chech.collegegestion.notifications.MyResponse;
 import com.arz.chech.collegegestion.notifications.Sender;
 import com.arz.chech.collegegestion.notifications.Token;
@@ -51,6 +54,10 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     private String userName;
     private String userApellido;
     private String mCurrentUserId;
+    Boolean banderaNots;
+
+    public static final String prefGlobants="collegegestion.shareds";
+    public static final String prefbanderas="collegegestion.bandes";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,6 +145,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                     mRootRef.child("Publicaciones").child(push_id).child("estaEliminado").setValue(false);
                     mRootRef.child("Publicaciones").child(push_id).child("timestamp").setValue(ServerValue.TIMESTAMP);
                     mRootRef.child("Publicaciones").child(push_id).child("tokenUser").setValue(mCurrentUserId);
+                    mRootRef.child("Publicaciones").child(push_id).child("bandera").setValue(banderaNots);
                     mRootRef.child("Publicaciones").child(push_id).child("tokenPubli").setValue(push_id);
 
                     mUsersDatabase.addValueEventListener(new ValueEventListener() {
@@ -146,7 +154,16 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                             for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                                 DatosUsuario datosUsuario = snapshot.getValue(DatosUsuario.class);
                                 if (!datosUsuario.getToken().equals(mCurrentUserId)){
-                                    sendNotification(datosUsuario.getToken(), asunto);
+                                    banderaNots =false;
+                                    SharedPreferences band = getApplicationContext().getSharedPreferences(ChatActivity.prefGlobant,MODE_PRIVATE);
+                                    SharedPreferences.Editor editor=band.edit();
+                                    editor.putBoolean(ChatActivity.prefbandera,banderaNots);
+                                    editor.apply();
+                                    System.out.println("LA PUBLICACION ENVIADA ES: "+band.getBoolean(prefbanderas,false));
+
+
+                                    sendNotification(datosUsuario.getToken(), asunto,banderaNots);
+
                                 }
                             }
                         }
@@ -154,9 +171,18 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                         }
                     });
+                    /*banderaNots =false;
+                    SharedPreferences band = getApplication().getSharedPreferences(prefGlobants,MODE_PRIVATE);
+                    SharedPreferences.Editor editor=band.edit();
+                    editor.putBoolean(prefbanderas,banderaNots);
+                    editor.apply();
+                    System.out.println("LA PUBLICACION ENVIADA DESPUES ES: "+band.getBoolean(prefbanderas,true));*/
+
+
                     onBackPressed();
                     finish();
                 }
+
             }
         });
 
@@ -170,7 +196,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         }
     }
 
-    private void sendNotification(final String receiver, final String asunto){
+    private void sendNotification(final String receiver, final String asunto,final Boolean bandera){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -178,7 +204,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, "Asunto: " + asunto, "Nueva Publicacion!", receiver);
+                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, "Asunto: " + asunto, "Nueva Publicacion!", receiver,bandera);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
                         @Override

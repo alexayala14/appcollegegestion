@@ -13,6 +13,7 @@ public class Preferences {
     public static final String PREFERENCE_NOMBRE = "collegegestion.sesion.nombre";
     public static final String PREFERENCE_APELLIDO = "collegegestion.sesion.apellido";
 
+
     public static void savePreferenceInt(Context c, int b, String key){
         SharedPreferences preferences = c.getSharedPreferences(STRING_PREFERENCES, c.MODE_PRIVATE);
         preferences.edit().putInt(key, b).apply();

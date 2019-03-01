@@ -26,6 +26,7 @@
         <activity
             android:name=".activities.MenuPrincipalActivity"
             android:label="@string/title_activity_menu_principal"
+            android:parentActivityName=".entidades.Administrador"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".entidades.Administrador"

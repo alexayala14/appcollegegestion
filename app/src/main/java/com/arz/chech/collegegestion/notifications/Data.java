@@ -6,16 +6,26 @@ public class Data {
     private String body;
     private String title;
     private String sented;
+    private Boolean bandera;
 
-    public Data(String user, int icon, String body, String title, String sented) {
+    public Data(String user, int icon, String body, String title, String sented,Boolean bandera) {
         this.user = user;
         this.icon = icon;
         this.body = body;
         this.title = title;
         this.sented = sented;
+        this.bandera=bandera;
     }
 
     public Data() {
+    }
+
+    public Boolean getBandera() {
+        return bandera;
+    }
+
+    public void setBandera(Boolean bandera) {
+        this.bandera = bandera;
     }
 
     public String getUser() {

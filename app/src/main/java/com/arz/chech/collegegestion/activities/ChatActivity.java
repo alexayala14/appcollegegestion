@@ -1,6 +1,7 @@
 package com.arz.chech.collegegestion.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +18,13 @@ import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.ChatAdapter;
+import com.arz.chech.collegegestion.entidades.Bandera;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.entidades.Messages;
 import com.arz.chech.collegegestion.fragments.APIService;
 import com.arz.chech.collegegestion.notifications.Client;
 import com.arz.chech.collegegestion.notifications.Data;
+import com.arz.chech.collegegestion.notifications.MyFirebaseMessaging;
 import com.arz.chech.collegegestion.notifications.MyResponse;
 import com.arz.chech.collegegestion.notifications.Sender;
 import com.arz.chech.collegegestion.notifications.Token;
@@ -65,6 +68,11 @@ public class ChatActivity extends AppCompatActivity {
     private String userApellido;
     private APIService apiService;
     private boolean notify = false;
+    Boolean banderaNot;
+    Boolean bann;
+
+    public static final String prefGlobant="collegegestion.shared";
+    public static final String prefbandera="collegegestion.bande";
 
 
     // Storage Firebase
@@ -75,6 +83,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
+
 
         //TOOLBAR
         mChatToolbar = (Toolbar) findViewById(R.id.toolbarMessages);
@@ -131,6 +140,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         readMessages();
+
         mRootRef.child("Chat").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -161,8 +171,19 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 notify = true;
                 sendMessage();
+
+
             }
         });
+
+        /*banderaNot=false;
+        SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant,MODE_PRIVATE);
+        SharedPreferences.Editor editor=ban.edit();
+        editor.putBoolean(prefbandera,banderaNot);
+        editor.apply();
+        System.out.println("bandera es despues del mensaje:"+ban.getBoolean(prefbandera,true));*/
+
+
         /*
         mChatAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +197,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void readMessages(){
+
         DatabaseReference messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(userid);
 
         messageRef.addValueEventListener(new ValueEventListener() {
@@ -197,6 +219,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void sendMessage() {
+
         String message = text_send.getText().toString();
         if(!TextUtils.isEmpty(message)){
             String current_user_ref = "Messages/" + mCurrentUserId + "/" + userid;
@@ -229,8 +252,22 @@ public class ChatActivity extends AppCompatActivity {
                     if(databaseError != null){
                         Log.d("CHAT_LOG", databaseError.getMessage().toString());
                     }
+
                 }
             });
+            banderaNot=true;
+
+
+            //SharedPreferences ban = PreferenceManager.getDefaultSharedPreferences(this);
+
+            ////////////////////////////
+
+            /*Bundle bundle = new Bundle();
+            bundle.putBoolean("bandera",banderaNot);
+            Intent intent = new Intent(ChatActivity.this,MyFirebaseMessaging.class);
+            intent.putExtra("bandera",banderaNot);
+            startService(intent);*/
+
 
         }else {
             Toast.makeText(ChatActivity.this, "No puede enviar un mensaje vacío", Toast.LENGTH_SHORT).show();
@@ -244,8 +281,16 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DatosUsuario user = dataSnapshot.getValue(DatosUsuario.class);
                 if (notify) {
+                    banderaNot=true;
+                    SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant,MODE_PRIVATE);
+                    SharedPreferences.Editor editor=ban.edit();
+                    editor.putBoolean(prefbandera,banderaNot);
+                    editor.apply();
+                    System.out.println("bandera antes del mensaje:"+ban.getBoolean(prefbandera,false));
 
-                    sendNotification(userid, user.getNombre() + " " + user.getApellido(), msg);
+
+                    sendNotification(userid, user.getNombre() + " " + user.getApellido(), msg,banderaNot);
+
                 }
                 notify = false;
             }
@@ -259,7 +304,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }
 
-    private void sendNotification(String receiver, final String username, final String message){
+    private void sendNotification(String receiver, final String username, final String message,final Boolean banderaNot){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -267,7 +312,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "Nuevo Mensaje!", userid);
+                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "Nuevo Mensaje!", userid,banderaNot);
 
                     Sender sender = new Sender(data, token.getToken());
 
@@ -291,4 +336,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
