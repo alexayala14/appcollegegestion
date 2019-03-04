@@ -69,46 +69,16 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-        //int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         if (bandera){
             intt=ChatActivity.class;
 
 
 
 
-            /*SharedPreferences ban = getApplication().getSharedPreferences(ChatActivity.prefGlobant,MODE_PRIVATE);
-            SharedPreferences.Editor editor=ban.edit();
-            editor.putBoolean(ChatActivity.prefbandera,bandera);
-            editor.apply();
-
-            SharedPreferences band = getApplication().getSharedPreferences(NuevaPublicacionActivity.prefGlobants,MODE_PRIVATE);
-            SharedPreferences.Editor editors=band.edit();
-            editors.putBoolean(NuevaPublicacionActivity.prefbanderas,banderas);
-            editors.apply();*/
 
         }else if(!bandera){
             intt=MenuPrincipalActivity.class;
         }
-        /*if(banderas && !bandera){
-            intt=MenuPrincipalActivity.class;
-            bandera=false;
-            banderas=false;*/
-
-            /*SharedPreferences ban = getApplication().getSharedPreferences(ChatActivity.prefGlobant,MODE_PRIVATE);
-            SharedPreferences.Editor editor=ban.edit();
-            editor.putBoolean(ChatActivity.prefbandera,bandera);
-            editor.apply();
-
-            SharedPreferences band = getApplication().getSharedPreferences(NuevaPublicacionActivity.prefGlobants,MODE_PRIVATE);
-            SharedPreferences.Editor editors=band.edit();
-            editors.putBoolean(NuevaPublicacionActivity.prefbanderas,banderas);
-            editors.apply();*/
-
-        //}
-
-
-
-
 
 
 
@@ -116,11 +86,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user);
         intent.putExtras(bundle);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(intent);
 
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -130,9 +100,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 defaultSound, icon);
 
         int i = 0;
-        /*if (j > 0){
-            i = j;
-        }*/
+
         Random r = new Random();
         int randomNoID = r.nextInt(1000+1);
         oreoNotification.getManager().notify(randomNoID, builder.build());
@@ -150,44 +118,26 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-        //int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
+
         if (bandera ){
             intt=ChatActivity.class;
-            //bandera=false;
 
-
-           /* SharedPreferences ban = getApplication().getSharedPreferences(ChatActivity.prefGlobant,MODE_PRIVATE);
-            SharedPreferences.Editor editor=ban.edit();
-            editor.putBoolean(ChatActivity.prefbandera,bandera);
-            editor.apply();*/
 
 
         }else if(!bandera){
             intt=MenuPrincipalActivity.class;
         }
-        /*if(banderas){
-            intt=MenuPrincipalActivity.class;
-
-            banderas=false;
 
 
-
-            SharedPreferences band = getApplication().getSharedPreferences(NuevaPublicacionActivity.prefGlobants,MODE_PRIVATE);
-            SharedPreferences.Editor editors=band.edit();
-            editors.putBoolean(NuevaPublicacionActivity.prefbanderas,banderas);
-            editors.apply();
-        }*/
-        System.out.println("ahora"+bandera);
-        //System.out.println("ahoraaaa"+banderas);
         Intent intent = new Intent(this,intt);
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user);
         intent.putExtras(bundle);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(intent);
 
-        //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
@@ -201,9 +151,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         NotificationManager noti = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         int i = 0;
-        /*if (j > 0){
-            i = j;
-        }*/
+
         Random r = new Random();
         int randomNoID = r.nextInt(1000+1);
         noti.notify(randomNoID, builder.build());

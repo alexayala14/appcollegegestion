@@ -42,8 +42,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constrai"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="170dp"
+        android:layout_below="@+id/bar_layout1">
 
         <EditText
             android:id="@+id/editText"
@@ -54,17 +56,14 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="28dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:hint="Escribe el asunto aqui..."
             android:maxLength="28"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.666"
+            app:layout_constraintHorizontal_bias="0.627"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.119" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_imagen2"
@@ -77,34 +76,15 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:src="@drawable/twotone_photo_camera_black_48"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/editText"
-            app:layout_constraintHorizontal_bias="0.444"
+            app:layout_constraintBottom_toBottomOf="@+id/editText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.023"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.12" />
+            app:layout_constraintVertical_bias="1.0" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_imagen1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:src="@drawable/default_avatar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.081"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_imagen2"
-            app:layout_constraintVertical_bias="0.069" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/idAddIntegrante"
@@ -122,13 +102,46 @@
             android:src="@drawable/sharp_person_add_black_48"
             android:visibility="visible"
             app:fabSize="normal"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.873"
-            app:layout_constraintStart_toEndOf="@+id/profile_imagen1"
+            app:layout_constraintHorizontal_bias="0.831"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText"
-            app:layout_constraintVertical_bias="0.07" />
+            app:layout_constraintVertical_bias="0.425" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.005"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
 
     </android.support.constraint.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relative1"
+        android:layout_below="@id/constrai">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/act_contactosagregados_list"
+            android:layout_width="match_parent"
+            android:layout_height="626dp"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
+
+
 
 </RelativeLayout>

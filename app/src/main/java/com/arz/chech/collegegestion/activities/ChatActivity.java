@@ -176,12 +176,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        /*banderaNot=false;
-        SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant,MODE_PRIVATE);
-        SharedPreferences.Editor editor=ban.edit();
-        editor.putBoolean(prefbandera,banderaNot);
-        editor.apply();
-        System.out.println("bandera es despues del mensaje:"+ban.getBoolean(prefbandera,true));*/
 
 
         /*
@@ -258,15 +252,7 @@ public class ChatActivity extends AppCompatActivity {
             banderaNot=true;
 
 
-            //SharedPreferences ban = PreferenceManager.getDefaultSharedPreferences(this);
 
-            ////////////////////////////
-
-            /*Bundle bundle = new Bundle();
-            bundle.putBoolean("bandera",banderaNot);
-            Intent intent = new Intent(ChatActivity.this,MyFirebaseMessaging.class);
-            intent.putExtra("bandera",banderaNot);
-            startService(intent);*/
 
 
         }else {
