@@ -1,5 +1,6 @@
 package com.arz.chech.collegegestion.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.ContactosAgregadosAdapter;
@@ -40,12 +43,14 @@ public class NuevoGrupoActivity extends AppCompatActivity {
     private List<String> usersList;
     private LinearLayoutManager mLinearLayout;
     private DatabaseReference RootRef;
-    public String userid;
+    private String userid;
     private String nom;
     private String ape;
     private int request_code = 1;
-    private Boolean bandera=true;
+    public static Boolean bandera=true;
     private TextView textView;
+    private FloatingActionButton creargrupo;
+    private EditText editText;
 
 
     @Override
@@ -58,6 +63,8 @@ public class NuevoGrupoActivity extends AppCompatActivity {
         agregadosList.setHasFixedSize(true);
         agregadosList.setLayoutManager(mLinearLayout);
         textView =(TextView) findViewById(R.id.textView3);
+        creargrupo =(FloatingActionButton)findViewById(R.id.crearGrupo);
+        editText=(EditText)findViewById(R.id.editText);
         //Intent intent = getIntent();
         //userid=intent.getStringExtra("user_id");
         //userid = intent.getStringExtra("user_id");
@@ -87,6 +94,8 @@ public class NuevoGrupoActivity extends AppCompatActivity {
             }
         });
 
+
+
         datosUsuarios = new ArrayList<>();
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
         if (userid!=null){
@@ -95,6 +104,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                 if (userid.equals(mi.getToken())) {
 
                     bandera=false;
+
                 }
                 else {
                     //datosUsuarios.add(usuario);
@@ -114,19 +124,23 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                                 //if(mUsersDatabase.equals("d")) {
                                   //  datosUsuarios.add(usuario);
                                 //}
-
+                                datosUsuarios.add(usuario);
+                                System.out.println("usuario agregado por create");
                                 if(bandera) {
-                                    datosUsuarios.add(usuario);
 
+                                    bandera=false;
+                                }
+                                else{
+                                    System.out.println("El usuario esta repetido por create");
                                 }
 
                             }
                         }
-                    }else{
+                    }/*else{
                         if (userid.equals(usuario.getToken())){
                             datosUsuarios.add(usuario);
                         }
-                    }
+                    }*/
 
                 }
                 ContactosAgregadosAdapter agregadosAdapter = new ContactosAgregadosAdapter(NuevoGrupoActivity.this, datosUsuarios);
@@ -144,6 +158,24 @@ public class NuevoGrupoActivity extends AppCompatActivity {
         }
         String texto="Participantes: "+String.valueOf(datosUsuarios.size());
         textView.setText(texto);
+
+        creargrupo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editText.getText().toString().equals("")) {
+                    Toast.makeText(NuevoGrupoActivity.this ,"Ingrese nombre de Grupo",Toast.LENGTH_LONG).show();
+                }else {
+                    String nombreGrupo=editText.getText().toString();
+                    RootRef.child("Groups").child(nombreGrupo).setValue("");
+                    Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
+                    intent.putExtra("datosUsuariosList", datosUsuarios);
+                    intent.putExtra("nombreGrupo",nombreGrupo);
+                    startActivity(intent);
+                    finish();
+
+                }
+            }
+        });
 
     }
 
@@ -176,6 +208,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
             if (userid.equals(mi.getToken())) {
 
                 bandera=false;
+
             }
             else {
                 //datosUsuarios.add(usuario);
@@ -202,16 +235,21 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                                     //}
                                     if(bandera) {
                                         datosUsuarios.add(usuario);
+                                        bandera=false;
+                                        System.out.println("El usuario esta agregado por resume");
+                                    }
+                                    else{
+                                        System.out.println("El usuario esta repetido por resume");
                                     }
                                 }
                             }
-                        }else{
+                        }/*else{
                             if (userid.equals(usuario.getToken())){
                                 datosUsuarios.add(usuario);
                                 System.out.println("por dos");
 
                             }
-                        }
+                        }*/
 
                     }
                     ContactosAgregadosAdapter agregadosAdapter = new ContactosAgregadosAdapter(NuevoGrupoActivity.this, datosUsuarios);
@@ -227,6 +265,23 @@ public class NuevoGrupoActivity extends AppCompatActivity {
             });}
         String texto="Participantes: "+String.valueOf(datosUsuarios.size());
         textView.setText(texto);
+        creargrupo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editText.getText().toString().equals("")) {
+                    Toast.makeText(NuevoGrupoActivity.this ,"Ingrese nombre de Grupo",Toast.LENGTH_LONG).show();
+                }else {
+                    String nombreGrupo=editText.getText().toString();
+                    RootRef.child("Groups").child(nombreGrupo).setValue("");
+                    Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
+                    intent.putExtra("datosUsuariosList", datosUsuarios);
+                    intent.putExtra("nombreGrupo",nombreGrupo);
+                    startActivity(intent);
+                    finish();
+
+                }
+            }
+        });
     }
 
 }

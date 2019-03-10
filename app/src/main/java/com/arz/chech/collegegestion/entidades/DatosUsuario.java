@@ -1,6 +1,9 @@
 package com.arz.chech.collegegestion.entidades;
 
-public class DatosUsuario {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class DatosUsuario implements Parcelable {
     private String nombre;
     private String apellido;
     private String rut;
@@ -19,6 +22,27 @@ public class DatosUsuario {
 
     public DatosUsuario() {
     }
+
+    protected DatosUsuario(Parcel in) {
+        nombre = in.readString();
+        apellido = in.readString();
+        rut = in.readString();
+        perfil = in.readString();
+        token = in.readString();
+        estaEliminado = in.readByte() != 0;
+    }
+
+    public static final Creator<DatosUsuario> CREATOR = new Creator<DatosUsuario>() {
+        @Override
+        public DatosUsuario createFromParcel(Parcel in) {
+            return new DatosUsuario(in);
+        }
+
+        @Override
+        public DatosUsuario[] newArray(int size) {
+            return new DatosUsuario[size];
+        }
+    };
 
     public boolean isEstaEliminado() {
         return estaEliminado;
@@ -71,5 +95,20 @@ public class DatosUsuario {
     @Override
     public String toString() {
         return nombre + " " + apellido;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nombre);
+        dest.writeString(apellido);
+        dest.writeString(rut);
+        dest.writeString(perfil);
+        dest.writeString(token);
+        dest.writeByte((byte) (estaEliminado ? 1 : 0));
     }
 }
