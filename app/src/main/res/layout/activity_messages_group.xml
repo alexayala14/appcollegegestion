@@ -44,7 +44,7 @@
         android:background="#555"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerViewChat"
+        android:id="@+id/recyclerViewChatGroup"
         android:layout_above="@id/bottom"
         android:layout_below="@id/bar_layout">
     </android.support.v7.widget.RecyclerView>

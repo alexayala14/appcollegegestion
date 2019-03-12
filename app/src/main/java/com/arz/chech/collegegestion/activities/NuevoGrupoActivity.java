@@ -272,7 +272,9 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     Toast.makeText(NuevoGrupoActivity.this ,"Ingrese nombre de Grupo",Toast.LENGTH_LONG).show();
                 }else {
                     String nombreGrupo=editText.getText().toString();
-                    RootRef.child("Groups").child(nombreGrupo).setValue("");
+                    //RootRef.child("Groups").child(nombreGrupo).setValue("");
+                    RootRef.child("Groups").child(nombreGrupo).setValue(datosUsuarios);
+                    //RootRef.child("Groups").child(nombreGrupo).child("members").setValue(usuario.g);
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
                     intent.putExtra("nombreGrupo",nombreGrupo);

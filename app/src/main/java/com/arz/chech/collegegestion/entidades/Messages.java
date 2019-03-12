@@ -29,6 +29,8 @@ public class Messages {
         this.seen = seen;
     }
 
+
+
     public String getReceiver() {
         return receiver;
     }

@@ -3,6 +3,7 @@ package com.arz.chech.collegegestion.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.ChatAdapter;
+import com.arz.chech.collegegestion.adapters.ChatAdapterGroup;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.entidades.Messages;
 import com.arz.chech.collegegestion.fragments.APIService;
@@ -28,6 +30,7 @@ import com.arz.chech.collegegestion.notifications.Sender;
 import com.arz.chech.collegegestion.notifications.Token;
 import com.arz.chech.collegegestion.preferences.Preferences;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +45,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +66,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     private EditText text_send;
     private RecyclerView mMessagesList;
     private final List<Messages> messagesList = new ArrayList<>();
-    private ChatAdapter mAdapter;
+    private ChatAdapterGroup mAdapter;
     private static final int GALLERY_PICK = 1;
     private TextView displayName;
     private String userid;
@@ -76,6 +80,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     private String nombreGrupo;
     private FirebaseAuth mAuth;
     private String currentUserID,currentGroupName,currentUserName,currentDate,currentTime;
+    private TextView displayTextMessage;
 
     public static final String prefGlobant="collegegestion.shared";
     public static final String prefbandera="collegegestion.bande";
@@ -109,11 +114,11 @@ public class ChatActivityGroup extends AppCompatActivity {
         });
 
         apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-        mMessagesList = (RecyclerView) findViewById(R.id.recyclerViewChat);
+        mMessagesList = (RecyclerView) findViewById(R.id.recyclerViewChatGroup);
         mMessagesList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
-        mAdapter = new ChatAdapter(ChatActivityGroup.this, messagesList);
+        mAdapter = new ChatAdapterGroup(ChatActivityGroup.this, messagesList);
         mMessagesList.setLayoutManager(linearLayoutManager);
         mMessagesList.setAdapter(mAdapter);
 
@@ -127,6 +132,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         btn_send = (ImageButton) findViewById(R.id.chat_send_btn);
         text_send = (EditText) findViewById(R.id.chat_message_view);
         displayName = (TextView) findViewById(R.id.display_name);
+        userid="LTNMHPisqBPa-6T-TZt";
         /*Intent intent = getIntent();
         userid = intent.getStringExtra("user_id");*/
 
@@ -135,35 +141,59 @@ public class ChatActivityGroup extends AppCompatActivity {
         /*for (final DatosUsuario m:datosUsuarios){
             userid=m.getToken();
             System.out.println("El nombre es: "+m.getNombre());
-            System.out.println("El apellido es: "+m.getApellido());
+            System.out.println("El apellido es: "+m.getApellido());*/
 
 
         //------- IMAGE STORAGE ---------
-        mImageStorage = FirebaseStorage.getInstance().getReference();
-        mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
+       // mImageStorage = FirebaseStorage.getInstance().getReference();
+        //mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
 
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+        reference = FirebaseDatabase.getInstance().getReference("Groups");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                DatosUsuario datosUsuario = dataSnapshot.getValue(DatosUsuario.class);
-                userName = m.getNombre();
-                userApellido = m.getApellido();
                 displayName.setText(nombreGrupo);
-                System.out.println("El nombre es: "+userName+" " + userApellido);
-                mAdapter.enviarDatos(userName, userApellido);
+                for (final DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) {
+
+                    reference.child(dataSnapshot1.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(final DataSnapshot dataSnapshot2:dataSnapshot.getChildren()) {
+
+                                        DatosUsuario datosUsuario = dataSnapshot2.getValue(DatosUsuario.class);
+                                        assert datosUsuario != null;
+                                        userName = datosUsuario.getNombre();
+                                        userApellido = datosUsuario.getApellido();
+
+                                        System.out.println("El nombre es: " + userName + " " + userApellido);
+                                        mAdapter.enviarDatos(userName, userApellido);
+                                        System.out.println("los nombres son: " + userName + " " + userApellido);
+
+
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 
-        readMessages();
+        //readMessages();
 
-        mRootRef.child("Chat").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
+       /* mRootRef.child("Chat").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(!dataSnapshot.hasChild(userid)){
@@ -196,7 +226,7 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
             }
-        });}
+        });*/
 
 
 
@@ -213,35 +243,110 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
 
-
+        //displayName.setText(nombreGrupo);
         GetUserInfo();
+        readMessages();
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SaveMessageInfoToDatabase();
-                text_send.setText("");
+
+
             }
         });
 
     }
+    /*
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        groupNameRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists()){
+                    displayMessage(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if(dataSnapshot.exists()){
+                    displayMessage(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }*/
+
+    private void displayMessage(DataSnapshot dataSnapshot) {
+        /*
+        Iterator iterator = dataSnapshot.getChildren().iterator();
+        while (iterator.hasNext()){
+
+            String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatMessage = (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatName = (String) ((DataSnapshot)iterator.next()).getValue();
+            String chatTime = (String) ((DataSnapshot)iterator.next()).getValue();
+
+            //displayMessage.t;
 
 
+        }*/
+
+    }
 
     private void readMessages(){
 
-        DatabaseReference messageRef = mRootRef.child("Messages").child(mCurrentUserId).child(userid);
+        final DatabaseReference messageRef = mRootRef.child("Groups");
 
         messageRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 messagesList.clear();
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    Messages message = snapshot.getValue(Messages.class);
-                    messagesList.add(message);
+                for (final DataSnapshot snapshot: dataSnapshot.getChildren()){
+
+                    messageRef.child(snapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for(final DataSnapshot snapshot1:dataSnapshot.getChildren()){
+
+                                Messages message = snapshot1.getValue(Messages.class);
+                                assert message !=null;
+                                messagesList.add(message);
+
+                            }
+
+                            mAdapter.notifyDataSetChanged();
+                            mMessagesList.scrollToPosition(messagesList.size()-1);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }
-                mAdapter.notifyDataSetChanged();
-                mMessagesList.scrollToPosition(messagesList.size()-1);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -367,7 +472,8 @@ public class ChatActivityGroup extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists()){
-                    currentUserName = dataSnapshot.child("name").getValue(String.class);
+                    currentUserName = dataSnapshot.child("nombre").getValue(String.class) +" "+ dataSnapshot.child("apellido").getValue(String.class);
+                    System.out.println("el usuario es: "+currentUserName);
                 }
             }
 
@@ -384,7 +490,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         String message = text_send.getText().toString();
         String messageKey =groupNameRef.push().getKey();
         if(TextUtils.isEmpty(message)){
-            Toast.makeText(this,"Pr favor ingrese un mensaje",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Por favor ingrese un mensaje",Toast.LENGTH_LONG).show();
         }
         else {
             Calendar calForDate = Calendar.getInstance();
@@ -403,12 +509,22 @@ public class ChatActivityGroup extends AppCompatActivity {
             groupmessageKeyRef = groupNameRef.child(messageKey);
 
             HashMap<String,Object> messageInfoMap = new HashMap<>();
-                messageInfoMap.put("name",currentUserName);
-                messageInfoMap.put("menssage",message);
-                messageInfoMap.put("date",currentDate);
-                messageInfoMap.put("time",currentTime);
+                messageInfoMap.put("message",message.trim());
+                messageInfoMap.put("seen", false);
+                messageInfoMap.put("type", "text");
+                messageInfoMap.put("time", ServerValue.TIMESTAMP);
+                messageInfoMap.put("from",mCurrentUserId);
+                //messageInfoMap.put("nombre",currentUserName);
+                messageInfoMap.put("receiver", userid);
+                //messageInfoMap.put("date",currentDate);
+                //messageInfoMap.put("time",currentTime);
              groupmessageKeyRef.updateChildren(messageInfoMap);
             }
+        text_send.setText("");
+
+
+        mMessagesList.scrollToPosition(messagesList.size()-1);
+
 
     }
 }
