@@ -202,6 +202,15 @@ public class NuevoGrupoActivity extends AppCompatActivity {
         agregadosList.setHasFixedSize(true);
         agregadosList.setLayoutManager(mLinearLayout);
         RootRef = FirebaseDatabase.getInstance().getReference();
+        addpersona.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NuevoGrupoActivity.this,AgregarContactoActivity.class);
+                startActivityForResult(intent,request_code);
+                //onResume();
+
+            }
+        });
 
         for (DatosUsuario mi:datosUsuarios){
 
@@ -273,8 +282,9 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                 }else {
                     String nombreGrupo=editText.getText().toString();
                     //RootRef.child("Groups").child(nombreGrupo).setValue("");
-                    RootRef.child("Groups").child(nombreGrupo).setValue(datosUsuarios);
-                    //RootRef.child("Groups").child(nombreGrupo).child("members").setValue(usuario.g);
+                    RootRef.child("Groups").child(nombreGrupo);
+                    RootRef.child("Groups").child(nombreGrupo).child("members").setValue(datosUsuarios);
+                    RootRef.child("Groups").child(nombreGrupo).child("admin").setValue(mCurrent_user_id);
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
                     intent.putExtra("nombreGrupo",nombreGrupo);

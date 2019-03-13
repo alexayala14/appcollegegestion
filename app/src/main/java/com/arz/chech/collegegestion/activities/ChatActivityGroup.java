@@ -150,7 +150,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
 
-        reference = FirebaseDatabase.getInstance().getReference("Groups");
+       /* reference = FirebaseDatabase.getInstance().getReference("Groups");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -161,20 +161,20 @@ public class ChatActivityGroup extends AppCompatActivity {
                     reference.child(dataSnapshot1.getKey()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for(final DataSnapshot dataSnapshot2:dataSnapshot.getChildren()) {
 
-                                        DatosUsuario datosUsuario = dataSnapshot2.getValue(DatosUsuario.class);
-                                        assert datosUsuario != null;
-                                        userName = datosUsuario.getNombre();
-                                        userApellido = datosUsuario.getApellido();
+                                            DatosUsuario datosUsuario = dataSnapshot1.getValue(DatosUsuario.class);
+                                            assert datosUsuario != null;
+                                            userName = datosUsuario.getNombre();
+                                            userApellido = datosUsuario.getApellido();
+                                            Log.e("datos", "" + dataSnapshot1.getValue());
+                                            Log.e("nombre usuario", "" + userName + " " + userApellido);
+                                            System.out.println("El nombre es: " + userName + " " + userApellido);
+                                            mAdapter.enviarDatos(userName, userApellido);
+                                            System.out.println("los nombres son: " + userName + " " + userApellido);
 
-                                        System.out.println("El nombre es: " + userName + " " + userApellido);
-                                        mAdapter.enviarDatos(userName, userApellido);
-                                        System.out.println("los nombres son: " + userName + " " + userApellido);
 
 
 
-                            }
 
                         }
 
@@ -183,13 +183,27 @@ public class ChatActivityGroup extends AppCompatActivity {
 
                         }
                     });
+
+
+
+
                 }
 
+
+
+
             }
+
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
-        });
+        });*/
+
+
+
+
+
 
         //readMessages();
 
@@ -245,7 +259,7 @@ public class ChatActivityGroup extends AppCompatActivity {
 
         //displayName.setText(nombreGrupo);
         GetUserInfo();
-        readMessages();
+        //readMessages();
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,16 +267,17 @@ public class ChatActivityGroup extends AppCompatActivity {
                 SaveMessageInfoToDatabase();
 
 
+
             }
         });
 
     }
-    /*
+
     @Override
     protected void onStart() {
         super.onStart();
-
-        groupNameRef.addChildEventListener(new ChildEventListener() {
+        displayName.setText(nombreGrupo);
+        groupNameRef.child("message").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.exists()){
@@ -292,22 +307,47 @@ public class ChatActivityGroup extends AppCompatActivity {
 
             }
         });
-    }*/
+    }
 
     private void displayMessage(DataSnapshot dataSnapshot) {
-        /*
+
         Iterator iterator = dataSnapshot.getChildren().iterator();
+        messagesList.clear();
         while (iterator.hasNext()){
+            //DatosUsuario datosUsuario = dataSnapshot.getValue(DatosUsuario.class);
+            //assert datosUsuario != null;
+           /* String userApellido =(String) ((DataSnapshot)iterator.next()).getValue();
+            Boolean estaEliminado = (Boolean) ((DataSnapshot)iterator.next()).getValue();
+            String userName = (String) ((DataSnapshot)iterator.next()).getValue();
+            String perfil = (String) ((DataSnapshot)iterator.next()).getValue();
+            String rut = (String) ((DataSnapshot)iterator.next()).getValue();
+            String token = (String) ((DataSnapshot)iterator.next()).getValue();
+            mAdapter.enviarDatos(userName, userApellido);
+            System.out.println("desde display:"+userName+" "+userApellido);*/
 
-            String chatDate = (String) ((DataSnapshot)iterator.next()).getValue();
-            String chatMessage = (String) ((DataSnapshot)iterator.next()).getValue();
-            String chatName = (String) ((DataSnapshot)iterator.next()).getValue();
-            String chatTime = (String) ((DataSnapshot)iterator.next()).getValue();
+            String messages =(String) ((DataSnapshot)iterator.next()).getValue();
+            Boolean seen = (Boolean) ((DataSnapshot)iterator.next()).getValue();
+            String type = (String) ((DataSnapshot)iterator.next()).getValue();
+            String time = (String) ((DataSnapshot)iterator.next()).getValue();
+            String from = (String) ((DataSnapshot)iterator.next()).getValue();
+            String receiver = (String) ((DataSnapshot)iterator.next()).getValue();
 
-            //displayMessage.t;
 
 
-        }*/
+            Messages message = dataSnapshot.getValue(Messages.class);
+            assert message !=null;
+            messagesList.add(message);
+
+
+
+            mAdapter.notifyDataSetChanged();
+            mMessagesList.scrollToPosition(messagesList.size()-1);
+
+
+        }
+
+        //mAdapter.notifyDataSetChanged();
+        //mMessagesList.scrollToPosition(messagesList.size()-1);
 
     }
 
@@ -488,7 +528,8 @@ public class ChatActivityGroup extends AppCompatActivity {
 
     private void SaveMessageInfoToDatabase() {
         String message = text_send.getText().toString();
-        String messageKey =groupNameRef.push().getKey();
+        DatabaseReference mMensaje = groupNameRef.child("message");
+        String messageKey =mMensaje.push().getKey();
         if(TextUtils.isEmpty(message)){
             Toast.makeText(this,"Por favor ingrese un mensaje",Toast.LENGTH_LONG).show();
         }
@@ -503,10 +544,10 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
             HashMap<String,Object> groupMessageKey=new HashMap<>();
-            groupNameRef.updateChildren(groupMessageKey);
+            mMensaje.updateChildren(groupMessageKey);
 
 
-            groupmessageKeyRef = groupNameRef.child(messageKey);
+            groupmessageKeyRef = mMensaje.child(messageKey);
 
             HashMap<String,Object> messageInfoMap = new HashMap<>();
                 messageInfoMap.put("message",message.trim());
