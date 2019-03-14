@@ -75,7 +75,8 @@ public class FriendsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(),"Es un grupo nuevo",Toast.LENGTH_LONG).show();
                 //RequestNewGroup();
-                Intent intent = new Intent(FriendsActivity.this, NuevoGrupoActivity.class);
+                //Intent intent = new Intent(FriendsActivity.this, NuevoGrupoActivity.class);
+                Intent intent = new Intent(FriendsActivity.this, MensajesGruposActivity.class);
                 startActivity(intent);
                 finish();
             }

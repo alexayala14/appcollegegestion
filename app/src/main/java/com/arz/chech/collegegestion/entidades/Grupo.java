@@ -4,12 +4,18 @@ public class Grupo {
 
     private String nombre;
     private String token;
-    private boolean estaEliminado;
+    private String message;
+    private String members;
 
-    public Grupo(String nombre, String token, boolean estaEliminado) {
+    public Grupo(String nombre, String token, String message, String members) {
         this.nombre = nombre;
         this.token = token;
-        this.estaEliminado = estaEliminado;
+        this.message = message;
+        this.members = members;
+    }
+
+    public Grupo(String nombre) {
+
     }
     public Grupo(){
 
@@ -31,18 +37,31 @@ public class Grupo {
         this.token = token;
     }
 
-    public boolean isEstaEliminado() {
-        return estaEliminado;
+    public String getMessage() {
+        return message;
     }
 
-    public void setEstaEliminado(boolean estaEliminado) {
-        this.estaEliminado = estaEliminado;
+    public void setMessage(String message) {
+        this.message = message;
     }
+
+    public String getMembers() {
+        return members;
+    }
+
+    public void setMembers(String members) {
+        this.members = members;
+    }
+
+
 
     @Override
     public String toString() {
         return "Grupo{" +
                 "nombre='" + nombre + '\'' +
+                ", token='" + token + '\'' +
+                ", message='" + message + '\'' +
+                ", members='" + members + '\'' +
                 '}';
     }
 }
