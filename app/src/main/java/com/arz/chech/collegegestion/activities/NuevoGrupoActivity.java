@@ -298,7 +298,6 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     miUsuario.setRut(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_USUARIO));
                     miUsuario.setToken(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_TOKEN));
                     datosUsuarios.add(miUsuario);
-                    //miUsuario.setEstaEliminado(Preferences.obtenerPreferenceBoolean(NuevoGrupoActivity.this,Preferences.PREFERENCE_ESTADO_SESION));
                     System.out.println("el usuario tiene los datos"+miUsuario.toString());
                     DatabaseReference refGroup= RootRef.child("Groups").push();
                     refGroup.child("name").setValue(nombreGrupo);

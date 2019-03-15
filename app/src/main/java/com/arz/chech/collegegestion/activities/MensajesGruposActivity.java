@@ -68,12 +68,14 @@ public class MensajesGruposActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 groupList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Grupo grupo = snapshot.getValue(Grupo.class);
+                   final Grupo grupo = snapshot.getValue(Grupo.class);
                     assert grupo !=null;
                     groupId=grupo.getGroupId();
                     groupId = snapshot.getKey();
                     messagesGroupAdapter.enviarDatos(groupId);
+
                     System.out.println("el dato a pasar es : "+groupId);
+
                     groupList.add(grupo);
                 }
                 //chatList();

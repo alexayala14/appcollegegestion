@@ -133,8 +133,6 @@ public class ChatActivityGroup extends AppCompatActivity {
         text_send = (EditText) findViewById(R.id.chat_message_view);
         displayName = (TextView) findViewById(R.id.display_name);
         userid="LTNMHPisqBPa-6T-TZt";
-        /*Intent intent = getIntent();
-        userid = intent.getStringExtra("user_id");*/
 
         //
 
@@ -298,6 +296,26 @@ public class ChatActivityGroup extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                Grupo grupo = dataSnapshot.getValue(Grupo.class);
+                assert grupo != null;
+                nombreGrupo = grupo.getName();
+                displayName.setText(nombreGrupo);
+                System.out.println("el nombre del grupo es:  "+nombreGrupo);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         groupNameRef.child("message").addChildEventListener(new ChildEventListener() {
             @Override
