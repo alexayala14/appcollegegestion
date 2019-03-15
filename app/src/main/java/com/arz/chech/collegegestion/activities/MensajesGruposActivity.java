@@ -38,6 +38,7 @@ public class MensajesGruposActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private TextView noExistenMensajes;
     private DatabaseReference groupRef;
+    private String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,10 @@ public class MensajesGruposActivity extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Grupo grupo = snapshot.getValue(Grupo.class);
                     assert grupo !=null;
+                    groupId=grupo.getGroupId();
+                    groupId = snapshot.getKey();
+                    messagesGroupAdapter.enviarDatos(groupId);
+                    System.out.println("el dato a pasar es : "+groupId);
                     groupList.add(grupo);
                 }
                 //chatList();

@@ -35,6 +35,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     private String firebaseUser;
     private static String dateFormat = "hh:mm a";
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+    private String groupId;
 
     public MessagesGroupAdapter(Context context, ArrayList<Grupo> groupList){
         this.groupList = groupList;
@@ -57,15 +58,17 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     @Override
     public void onBindViewHolder(@NonNull MessagesGroupAdapter.ViewHolder viewHolder, int i) {
         final Grupo grupo = groupList.get(i);
-        viewHolder.username.setText(grupo.getNombre());
+        viewHolder.username.setText(grupo.getName());
 
 
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ChatActivityGroup.class);
-                intent.putExtra("user_id", grupo.getToken());
-                intent.putExtra("user_name", grupo.getNombre());
+                //intent.putExtra("user_id", grupo.getToken());
+                intent.putExtra("nombreGrupo",groupId);
+                System.out.println("En el intent es el valor: "+groupId);
+                intent.putExtra("name", grupo.getName());
 
                 mContext.startActivity(intent);
             }
@@ -132,5 +135,10 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+
+    public void enviarDatos(String groupIda) {
+        groupId = groupIda;
+
     }
 }

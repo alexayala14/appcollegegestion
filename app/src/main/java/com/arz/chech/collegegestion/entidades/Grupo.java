@@ -2,66 +2,43 @@ package com.arz.chech.collegegestion.entidades;
 
 public class Grupo {
 
-    private String nombre;
-    private String token;
-    private String message;
-    private String members;
+    private String name;
+    private String  groupId;
 
-    public Grupo(String nombre, String token, String message, String members) {
-        this.nombre = nombre;
-        this.token = token;
-        this.message = message;
-        this.members = members;
-    }
-
-    public Grupo(String nombre) {
-
+    public Grupo(String name) {
+        this.name = name;
     }
     public Grupo(){
 
     }
 
-    public String getNombre() {
-        return nombre;
+
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getToken() {
-        return token;
+    public Grupo(String name, String groupId) {
+        this.name = name;
+        this.groupId = groupId;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public String getMessage() {
-        return message;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getMembers() {
-        return members;
-    }
-
-    public void setMembers(String members) {
-        this.members = members;
-    }
-
-
 
     @Override
     public String toString() {
         return "Grupo{" +
-                "nombre='" + nombre + '\'' +
-                ", token='" + token + '\'' +
-                ", message='" + message + '\'' +
-                ", members='" + members + '\'' +
+                "name='" + name + '\'' +
+                ", groupId='" + groupId + '\'' +
                 '}';
     }
 }

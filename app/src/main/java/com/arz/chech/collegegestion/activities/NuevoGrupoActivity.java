@@ -229,6 +229,8 @@ public class NuevoGrupoActivity extends AppCompatActivity {
         if (userid!=null){
 
 
+
+
             mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
             mUsersDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -272,6 +274,13 @@ public class NuevoGrupoActivity extends AppCompatActivity {
 
                 }
             });}
+
+
+
+
+
+
+
         String texto="Participantes: "+String.valueOf(datosUsuarios.size());
         textView.setText(texto);
         creargrupo.setOnClickListener(new View.OnClickListener() {
@@ -282,12 +291,14 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                 }else {
                     String nombreGrupo=editText.getText().toString();
                     //RootRef.child("Groups").child(nombreGrupo).setValue("");
-                    RootRef.child("Groups").child(nombreGrupo);
-                    RootRef.child("Groups").child(nombreGrupo).child("members").setValue(datosUsuarios);
-                    RootRef.child("Groups").child(nombreGrupo).child("admin").setValue(mCurrent_user_id);
+                    DatabaseReference refGroup= RootRef.child("Groups").push();
+                    refGroup.child("name").setValue(nombreGrupo);
+                    refGroup.child("members").setValue(datosUsuarios);
+                    refGroup.child("admin").setValue(mCurrent_user_id);
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
-                    intent.putExtra("nombreGrupo",nombreGrupo);
+                    intent.putExtra("nombreGrupo",refGroup.getKey());
+                    System.out.println("el valor essssss: "+ refGroup.getKey());
                     startActivity(intent);
                     finish();
 

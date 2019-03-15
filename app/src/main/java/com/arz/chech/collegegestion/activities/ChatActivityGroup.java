@@ -21,6 +21,7 @@ import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.ChatAdapter;
 import com.arz.chech.collegegestion.adapters.ChatAdapterGroup;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.entidades.Grupo;
 import com.arz.chech.collegegestion.entidades.Messages;
 import com.arz.chech.collegegestion.fragments.APIService;
 import com.arz.chech.collegegestion.notifications.Client;
@@ -94,12 +95,11 @@ public class ChatActivityGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages_group);
 
-        datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
-        nombreGrupo=getIntent().getStringExtra("nombreGrupo");
-        System.out.println("el valor es:"+datosUsuarios.toString());
+        //datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
+        //nombreGrupo=getIntent().getStringExtra("nombreGrupo");
+        //System.out.println("el valor es:"+datosUsuarios.toString());
         currentGroupName=getIntent().getStringExtra("nombreGrupo");
-
-
+        System.out.println("El token de grupo pasado por intent es: "+ currentGroupName);
 
         //TOOLBAR
         mChatToolbar = (Toolbar) findViewById(R.id.toolbarMessages);
@@ -150,9 +150,31 @@ public class ChatActivityGroup extends AppCompatActivity {
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
 
-       /* reference = FirebaseDatabase.getInstance().getReference("Groups");
+        reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
 
         reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    Grupo grupo = dataSnapshot.getValue(Grupo.class);
+                    assert grupo != null;
+                    nombreGrupo = grupo.getName();
+                    displayName.setText(nombreGrupo);
+                    System.out.println("el nombre del grupo es:  "+nombreGrupo);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        System.out.println("el nooooombre es: "+currentGroupName);
+        System.out.println("el nombre del grupo es:  "+nombreGrupo);
+
+
+        /*reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 displayName.setText(nombreGrupo);
@@ -276,7 +298,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        displayName.setText(nombreGrupo);
+
         groupNameRef.child("message").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
