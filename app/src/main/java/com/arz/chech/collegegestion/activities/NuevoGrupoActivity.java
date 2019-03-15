@@ -2,6 +2,7 @@ package com.arz.chech.collegegestion.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -290,7 +291,15 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     Toast.makeText(NuevoGrupoActivity.this ,"Ingrese nombre de Grupo",Toast.LENGTH_LONG).show();
                 }else {
                     String nombreGrupo=editText.getText().toString();
-                    //RootRef.child("Groups").child(nombreGrupo).setValue("");
+                    DatosUsuario miUsuario = new DatosUsuario();
+                    miUsuario.setNombre(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_NOMBRE));
+                    miUsuario.setApellido(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_APELLIDO));
+                    miUsuario.setPerfil(String.valueOf(Preferences.obtenerPreferenceInt(NuevoGrupoActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)));
+                    miUsuario.setRut(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_USUARIO));
+                    miUsuario.setToken(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_TOKEN));
+                    datosUsuarios.add(miUsuario);
+                    //miUsuario.setEstaEliminado(Preferences.obtenerPreferenceBoolean(NuevoGrupoActivity.this,Preferences.PREFERENCE_ESTADO_SESION));
+                    System.out.println("el usuario tiene los datos"+miUsuario.toString());
                     DatabaseReference refGroup= RootRef.child("Groups").push();
                     refGroup.child("name").setValue(nombreGrupo);
                     refGroup.child("members").setValue(datosUsuarios);
