@@ -84,6 +84,8 @@ public class ChatActivityGroup extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String currentUserID,currentGroupName,currentUserName,currentDate,currentTime;
     private TextView displayTextMessage;
+    private Boolean bannnd;
+    private String Userrrr;
 
     public static final String prefGlobant="collegegestion.shared";
     public static final String prefbandera="collegegestion.bande";
@@ -142,6 +144,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         displayName = (TextView) findViewById(R.id.display_name);
 
 
+
         //
 
         /*for (final DatosUsuario m:datosUsuarios){
@@ -167,6 +170,8 @@ public class ChatActivityGroup extends AppCompatActivity {
                     nombreGrupo = grupo.getName();
                     displayName.setText(nombreGrupo);
                     System.out.println("el nombre del grupo es:  "+nombreGrupo);
+
+                //mAdapter.enviarDatos(nombre, apellido);
 
             }
 
@@ -292,6 +297,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                notify = true;
                 SaveMessageInfoToDatabase();
 
 
@@ -330,6 +336,7 @@ public class ChatActivityGroup extends AppCompatActivity {
                 displayName.setText(nombreGrupo);
                 System.out.println("el nombre del grupo es:  "+nombreGrupo);
 
+                //mAdapter.enviarDatos(nombre, apellido);
             }
 
             @Override
@@ -337,6 +344,65 @@ public class ChatActivityGroup extends AppCompatActivity {
 
             }
         });
+
+
+
+        final DatabaseReference messageRef = reference.child("Messages");
+
+
+        messageRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (final DataSnapshot snapshot: dataSnapshot.getChildren()){
+
+                    messageRef.getRef().addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            for(final DataSnapshot snapshot1:dataSnapshot.getChildren()){
+
+                                Messages message = snapshot1.getValue(Messages.class);
+                                assert message !=null;
+
+                                for(DatosUsuario dat:datosUsuarios){
+                                    System.out.println("EL TOKENNN ES DE USUARIO "+ dat.getToken());
+                                    System.out.println("EL TOKENNN ES DE MENSAJE "+ message.getFrom());
+
+                                    if(message.getFrom().contains(dat.getToken())){
+                                        String nombre=dat.getNombre();
+                                        String apellido = dat.getApellido();
+                                        System.out.println("EL NOMBRE ES:"+nombre);
+                                        System.out.println("EL APELLIDO ES:"+apellido);
+                                        mAdapter.enviarDatos(nombre,apellido);
+
+
+                                    }
+                                }
+
+                            }
+                            mAdapter.notifyDataSetChanged();
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
+
 
         /*reference.child("message").addValueEventListener(new ValueEventListener() {
             @Override
@@ -430,7 +496,7 @@ public class ChatActivityGroup extends AppCompatActivity {
 
     private void readMessages(){
 
-        final DatabaseReference messageRef = reference.child("message");
+        final DatabaseReference messageRef = reference.child("Messages");
 
 
         messageRef.addValueEventListener(new ValueEventListener() {
@@ -602,11 +668,18 @@ public class ChatActivityGroup extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        // Añade más funciones si fuese necesario
+        super.onBackPressed();  // Invoca al método
+    }
+
 
 
     private void SaveMessageInfoToDatabase() {
         String message = text_send.getText().toString();
-        DatabaseReference mMensaje = groupNameRef.child("message");
+        DatabaseReference mMensaje = groupNameRef.child("Messages");
         String messageKey =mMensaje.push().getKey();
         if(TextUtils.isEmpty(message)){
             Toast.makeText(this,"Por favor ingrese un mensaje",Toast.LENGTH_LONG).show();
@@ -644,6 +717,28 @@ public class ChatActivityGroup extends AppCompatActivity {
 
         mMessagesList.scrollToPosition(messagesList.size()-1);
 
+        final String msg = message.trim();
+        /* VER NOTIFICACION
+        for(DatosUsuario dato:datosUsuarios) {
+            userid=dato.getToken();
 
+                    if (notify && !(userid.equals(mCurrentUserId))) {
+                        banderaNot = true;
+                        SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = ban.edit();
+                        editor.putBoolean(prefbandera, banderaNot);
+                        editor.apply();
+                        System.out.println("bandera antes del mensaje:" + ban.getBoolean(prefbandera, false));
+
+
+                        sendNotification(userid, dato.getNombre() + " " + dato.getApellido(), msg, banderaNot);
+
+                    }
+
+
+        }
+        notify = false;*/
+
+        mMessagesList.scrollToPosition(messagesList.size()-1);
     }
 }

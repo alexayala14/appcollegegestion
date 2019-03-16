@@ -102,44 +102,7 @@ public class MessageFragment extends Fragment{
         return view;
     }
 
-    private void groupList() {
-        groupRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mUsers.clear();
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    DatosUsuario user = snapshot.getValue(DatosUsuario.class);
-                    if (snapshot.child("estaEliminado").exists()){
-                        for (String grupo: groupList){
-                            if (user.getToken().equals(grupo)){
-                                if (!user.isEstaEliminado()){
-                                    mUsers.add(user);
-                                }
-                            }
-                        }
-                    }else{
-                        for (String grupo: groupList){
-                            if (user.getToken().equals(grupo)){
-                                mUsers.add(user);
-                            }
-                        }
-                    }
 
-                }
-                if (mUsers.isEmpty()){
-                    noExistenMensajes.setVisibility(View.VISIBLE);
-                }else {
-                    noExistenMensajes.setVisibility(View.GONE);
-                }
-                messagesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     private void updateToken(String token){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");

@@ -78,6 +78,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                 intent.putExtra("name", grupo.getName());
 
                 mContext.startActivity(intent);
+
             }
         });
     }

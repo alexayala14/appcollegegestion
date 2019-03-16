@@ -66,7 +66,7 @@ public class MensajesGruposActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                groupList.clear();
+                //groupList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                    final Grupo grupo = snapshot.getValue(Grupo.class);
                     assert grupo !=null;
@@ -76,11 +76,11 @@ public class MensajesGruposActivity extends AppCompatActivity {
 
                     System.out.println("el dato a pasar es : "+groupId);
 
-                    groupList.add(grupo);
+                    //groupList.add(grupo);
                 }
                 //chatList();
-                //groupList();
-                messagesGroupAdapter.notifyDataSetChanged();
+
+                //messagesGroupAdapter.notifyDataSetChanged();
 
 
             }
@@ -93,6 +93,29 @@ public class MensajesGruposActivity extends AppCompatActivity {
         });
 
         //updateToken(FirebaseInstanceId.getInstance().getToken());
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                groupList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    final Grupo grupo = snapshot.getValue(Grupo.class);
+                    assert grupo !=null;
+                    groupList.add(grupo);
+                }
+                //chatList();
+
+                messagesGroupAdapter.notifyDataSetChanged();
+
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
     }
