@@ -78,6 +78,8 @@ public class ChatActivityGroup extends AppCompatActivity {
     private DatabaseReference userRef,groupNameRef,groupmessageKeyRef;
     Boolean banderaNot;
     Boolean bann;
+    private String miembrosGroup;
+    private String acumMembers;
     private String nombreGrupo;
     private FirebaseAuth mAuth;
     private String currentUserID,currentGroupName,currentUserName,currentDate,currentTime;
@@ -95,11 +97,17 @@ public class ChatActivityGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages_group);
 
-        //datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
-        //nombreGrupo=getIntent().getStringExtra("nombreGrupo");
-        //System.out.println("el valor es:"+datosUsuarios.toString());
+        datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
+        System.out.println("el array en el chat es: "+ datosUsuarios);
+       // userid=getIntent().getStringExtra("user_id");
+        //System.out.println("el user id es el: "+ userid);
         currentGroupName=getIntent().getStringExtra("nombreGrupo");
         System.out.println("El token de grupo pasado por intent es: "+ currentGroupName);
+
+        for(DatosUsuario i:datosUsuarios){
+            //i.getToken();
+        }
+
 
         //TOOLBAR
         mChatToolbar = (Toolbar) findViewById(R.id.toolbarMessages);
@@ -132,7 +140,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         btn_send = (ImageButton) findViewById(R.id.chat_send_btn);
         text_send = (EditText) findViewById(R.id.chat_message_view);
         displayName = (TextView) findViewById(R.id.display_name);
-        userid="LTNMHPisqBPa-6T-TZt";
+
 
         //
 
@@ -147,7 +155,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         //mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
-
+        displayName.setText(datosUsuarios.toString());
         reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -279,7 +287,7 @@ public class ChatActivityGroup extends AppCompatActivity {
 
         //displayName.setText(nombreGrupo);
         GetUserInfo();
-        //readMessages();
+        readMessages();
 
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -296,8 +304,21 @@ public class ChatActivityGroup extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        acumMembers="";
+        userid=getIntent().getStringExtra("user_id");
+        System.out.println("el user id es el: "+ userid);
+        currentGroupName=getIntent().getStringExtra("nombreGrupo");
+        System.out.println("El token de grupo pasado por intent es: "+ currentGroupName);
         reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
+
+        //miembros de los grupos como subtitulo
+        /*for(DatosUsuario i:datosUsuarios){
+            acumMembers= (String) acumMembers + i.getNombre()+",";
+        }
+        miembrosGroup=acumMembers.substring(0,acumMembers.length()-1);
+        displayName.setText(miembrosGroup);*/
+
+
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -317,7 +338,23 @@ public class ChatActivityGroup extends AppCompatActivity {
             }
         });
 
-        groupNameRef.child("message").addChildEventListener(new ChildEventListener() {
+        /*reference.child("message").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    if (dataSnapshot.exists()) {
+                        displayMessage(snapshot);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
+
+        /*groupNameRef.child("message").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 if(dataSnapshot.exists()){
@@ -346,7 +383,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     private void displayMessage(DataSnapshot dataSnapshot) {
@@ -393,7 +430,8 @@ public class ChatActivityGroup extends AppCompatActivity {
 
     private void readMessages(){
 
-        final DatabaseReference messageRef = mRootRef.child("Groups");
+        final DatabaseReference messageRef = reference.child("message");
+
 
         messageRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -401,10 +439,10 @@ public class ChatActivityGroup extends AppCompatActivity {
                 messagesList.clear();
                 for (final DataSnapshot snapshot: dataSnapshot.getChildren()){
 
-                    messageRef.child(snapshot.getKey()).addValueEventListener(new ValueEventListener() {
+                    messageRef.getRef().addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                            messagesList.clear();
                             for(final DataSnapshot snapshot1:dataSnapshot.getChildren()){
 
                                 Messages message = snapshot1.getValue(Messages.class);

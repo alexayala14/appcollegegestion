@@ -65,7 +65,14 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ChatActivityGroup.class);
-                //intent.putExtra("user_id", grupo.getToken());
+                ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
+                for(DatosUsuario i:grupo.getMembers()){
+                    mem.add(i);
+
+                }
+
+                intent.putExtra("datosUsuariosList", mem);
+                System.out.println("el arraylist en mensaje es: "+mem);
                 intent.putExtra("nombreGrupo",groupId);
                 System.out.println("En el intent es el valor: "+groupId);
                 intent.putExtra("name", grupo.getName());

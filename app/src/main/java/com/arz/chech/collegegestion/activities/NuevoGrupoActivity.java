@@ -305,6 +305,10 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     refGroup.child("admin").setValue(mCurrent_user_id);
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
+                    /*for(DatosUsuario i:datosUsuarios){
+                        intent.putExtra("user_id",i.getToken());
+
+                    }*/
                     intent.putExtra("nombreGrupo",refGroup.getKey());
                     System.out.println("el valor essssss: "+ refGroup.getKey());
                     startActivity(intent);
