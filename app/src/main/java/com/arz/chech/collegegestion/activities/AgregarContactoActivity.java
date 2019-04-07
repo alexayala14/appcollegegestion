@@ -80,12 +80,44 @@ public class AgregarContactoActivity extends AppCompatActivity {
                         if (!mCurrent_user_id.equals(usuario.getToken())){
                             if (!usuario.isEstaEliminado()){
 
-                                datosUsuarios.add(usuario);
+                                if((String.valueOf(Preferences.obtenerPreferenceInt(AgregarContactoActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
+
+                                    datosUsuarios.add(usuario);
+
+                                }
+
+                                if((String.valueOf(Preferences.obtenerPreferenceInt(AgregarContactoActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
+                                    if (usuario.getPerfil().equals("1")||usuario.getPerfil().equals("2")||usuario.getPerfil().equals("3")) {
+                                        datosUsuarios.add(usuario);
+                                    }
+                                }
+
+                                if((String.valueOf(Preferences.obtenerPreferenceInt(AgregarContactoActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
+                                    if (usuario.getPerfil().equals("2")||usuario.getPerfil().equals("3")) {
+                                        datosUsuarios.add(usuario);
+                                    }
+                                }
                             }
                         }
                     }else{
                         if (!mCurrent_user_id.equals(usuario.getToken())){
-                            datosUsuarios.add(usuario);
+                            if((String.valueOf(Preferences.obtenerPreferenceInt(AgregarContactoActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
+
+                                datosUsuarios.add(usuario);
+
+                            }
+
+                            if((String.valueOf(Preferences.obtenerPreferenceInt(AgregarContactoActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
+                                if (usuario.getPerfil().equals("1")||usuario.getPerfil().equals("2")||usuario.getPerfil().equals("3")) {
+                                    datosUsuarios.add(usuario);
+                                }
+                            }
+
+                            if((String.valueOf(Preferences.obtenerPreferenceInt(AgregarContactoActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
+                                if (usuario.getPerfil().equals("2")||usuario.getPerfil().equals("3")) {
+                                    datosUsuarios.add(usuario);
+                                }
+                            }
                         }
                     }
 

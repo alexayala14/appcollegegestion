@@ -134,7 +134,25 @@ public class FriendsActivity extends AppCompatActivity {
                                 /*if(mUsersDatabase.equals("d")) {
                                     datosUsuarios.add(usuario);
                                 }*/
-                                datosUsuarios.add(usuario);
+
+                                if((String.valueOf(Preferences.obtenerPreferenceInt(FriendsActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
+
+                                    datosUsuarios.add(usuario);
+
+                                }
+
+                                if((String.valueOf(Preferences.obtenerPreferenceInt(FriendsActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
+                                    if (usuario.getPerfil().equals("1")||usuario.getPerfil().equals("2")||usuario.getPerfil().equals("3")) {
+                                        datosUsuarios.add(usuario);
+                                    }
+                                }
+
+                                if((String.valueOf(Preferences.obtenerPreferenceInt(FriendsActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
+                                    if (usuario.getPerfil().equals("2")||usuario.getPerfil().equals("3")) {
+                                        datosUsuarios.add(usuario);
+                                    }
+                                }
+
                             }
                         }
                     }else{

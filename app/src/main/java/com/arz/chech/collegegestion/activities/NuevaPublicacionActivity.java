@@ -161,8 +161,28 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                                     editor.apply();
                                     System.out.println("LA PUBLICACION ENVIADA ES: "+band.getBoolean(prefbanderas,false));
 
+                                    if((String.valueOf(Preferences.obtenerPreferenceInt(NuevaPublicacionActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
 
-                                    sendNotification(datosUsuario.getToken(), asunto,banderaNots);
+                                            sendNotification(datosUsuario.getToken(), asunto,banderaNots);
+
+                                    }
+
+                                    if((String.valueOf(Preferences.obtenerPreferenceInt(NuevaPublicacionActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
+                                        if (datosUsuario.getPerfil().equals("1")||datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")||datosUsuario.getPerfil().equals("4")) {
+                                            sendNotification(datosUsuario.getToken(), asunto,banderaNots);
+                                        }
+                                    }
+
+                                    if((String.valueOf(Preferences.obtenerPreferenceInt(NuevaPublicacionActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
+                                        if (datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")||datosUsuario.getPerfil().equals("5")) {
+                                            sendNotification(datosUsuario.getToken(), asunto,banderaNots);
+                                        }
+                                    }
+
+
+
+
+
 
                                 }
                             }

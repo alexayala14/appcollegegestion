@@ -76,8 +76,38 @@ public class PublicacionesFragment extends Fragment{
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario datosUsuario = snapshot.getValue(DatosUsuario.class);
                     if (!datosUsuario.isEstaEliminado()){
-                        listaUsuarios.add(datosUsuario.getToken());
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
+
+                            listaUsuarios.add(datosUsuario.getToken());
+
+                        }
+
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
+                            if (datosUsuario.getPerfil().equals("1")||datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")) {
+                                listaUsuarios.add(datosUsuario.getToken());
+                            }
+                        }
+
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
+                            if (datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")) {
+                                listaUsuarios.add(datosUsuario.getToken());
+                            }
+                        }
+
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("4"))){
+                            if (datosUsuario.getPerfil().equals("2")) {
+                                listaUsuarios.add(datosUsuario.getToken());
+                            }
+                        }
+
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("5"))){
+                            if (datosUsuario.getPerfil().equals("3")) {
+                                listaUsuarios.add(datosUsuario.getToken());
+                            }
+                        }
                     }
+
+
                 }
                 publicacionesList();
             }
@@ -102,6 +132,7 @@ public class PublicacionesFragment extends Fragment{
                         if (publicacion.getTokenUser() != null){
                             for (String usuarios: listaUsuarios){
                                 if (publicacion.getTokenUser().equals(usuarios)){
+
                                     listaPublicaciones.add(publicacion);
                                 }
                             }

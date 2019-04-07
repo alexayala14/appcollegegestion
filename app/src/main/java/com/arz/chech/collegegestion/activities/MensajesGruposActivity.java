@@ -73,14 +73,15 @@ public class MensajesGruposActivity extends AppCompatActivity {
                     groupId=grupo.getGroupId();
                     groupId = snapshot.getKey();
                     messagesGroupAdapter.enviarDatos(groupId);
+                    usersList.add(snapshot.getKey());
 
                     System.out.println("el dato a pasar es : "+groupId);
 
                     //groupList.add(grupo);
                 }
-                //chatList();
+                chatList();
 
-                //messagesGroupAdapter.notifyDataSetChanged();
+               // messagesGroupAdapter.notifyDataSetChanged();
 
 
             }
@@ -94,7 +95,7 @@ public class MensajesGruposActivity extends AppCompatActivity {
 
         //updateToken(FirebaseInstanceId.getInstance().getToken());
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 groupList.clear();
@@ -115,7 +116,7 @@ public class MensajesGruposActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
 
     }
@@ -130,31 +131,33 @@ public class MensajesGruposActivity extends AppCompatActivity {
 
 
     private void chatList() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Groups");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mUsers.clear();
+                groupList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    DatosUsuario user = snapshot.getValue(DatosUsuario.class);
+                    Grupo grupo = snapshot.getValue(Grupo.class);
+                    /*DatosUsuario user = snapshot.getValue(DatosUsuario.class);
                     if (snapshot.child("estaEliminado").exists()){
                         for (String usuario: usersList){
                             if (user.getToken().equals(usuario)){
                                 if (!user.isEstaEliminado()){
-                                    mUsers.add(user);
+                                    groupList.add(grupo);
                                 }
                             }
                         }
                     }else{
                         for (String usuario: usersList){
                             if (user.getToken().equals(usuario)){
-                                mUsers.add(user);
+                                groupList.add(grupo);
                             }
                         }
-                    }
+                    }*/
+                    groupList.add(grupo);
 
                 }
-                if (mUsers.isEmpty()){
+                if (groupList.isEmpty()){
                     noExistenMensajes.setVisibility(View.VISIBLE);
                 }else {
                     noExistenMensajes.setVisibility(View.GONE);
