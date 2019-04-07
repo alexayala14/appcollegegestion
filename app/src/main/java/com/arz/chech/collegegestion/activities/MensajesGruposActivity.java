@@ -77,7 +77,7 @@ public class MensajesGruposActivity extends AppCompatActivity {
 
                     System.out.println("el dato a pasar es : "+groupId);
 
-                    //groupList.add(grupo);
+
                 }
                 chatList();
 
@@ -93,30 +93,7 @@ public class MensajesGruposActivity extends AppCompatActivity {
             }
         });
 
-        //updateToken(FirebaseInstanceId.getInstance().getToken());
 
-        /*databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                groupList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    final Grupo grupo = snapshot.getValue(Grupo.class);
-                    assert grupo !=null;
-                    groupList.add(grupo);
-                }
-                //chatList();
-
-                messagesGroupAdapter.notifyDataSetChanged();
-
-
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
 
 
     }
@@ -138,23 +115,16 @@ public class MensajesGruposActivity extends AppCompatActivity {
                 groupList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     Grupo grupo = snapshot.getValue(Grupo.class);
-                    /*DatosUsuario user = snapshot.getValue(DatosUsuario.class);
-                    if (snapshot.child("estaEliminado").exists()){
-                        for (String usuario: usersList){
-                            if (user.getToken().equals(usuario)){
-                                if (!user.isEstaEliminado()){
-                                    groupList.add(grupo);
-                                }
-                            }
+                    assert grupo !=null;
+
+                    for(DatosUsuario user:grupo.getMembers()) {
+
+
+                        if (Preferences.obtenerPreferenceString(MensajesGruposActivity.this, Preferences.PREFERENCE_TOKEN).equals(user.getToken())){
+                            groupList.add(grupo);
                         }
-                    }else{
-                        for (String usuario: usersList){
-                            if (user.getToken().equals(usuario)){
-                                groupList.add(grupo);
-                            }
-                        }
-                    }*/
-                    groupList.add(grupo);
+                    }
+
 
                 }
                 if (groupList.isEmpty()){

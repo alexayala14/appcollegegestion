@@ -74,7 +74,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                 intent.putExtra("datosUsuariosList", mem);
                 System.out.println("el arraylist en mensaje es: "+mem);
                 intent.putExtra("nombreGrupo",groupId);
-                System.out.println("En el intent es el valor: "+groupId);
+                System.out.println("En el intent mensaje es el valor: "+groupId);
                 intent.putExtra("name", grupo.getName());
 
                 mContext.startActivity(intent);
