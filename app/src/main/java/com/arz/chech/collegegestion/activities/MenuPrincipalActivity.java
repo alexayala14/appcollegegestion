@@ -22,16 +22,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.fragments.GruposFragment;
 import com.arz.chech.collegegestion.fragments.MessageFragment;
 import com.arz.chech.collegegestion.fragments.DetalleFragment;
 import com.arz.chech.collegegestion.fragments.MisPublicacionesFragment;
 import com.arz.chech.collegegestion.fragments.PublicacionesFragment;
+import com.arz.chech.collegegestion.activities.MensajesGruposActivity;
 import com.arz.chech.collegegestion.preferences.Preferences;
 
-public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MessageFragment.OnFragmentInteractionListener,DetalleFragment.OnFragmentInteractionListener {
+public class MenuPrincipalActivity extends AppCompatActivity implements PublicacionesFragment.OnFragmentInteractionListener,MisPublicacionesFragment.OnFragmentInteractionListener,MessageFragment.OnFragmentInteractionListener,DetalleFragment.OnFragmentInteractionListener,GruposFragment.OnFragmentInteractionListener {
     PublicacionesFragment publicaciones;
     MisPublicacionesFragment misPublicaciones;
     MessageFragment mensajes;
+    GruposFragment grupos;
     private int num;
     private  int numper;
 
@@ -185,6 +188,9 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
                 case 2:
                     mensajes = new MessageFragment();
                     return mensajes;
+                case 3:
+                    grupos = new GruposFragment();
+                    return grupos;
             }
             return null;
         }
@@ -204,7 +210,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
                 num=2;
             }*/
 
-            return 3;
+            return 4;
         }
 
         @Override
@@ -216,6 +222,8 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
                     return "Mis Publicaciones";
                 case 2:
                     return "Mensajes";
+                case 3:
+                    return "Grupos";
             }
             return null;
         }
