@@ -303,6 +303,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     refGroup.child("name").setValue(nombreGrupo);
                     refGroup.child("members").setValue(datosUsuarios);
                     refGroup.child("admin").setValue(mCurrent_user_id);
+                    refGroup.child("groupId").setValue(refGroup.getKey());
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
                     /*for(DatosUsuario i:datosUsuarios){

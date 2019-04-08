@@ -100,11 +100,10 @@ public class ChatActivityGroup extends AppCompatActivity {
         setContentView(R.layout.activity_messages_group);
 
         datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
-        System.out.println("el array en el chat es: "+ datosUsuarios);
        // userid=getIntent().getStringExtra("user_id");
         //System.out.println("el user id es el: "+ userid);
         currentGroupName=getIntent().getStringExtra("nombreGrupo");
-        System.out.println("El token de grupo pasado por intent es: "+ currentGroupName);
+
 
         for(DatosUsuario i:datosUsuarios){
             //i.getToken();
@@ -169,7 +168,7 @@ public class ChatActivityGroup extends AppCompatActivity {
                     assert grupo != null;
                     nombreGrupo = grupo.getName();
                     displayName.setText(nombreGrupo);
-                    System.out.println("el nombre del grupo es:  "+nombreGrupo);
+
 
                 //mAdapter.enviarDatos(nombre, apellido);
 
@@ -181,8 +180,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             }
         });
 
-        System.out.println("el nooooombre es: "+currentGroupName);
-        System.out.println("el nombre del grupo es:  "+nombreGrupo);
+
 
 
         /*reference.addValueEventListener(new ValueEventListener() {
@@ -312,9 +310,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         super.onStart();
         acumMembers="";
         userid=getIntent().getStringExtra("user_id");
-        System.out.println("el user id es el: "+ userid);
         currentGroupName=getIntent().getStringExtra("nombreGrupo");
-        System.out.println("El token de grupo pasado por intent es: "+ currentGroupName);
         reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
 
         //miembros de los grupos como subtitulo
@@ -366,14 +362,14 @@ public class ChatActivityGroup extends AppCompatActivity {
                                 assert message !=null;
 
                                 for(DatosUsuario dat:datosUsuarios){
-                                    System.out.println("EL TOKENNN ES DE USUARIO "+ dat.getToken());
-                                    System.out.println("EL TOKENNN ES DE MENSAJE "+ message.getFrom());
+                                    //System.out.println("EL TOKENNN ES DE USUARIO "+ dat.getToken());
+                                    //System.out.println("EL TOKENNN ES DE MENSAJE "+ message.getFrom());
 
                                     if(message.getFrom().contains(dat.getToken())){
                                         String nombre=dat.getNombre();
                                         String apellido = dat.getApellido();
-                                        System.out.println("EL NOMBRE ES:"+nombre);
-                                        System.out.println("EL APELLIDO ES:"+apellido);
+                                      //  System.out.println("EL NOMBRE ES:"+nombre);
+                                        //System.out.println("EL APELLIDO ES:"+apellido);
                                         mAdapter.enviarDatos(nombre,apellido);
 
 

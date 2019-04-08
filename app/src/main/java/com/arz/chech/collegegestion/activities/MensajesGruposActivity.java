@@ -75,13 +75,12 @@ public class MensajesGruposActivity extends AppCompatActivity {
                     messagesGroupAdapter.enviarDatos(groupId);
                     usersList.add(snapshot.getKey());
 
-                    System.out.println("el dato a pasar es : "+groupId);
 
 
                 }
                 chatList();
 
-               // messagesGroupAdapter.notifyDataSetChanged();
+               //messagesGroupAdapter.notifyDataSetChanged();
 
 
             }
@@ -92,6 +91,8 @@ public class MensajesGruposActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
 

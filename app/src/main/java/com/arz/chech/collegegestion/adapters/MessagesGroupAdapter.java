@@ -35,7 +35,8 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     private String firebaseUser;
     private static String dateFormat = "hh:mm a";
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
-    private String groupId;
+    private  String groupId;
+    private String nom;
 
     public MessagesGroupAdapter(Context context, ArrayList<Grupo> groupList){
         this.groupList = groupList;
@@ -72,10 +73,10 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                 }
 
                 intent.putExtra("datosUsuariosList", mem);
-                System.out.println("el arraylist en mensaje es: "+mem);
-                intent.putExtra("nombreGrupo",groupId);
-                System.out.println("En el intent mensaje es el valor: "+groupId);
+                intent.putExtra("nombreGrupo",grupo.getGroupId());
                 intent.putExtra("name", grupo.getName());
+
+
 
                 mContext.startActivity(intent);
 
