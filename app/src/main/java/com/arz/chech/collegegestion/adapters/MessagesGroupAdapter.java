@@ -60,6 +60,13 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     public void onBindViewHolder(@NonNull MessagesGroupAdapter.ViewHolder viewHolder, int i) {
         final Grupo grupo = groupList.get(i);
         viewHolder.username.setText(grupo.getName());
+        //ArrayList<DatosUsuario> us = new ArrayList<DatosUsuario>();
+        for(DatosUsuario j:grupo.getMembers()){
+            lastMessage(j.getToken(), viewHolder.message, viewHolder.display_time,groupList.get(i));
+
+
+
+        }
 
 
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +76,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                 ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
                 for(DatosUsuario i:grupo.getMembers()){
                     mem.add(i);
+
 
                 }
 
@@ -82,6 +90,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
 
             }
         });
+
     }
 
     @Override
@@ -106,39 +115,69 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     }
 
     //check for last message
-    private void lastMessage(final String userid, final TextView last_msg, final TextView last_time){
+    private void lastMessage(final String userid, final TextView last_msg, final TextView last_time,final Grupo grupo){
         theLastMessage = "default";
         theLastTime = 0L;
         firebaseUser = Preferences.obtenerPreferenceString(mContext, Preferences.PREFERENCE_TOKEN);
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Messages").child(firebaseUser).child(userid);
+        System.out.println("EL VALOR DE ID ES: "+userid);
+
+
+       /* for(Messages k:grupo.getMessages()){
+
+            System.out.println("EL VALOR DEL GRUPO ID ES: "+ k.getFrom());
+
+        }*/
+
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Groups").child(grupo.getGroupId()).child("Messages");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Messages chat = snapshot.getValue(Messages.class);
-                    if (firebaseUser != null && chat != null) {
-                        if (chat.getReceiver().equals(firebaseUser) && chat.getFrom().equals(userid) ||
-                                chat.getReceiver().equals(userid) && chat.getFrom().equals(firebaseUser)) {
-                            theLastMessage = chat.getMessage();
-                            theLastTime = chat.getTime();
+                    reference.getRef().addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot1:dataSnapshot.getChildren()){
+
+                                Messages chat = snapshot1.getValue(Messages.class);
+                                //System.out.println("El mensaje esssssss: "+chat.getFrom());
+                                if (firebaseUser != null && chat != null) {
+                                    if (/*chat.getReceiver().equals(firebaseUser) && */chat.getFrom().equals(userid) ||
+                                            /*chat.getReceiver().equals(userid) && */chat.getFrom().equals(firebaseUser)) {
+                                        theLastMessage = chat.getMessage();
+                                        theLastTime = chat.getTime();
+
+                                    }
+                                }
+
+
+                            }
+
+                            switch (theLastMessage){
+                                case  "default":
+                                    last_msg.setText("No hay mensajes");
+                                    last_time.setText("");
+                                    break;
+
+                                default:
+                                    last_msg.setText(theLastMessage);
+                                    last_time.setText(formatearHora(theLastTime));
+                                    break;
+                            }
+
+                            theLastMessage = "default";
+
                         }
-                    }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
                 }
 
-                switch (theLastMessage){
-                    case  "default":
-                        last_msg.setText("No hay mensajes");
-                        last_time.setText("");
-                        break;
 
-                    default:
-                        last_msg.setText(theLastMessage);
-                        last_time.setText(formatearHora(theLastTime));
-                        break;
-                }
-
-                theLastMessage = "default";
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

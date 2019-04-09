@@ -31,7 +31,7 @@
         android:layout_alignStart="@+id/user_single_name"
         android:layout_below="@+id/user_single_name"
         android:layout_marginTop="8dp"
-        android:text="Presiona para agregar" />
+        android:text="No hay mensajes" />
 
     <TextView
         android:id="@+id/user_single_time"

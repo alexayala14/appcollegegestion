@@ -1,5 +1,6 @@
 package com.arz.chech.collegegestion.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -75,7 +76,7 @@ public class GruposFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        mCurrent_user_id = Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_TOKEN);
+        mCurrent_user_id = Preferences.obtenerPreferenceString(requireContext(), Preferences.PREFERENCE_TOKEN);
         noExistenMensajes = (TextView) view.findViewById(R.id.no_exist_msj_grupo);
 
         grup = (FloatingActionButton) view.findViewById(R.id.my_grup);
@@ -137,7 +138,7 @@ public class GruposFragment extends Fragment {
         }
     }
 
-    @Override
+   /* @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -152,7 +153,7 @@ public class GruposFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+    }*/
 
     /**
      * This interface must be implemented by activities that contain this
@@ -169,7 +170,7 @@ public class GruposFragment extends Fragment {
     private void updateToken(String token){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
         Token token1 = new Token(token);
-        reference.child(Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_TOKEN)).setValue(token1);
+        reference.child(Preferences.obtenerPreferenceString(requireContext(), Preferences.PREFERENCE_TOKEN)).setValue(token1);
     }
 
 
@@ -183,10 +184,12 @@ public class GruposFragment extends Fragment {
                     Grupo grupo = snapshot.getValue(Grupo.class);
                     assert grupo !=null;
 
+                    //HAY UN PROBLEMA EN ESTE FOR QUE TIRA NULL CUANDO SE CREA UN GRUPO.SOLUCIONAR
                     for(DatosUsuario user:grupo.getMembers()) {
+                        assert user !=null;
 
 
-                        if (Preferences.obtenerPreferenceString(getContext(), Preferences.PREFERENCE_TOKEN).equals(user.getToken())){
+                        if (Preferences.obtenerPreferenceString(requireContext(), Preferences.PREFERENCE_TOKEN).equals(user.getToken())){
                             groupList.add(grupo);
                         }
                     }

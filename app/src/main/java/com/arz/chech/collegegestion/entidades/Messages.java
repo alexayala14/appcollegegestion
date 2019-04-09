@@ -29,6 +29,14 @@ public class Messages {
         this.seen = seen;
     }
 
+    public Messages(String from, String message, String type, long time, boolean seen) {
+        this.from = from;
+        this.message = message;
+        this.type = type;
+        this.time = time;
+        this.seen = seen;
+    }
+
 
 
     public String getReceiver() {

@@ -86,6 +86,8 @@ public class ChatActivityGroup extends AppCompatActivity {
     private TextView displayTextMessage;
     private Boolean bannnd;
     private String Userrrr;
+    private String nombre;
+    private String apellido;
 
     public static final String prefGlobant="collegegestion.shared";
     public static final String prefbandera="collegegestion.bande";
@@ -365,15 +367,15 @@ public class ChatActivityGroup extends AppCompatActivity {
                                     //System.out.println("EL TOKENNN ES DE USUARIO "+ dat.getToken());
                                     //System.out.println("EL TOKENNN ES DE MENSAJE "+ message.getFrom());
 
-                                    if(message.getFrom().contains(dat.getToken())){
-                                        String nombre=dat.getNombre();
-                                        String apellido = dat.getApellido();
-                                      //  System.out.println("EL NOMBRE ES:"+nombre);
+                                    if(message.getFrom().equals(dat.getToken())){
+                                        nombre=dat.getNombre();
+                                        apellido = dat.getApellido();
+                                        //System.out.println("EL NOMBRE ES:"+nombre);
                                         //System.out.println("EL APELLIDO ES:"+apellido);
-                                        mAdapter.enviarDatos(nombre,apellido);
-
+                                       mAdapter.enviarDatos(nombre,apellido);
 
                                     }
+
                                 }
 
                             }
@@ -714,7 +716,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
 
         final String msg = message.trim();
-        /* VER NOTIFICACION
+
         for(DatosUsuario dato:datosUsuarios) {
             userid=dato.getToken();
 
@@ -724,16 +726,13 @@ public class ChatActivityGroup extends AppCompatActivity {
                         SharedPreferences.Editor editor = ban.edit();
                         editor.putBoolean(prefbandera, banderaNot);
                         editor.apply();
-                        System.out.println("bandera antes del mensaje:" + ban.getBoolean(prefbandera, false));
-
-
-                        sendNotification(userid, dato.getNombre() + " " + dato.getApellido(), msg, banderaNot);
+                        sendNotification(userid, nombreGrupo, msg, banderaNot);
 
                     }
 
 
         }
-        notify = false;*/
+        notify = false;
 
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }
