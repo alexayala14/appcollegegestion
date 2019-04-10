@@ -181,18 +181,25 @@ public class GruposFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 groupList.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    Grupo grupo = snapshot.getValue(Grupo.class);
+                   final Grupo grupo = snapshot.getValue(Grupo.class);
                     assert grupo !=null;
 
-                    //HAY UN PROBLEMA EN ESTE FOR QUE TIRA NULL CUANDO SE CREA UN GRUPO.SOLUCIONAR
-                    for(DatosUsuario user:grupo.getMembers()) {
-                        assert user !=null;
+
+                    try {
+                        for(DatosUsuario user:grupo.getMembers()) {
+                            assert user !=null;
 
 
-                        if (Preferences.obtenerPreferenceString(requireContext(), Preferences.PREFERENCE_TOKEN).equals(user.getToken())){
-                            groupList.add(grupo);
+                            if (Preferences.obtenerPreferenceString(requireContext(), Preferences.PREFERENCE_TOKEN).equals(user.getToken())){
+                                groupList.add(grupo);
+                            }
                         }
+                    }catch (Exception e){
+
                     }
+
+
+
 
 
                 }
