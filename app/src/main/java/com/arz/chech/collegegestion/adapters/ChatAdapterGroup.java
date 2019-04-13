@@ -20,7 +20,7 @@ public class ChatAdapterGroup extends RecyclerView.Adapter<ChatAdapterGroup.View
     public static final int MSG_TYPE_LEFT = 0;
     public static final int MSG_TYPE_RIGHT = 1;
 
-    private String nombreReceiver, apellidoReceiver;
+    private String nombreReceiver, apellidoReceiver,nomape;
     private List<Messages> mChat;
     private static String dateFormat = "hh:mm a";
     private static String añoFormat = "dd-MM-yy";
@@ -38,10 +38,10 @@ public class ChatAdapterGroup extends RecyclerView.Adapter<ChatAdapterGroup.View
     public ChatAdapterGroup.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == MSG_TYPE_RIGHT){
             View v = LayoutInflater.from(mContext).inflate(R.layout.chat_item_right, parent, false);
-            return new ChatAdapterGroup.ViewHolder(v);
+            return new ViewHolder(v);
         }else {
             View v = LayoutInflater.from(mContext).inflate(R.layout.chat_item_left, parent, false);
-            return new ChatAdapterGroup.ViewHolder(v);
+            return new ViewHolder(v);
         }
     }
 
@@ -64,13 +64,14 @@ public class ChatAdapterGroup extends RecyclerView.Adapter<ChatAdapterGroup.View
         long time = chat.getTime();
         final String hora = formatearHora(time);
         final String año = formatearAño(time);
+        nomape = chat.getReceiver();
         viewHolder.show_message.setText(chat.getMessage());
         viewHolder.show_hora.setText(hora);
         viewHolder.show_año.setText(año);
         if (viewHolder.getItemViewType() == 1){
             viewHolder.show_name.setText("Tu");
         } else{
-            viewHolder.show_name.setText(nombreReceiver + " " + apellidoReceiver);
+            viewHolder.show_name.setText(nomape);
         }
     }
 

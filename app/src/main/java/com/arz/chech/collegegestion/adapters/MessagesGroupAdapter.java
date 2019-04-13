@@ -119,7 +119,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
         theLastMessage = "default";
         theLastTime = 0L;
         firebaseUser = Preferences.obtenerPreferenceString(mContext, Preferences.PREFERENCE_TOKEN);
-        System.out.println("EL VALOR DE ID ES: "+userid);
+
 
 
        /* for(Messages k:grupo.getMessages()){

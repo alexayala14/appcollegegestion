@@ -73,6 +73,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     private String userid;
     private String userName;
     private String userApellido;
+    private String nomape;
     private APIService apiService;
     private boolean notify = false;
     private DatabaseReference userRef,groupNameRef,groupmessageKeyRef;
@@ -100,7 +101,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages_group);
-
+        System.out.println("ESTAS EM EL CREATE");
         datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
        // userid=getIntent().getStringExtra("user_id");
         //System.out.println("el user id es el: "+ userid);
@@ -138,6 +139,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         //
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mCurrentUserId = Preferences.obtenerPreferenceString(ChatActivityGroup.this, Preferences.PREFERENCE_TOKEN);
+        nomape=Preferences.obtenerPreferenceString(ChatActivityGroup.this,Preferences.PREFERENCE_NOMBRE)+" "+Preferences.obtenerPreferenceString(ChatActivityGroup.this,Preferences.PREFERENCE_APELLIDO);
         //mAuth= FirebaseAuth.getInstance();
         //mCurrentUserId=mAuth.getCurrentUser().getUid();
         userRef=mRootRef.child("Users");
@@ -168,11 +170,28 @@ public class ChatActivityGroup extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    final Grupo grupo = dataSnapshot.getValue(Grupo.class);
-                    assert grupo != null;
+                final Grupo grupo = dataSnapshot.getValue(Grupo.class);
+                assert grupo != null;
 
-                    nombreGrupo = grupo.getName();
-                    displayName.setText(nombreGrupo);
+                nombreGrupo = grupo.getName();
+                displayName.setText(nombreGrupo);
+
+
+
+
+                /*for(DatosUsuario dad:grupo.getMembers()) {
+                    for (Messages men : grupo.getMessages()) {
+                        if(men.getFrom().equals(dad.getToken())){
+                            nombre=dad.getNombre();
+                            apellido = dad.getApellido();
+                            System.out.println("EL NOMBRE ES:"+nombre);
+                            System.out.println("EL APELLIDO ES:"+apellido);
+                            mAdapter.enviarDatos(nombre,apellido);
+                        }
+                    }
+                }*/
+
+
 
 
 
@@ -314,13 +333,57 @@ public class ChatActivityGroup extends AppCompatActivity {
 
     }
 
-    @Override
+   /* @Override
     protected void onStart() {
         super.onStart();
+        System.out.println("ESTAS EN EL START");
+
         acumMembers="";
         userid=getIntent().getStringExtra("user_id");
         currentGroupName=getIntent().getStringExtra("nombreGrupo");
+        //reference = FirebaseDatabase.getInstance().getReference("Groups");
+
+
+
+
         reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                final Grupo grupo = dataSnapshot.getValue(Grupo.class);
+                assert grupo != null;
+
+                nombreGrupo = grupo.getName();
+                displayName.setText(nombreGrupo);
+                try {
+                    for(DatosUsuario dad:grupo.getMembers()) {
+                        for (Messages men : grupo.getMessages()) {
+                            if(men.getFrom().equals(dad.getToken())){
+                                nombre=dad.getNombre();
+                                apellido = dad.getApellido();
+                                System.out.println("EL NOMBRE ES:"+nombre);
+                                System.out.println("EL APELLIDO ES:"+apellido);
+                                mAdapter.enviarDatos(nombre,apellido);
+                            }
+                        }
+                    }
+                    readMessages();
+                }catch (Exception e){}
+
+
+
+
+                //mAdapter.enviarDatos(nombre, apellido);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         //miembros de los grupos como subtitulo
         /*for(DatosUsuario i:datosUsuarios){
@@ -331,7 +394,7 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
 
-        reference.addValueEventListener(new ValueEventListener() {
+        /*reference.child(currentGroupName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -340,6 +403,10 @@ public class ChatActivityGroup extends AppCompatActivity {
                 nombreGrupo = grupo.getName();
                 displayName.setText(nombreGrupo);
                 System.out.println("el nombre del grupo es:  "+nombreGrupo);
+                try {
+                    currentGroupName=getIntent().getStringExtra("nombreGrupo");
+
+                }catch (Exception e){}
 
                 //mAdapter.enviarDatos(nombre, apellido);
             }
@@ -348,11 +415,11 @@ public class ChatActivityGroup extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
 
 
-        final DatabaseReference messageRef = reference.child("Messages");
+       /* final DatabaseReference messageRef = reference.child(currentGroupName).child("Messages");
 
 
         messageRef.addValueEventListener(new ValueEventListener() {
@@ -404,7 +471,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
-        });
+        });*/
 
 
 
@@ -454,11 +521,11 @@ public class ChatActivityGroup extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });*/
+        });
 
 
 
-    }
+    }*/
 
     private void displayMessage(DataSnapshot dataSnapshot) {
 
@@ -703,7 +770,6 @@ public class ChatActivityGroup extends AppCompatActivity {
             SimpleDateFormat currentDateTime = new SimpleDateFormat("hh:mm: a");
             currentTime =currentDateTime.format(calForTime.getTime());
 
-
             HashMap<String,Object> groupMessageKey=new HashMap<>();
             mMensaje.updateChildren(groupMessageKey);
 
@@ -717,7 +783,7 @@ public class ChatActivityGroup extends AppCompatActivity {
                 messageInfoMap.put("time", ServerValue.TIMESTAMP);
                 messageInfoMap.put("from",mCurrentUserId);
                 //messageInfoMap.put("nombre",currentUserName);
-                messageInfoMap.put("receiver", userid);
+                messageInfoMap.put("receiver", nomape);
                 //messageInfoMap.put("date",currentDate);
                 //messageInfoMap.put("time",currentTime);
              groupmessageKeyRef.updateChildren(messageInfoMap);
