@@ -30,8 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/user_single_name"
         android:layout_below="@+id/user_single_name"
-        android:layout_marginTop="8dp"
-        android:text="Presiona para eliminar" />
+        android:layout_marginTop="8dp"/>
 
     <TextView
         android:id="@+id/user_single_time"

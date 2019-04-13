@@ -6,9 +6,9 @@ public class Data {
     private String body;
     private String title;
     private String sented;
-    private Boolean bandera;
+    private String bandera;
 
-    public Data(String user, int icon, String body, String title, String sented,Boolean bandera) {
+    public Data(String user, int icon, String body, String title, String sented,String bandera) {
         this.user = user;
         this.icon = icon;
         this.body = body;
@@ -17,14 +17,14 @@ public class Data {
         this.bandera=bandera;
     }
 
-    public Data() {
+    public Data(String mCurrentUserId, int ic_launcher, String body, String title, String receiver, int bandera) {
     }
 
-    public Boolean getBandera() {
+    public String getBandera() {
         return bandera;
     }
 
-    public void setBandera(Boolean bandera) {
+    public void setBandera(String bandera) {
         this.bandera = bandera;
     }
 

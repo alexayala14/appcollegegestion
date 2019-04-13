@@ -76,7 +76,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     private APIService apiService;
     private boolean notify = false;
     private DatabaseReference userRef,groupNameRef,groupmessageKeyRef;
-    Boolean banderaNot;
+    private String banderaNot;
     Boolean bann;
     private String miembrosGroup;
     private String acumMembers;
@@ -104,12 +104,14 @@ public class ChatActivityGroup extends AppCompatActivity {
         datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
        // userid=getIntent().getStringExtra("user_id");
         //System.out.println("el user id es el: "+ userid);
-        currentGroupName=getIntent().getStringExtra("nombreGrupo");
+        assert currentGroupName!=null;
+        try {
+            currentGroupName=getIntent().getStringExtra("nombreGrupo");
+
+        }catch (Exception e){}
 
 
-        for(DatosUsuario i:datosUsuarios){
-            //i.getToken();
-        }
+
 
 
         //TOOLBAR
@@ -139,7 +141,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         //mAuth= FirebaseAuth.getInstance();
         //mCurrentUserId=mAuth.getCurrentUser().getUid();
         userRef=mRootRef.child("Users");
-        groupNameRef=mRootRef.child("Groups").child(currentGroupName);
+        groupNameRef=mRootRef.child("Groups");
         btn_send = (ImageButton) findViewById(R.id.chat_send_btn);
         text_send = (EditText) findViewById(R.id.chat_message_view);
         displayName = (TextView) findViewById(R.id.display_name);
@@ -159,17 +161,20 @@ public class ChatActivityGroup extends AppCompatActivity {
         //mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
-        displayName.setText(datosUsuarios.toString());
+        //displayName.setText(datosUsuarios.toString());
         reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    Grupo grupo = dataSnapshot.getValue(Grupo.class);
+                    final Grupo grupo = dataSnapshot.getValue(Grupo.class);
                     assert grupo != null;
+
                     nombreGrupo = grupo.getName();
                     displayName.setText(nombreGrupo);
+
+
 
 
                 //mAdapter.enviarDatos(nombre, apellido);
@@ -305,6 +310,8 @@ public class ChatActivityGroup extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     @Override
@@ -328,7 +335,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Grupo grupo = dataSnapshot.getValue(Grupo.class);
+                final Grupo grupo = dataSnapshot.getValue(Grupo.class);
                 assert grupo != null;
                 nombreGrupo = grupo.getName();
                 displayName.setText(nombreGrupo);
@@ -448,6 +455,9 @@ public class ChatActivityGroup extends AppCompatActivity {
 
             }
         });*/
+
+
+
     }
 
     private void displayMessage(DataSnapshot dataSnapshot) {
@@ -537,7 +547,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     }
 
 
-    private void sendMessage() {
+   /* private void sendMessage() {
 
         String message = text_send.getText().toString();
         if(!TextUtils.isEmpty(message)){
@@ -574,7 +584,7 @@ public class ChatActivityGroup extends AppCompatActivity {
 
                 }
             });
-            banderaNot=true;
+            banderaNot="3";
 
 
 
@@ -592,8 +602,8 @@ public class ChatActivityGroup extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DatosUsuario user = dataSnapshot.getValue(DatosUsuario.class);
                 if (notify) {
-                    banderaNot=true;
-                    SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant,MODE_PRIVATE);
+                    banderaNot="3";
+                    /*SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant,MODE_PRIVATE);
                     SharedPreferences.Editor editor=ban.edit();
                     editor.putBoolean(prefbandera,banderaNot);
                     editor.apply();
@@ -613,9 +623,9 @@ public class ChatActivityGroup extends AppCompatActivity {
         });
 
         mMessagesList.scrollToPosition(messagesList.size()-1);
-    }
+    }*/
 
-    private void sendNotification(String receiver, final String username, final String message,final Boolean banderaNot){
+    private void sendNotification(String receiver, final String username, final String message,final String banderaNot){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -624,7 +634,6 @@ public class ChatActivityGroup extends AppCompatActivity {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
                     Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "Nuevo Mensaje!", userid,banderaNot);
-
                     Sender sender = new Sender(data, token.getToken());
 
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
@@ -670,15 +679,18 @@ public class ChatActivityGroup extends AppCompatActivity {
     public void onBackPressed()
     {
         // Añade más funciones si fuese necesario
-        super.onBackPressed();  // Invoca al método
+        super.onBackPressed();
+
+        // Invoca al método
     }
 
 
 
     private void SaveMessageInfoToDatabase() {
         String message = text_send.getText().toString();
-        DatabaseReference mMensaje = groupNameRef.child("Messages");
+        DatabaseReference mMensaje = groupNameRef.child(currentGroupName).child("Messages");
         String messageKey =mMensaje.push().getKey();
+        banderaNot = "3";
         if(TextUtils.isEmpty(message)){
             Toast.makeText(this,"Por favor ingrese un mensaje",Toast.LENGTH_LONG).show();
         }
@@ -719,13 +731,13 @@ public class ChatActivityGroup extends AppCompatActivity {
 
         for(DatosUsuario dato:datosUsuarios) {
             userid=dato.getToken();
-
+            System.out.println("EL VALOR DE NOTIFY ES: "+notify);
                     if (notify && !(userid.equals(mCurrentUserId))) {
-                        banderaNot = true;
-                        SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant, MODE_PRIVATE);
+
+                        /*SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant, MODE_PRIVATE);
                         SharedPreferences.Editor editor = ban.edit();
                         editor.putBoolean(prefbandera, banderaNot);
-                        editor.apply();
+                        editor.apply();*/
                         sendNotification(userid, nombreGrupo, msg, banderaNot);
 
                     }

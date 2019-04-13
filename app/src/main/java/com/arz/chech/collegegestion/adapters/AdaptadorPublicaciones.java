@@ -26,7 +26,9 @@ import com.arz.chech.collegegestion.preferences.Preferences;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublicaciones.ViewHolder>{
 
@@ -35,6 +37,10 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     FragmentManager fm;
     private DatabaseReference mPublicacionDatabase;
     private String mCurrentUserId;
+    private static String dateFormat = "hh:mm a";
+    private static String añoFormat = "dd-MM-yy";
+    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+    private static SimpleDateFormat simpleAñoFormat = new SimpleDateFormat(añoFormat);
 
     public AdaptadorPublicaciones(Context context, ArrayList<Publicacion>listaPublicaciones, FragmentManager fm){
         this.mContext = context;
@@ -51,28 +57,63 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
         return new ViewHolder(view);
     }
 
+    public static String formatearHora(long milliSeconds){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return simpleDateFormat.format(calendar.getTime());
+    }
+
+    public static String formatearAño(long milliSeconds){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return simpleAñoFormat.format(calendar.getTime());
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Publicacion publicacion = listaPublicaciones.get(position);
         if(publicacion.getPrioridad()==1){
-
+            holder.mView.setBackgroundColor(Color.parseColor("#E57373"));
             holder.txt_descripcion.setText(publicacion.getAsunto());
-            holder.txt_descripcion.setTextColor(Color.parseColor("#B71C1C"));
+            //holder.txt_descripcion.setTextColor(Color.parseColor("#B71C1C"));
+            holder.txt_descripcion.setTextColor(Color.parseColor("#000000"));
             holder.txt_nombre.setText(publicacion.getNombre());
-            holder.txt_nombre.setTextColor(Color.parseColor("#B71C1C"));
+            holder.txt_nombre.setTextColor(Color.parseColor("#000000"));
+            //holder.txt_nombre.setTextColor(Color.parseColor("#B71C1C"));
+            long time = publicacion.getTimestamp();
+            final String hora = formatearHora(time);
+            final String año = formatearAño(time);
+            holder.show_hora.setText(hora);
+            holder.show_año.setText(año);
 
         }
         if(publicacion.getPrioridad()==2){
+            holder.mView.setBackgroundColor(Color.parseColor("#FFF590"));
             holder.txt_descripcion.setText(publicacion.getAsunto());
-            holder.txt_descripcion.setTextColor(Color.parseColor("#FDD835"));
+            //holder.txt_descripcion.setTextColor(Color.parseColor("#FDD835"));
+            holder.txt_descripcion.setTextColor(Color.parseColor("#000000"));
             holder.txt_nombre.setText(publicacion.getNombre());
-            holder.txt_nombre.setTextColor(Color.parseColor("#FDD835"));
+            holder.txt_nombre.setTextColor(Color.parseColor("#000000"));
+            //holder.txt_nombre.setTextColor(Color.parseColor("#FDD835"));
+            long time = publicacion.getTimestamp();
+            final String hora = formatearHora(time);
+            final String año = formatearAño(time);
+            holder.show_hora.setText(hora);
+            holder.show_año.setText(año);
         }
         if(publicacion.getPrioridad()==3){
+            holder.mView.setBackgroundColor(Color.parseColor("#9FA8DA"));
             holder.txt_descripcion.setText(publicacion.getAsunto());
-            holder.txt_descripcion.setTextColor(Color.parseColor("#1A237E"));
+            //holder.txt_descripcion.setTextColor(Color.parseColor("#1A237E"));
+            holder.txt_descripcion.setTextColor(Color.parseColor("#000000"));
             holder.txt_nombre.setText(publicacion.getNombre());
-            holder.txt_nombre.setTextColor(Color.parseColor("#1A237E"));
+            holder.txt_nombre.setTextColor(Color.parseColor("#000000"));
+            //holder.txt_nombre.setTextColor(Color.parseColor("#1A237E"));
+            long time = publicacion.getTimestamp();
+            final String hora = formatearHora(time);
+            final String año = formatearAño(time);
+            holder.show_hora.setText(hora);
+            holder.show_año.setText(año);
         }
 
         //holder.txt_nombre.setText(publicacion.getNombre());
@@ -140,7 +181,8 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         View mView;
-
+        public TextView show_hora;
+        public TextView show_año;
         TextView txt_nombre,txt_descripcion;
         ImageView foto;
 
@@ -150,6 +192,8 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             txt_nombre = itemView.findViewById(R.id.idNombre);
             txt_descripcion = itemView.findViewById(R.id.idInfo);
             foto = itemView.findViewById(R.id.idImagen);
+            show_hora = itemView.findViewById(R.id.time_text_layout);
+            show_año = itemView.findViewById(R.id.fecha_text_layout);
         }
     }
 }

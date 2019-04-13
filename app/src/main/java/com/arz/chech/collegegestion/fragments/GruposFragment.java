@@ -85,10 +85,15 @@ public class GruposFragment extends Fragment {
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(),"Es un grupo nuevo",Toast.LENGTH_LONG).show();
                 //RequestNewGroup();
-                Intent intent = new Intent(getContext(), NuevoGrupoActivity.class);
+
+                Intent intent = new Intent(getActivity(), NuevoGrupoActivity.class);
                 //Intent intent = new Intent(FriendsActivity.this, MensajesGruposActivity.class);
+                //intent.setFlags(intent.FLAG_ACTIVITY_SINGLE_TOP|intent.FLAG_ACTIVITY_CLEAR_TOP);
+
                 startActivity(intent);
-                //finish();
+
+
+
             }
         });
 

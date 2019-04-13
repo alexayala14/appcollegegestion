@@ -34,7 +34,7 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final DatosUsuario datosUsuario = datosUsuarioList.get(i);
         viewHolder.setName(datosUsuario.getNombre(), datosUsuario.getApellido());
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -46,6 +46,7 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
                 intent.putExtra("user_apellido", datosUsuario.getApellido());
                 mContext.startActivity(intent);
                 ((Activity)mContext).finish();*/
+
                 System.out.println("INGRESO AL BOTON");
             }
         });
@@ -69,7 +70,8 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
         }
 
         public void setName(String name, String apellido){
-            username.setText(name + " " + apellido);
+            String nomape=name + " " + apellido;
+            username.setText(nomape);
         }
     }
 }

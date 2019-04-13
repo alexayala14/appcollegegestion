@@ -54,7 +54,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     private String userName;
     private String userApellido;
     private String mCurrentUserId;
-    Boolean banderaNots;
+    private String banderaNots;
 
     public static final String prefGlobants="collegegestion.shareds";
     public static final String prefbanderas="collegegestion.bandes";
@@ -154,16 +154,17 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                             for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                                 DatosUsuario datosUsuario = snapshot.getValue(DatosUsuario.class);
                                 if (!datosUsuario.getToken().equals(mCurrentUserId)){
-                                    banderaNots =false;
-                                    SharedPreferences band = getApplicationContext().getSharedPreferences(ChatActivity.prefGlobant,MODE_PRIVATE);
+                                    banderaNots ="2";
+                                    /*SharedPreferences band = getApplicationContext().getSharedPreferences(ChatActivity.prefGlobant,MODE_PRIVATE);
                                     SharedPreferences.Editor editor=band.edit();
                                     editor.putBoolean(ChatActivity.prefbandera,banderaNots);
-                                    editor.apply();
-                                    System.out.println("LA PUBLICACION ENVIADA ES: "+band.getBoolean(prefbanderas,false));
+                                    editor.apply();*/
+
 
                                     if((String.valueOf(Preferences.obtenerPreferenceInt(NuevaPublicacionActivity.this,Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
 
                                             sendNotification(datosUsuario.getToken(), asunto,banderaNots);
+
 
                                     }
 
@@ -216,7 +217,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         }
     }
 
-    private void sendNotification(final String receiver, final String asunto,final Boolean bandera){
+    private void sendNotification(final String receiver, final String asunto,final String bandera){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {

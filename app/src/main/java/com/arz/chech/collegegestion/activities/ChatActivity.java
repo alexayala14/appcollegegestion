@@ -68,7 +68,7 @@ public class ChatActivity extends AppCompatActivity {
     private String userApellido;
     private APIService apiService;
     private boolean notify = false;
-    Boolean banderaNot;
+    private String banderaNot;
     Boolean bann;
 
     public static final String prefGlobant="collegegestion.shared";
@@ -249,7 +249,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-            banderaNot=true;
+            banderaNot="1";
 
 
 
@@ -267,12 +267,12 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 DatosUsuario user = dataSnapshot.getValue(DatosUsuario.class);
                 if (notify) {
-                    banderaNot=true;
-                    SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant,MODE_PRIVATE);
+                    banderaNot="1";
+                   /* SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant,MODE_PRIVATE);
                     SharedPreferences.Editor editor=ban.edit();
                     editor.putBoolean(prefbandera,banderaNot);
                     editor.apply();
-                    System.out.println("bandera antes del mensaje:"+ban.getBoolean(prefbandera,false));
+                    System.out.println("bandera antes del mensaje:"+ban.getBoolean(prefbandera,false));*/
 
 
                     sendNotification(userid, user.getNombre() + " " + user.getApellido(), msg,banderaNot);
@@ -290,7 +290,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }
 
-    private void sendNotification(String receiver, final String username, final String message,final Boolean banderaNot){
+    private void sendNotification(String receiver, final String username, final String message,final String banderaNot){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -301,7 +301,6 @@ public class ChatActivity extends AppCompatActivity {
                     Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "Nuevo Mensaje!", userid,banderaNot);
 
                     Sender sender = new Sender(data, token.getToken());
-
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
                         @Override
                         public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {

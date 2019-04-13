@@ -53,8 +53,9 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolder> 
                 intent.putExtra("user_id", datosUsuario.getToken());
                 /*intent.putExtra("user_name", datosUsuario.getNombre());
                 intent.putExtra("user_apellido", datosUsuario.getApellido());*/
-
+                
                 ((Activity)mContext).setResult(Activity.RESULT_OK,intent);
+                //((Activity)mContext).setResult(50,intent);
 
                 ((Activity)mContext).finish();
                 //userid=datosUsuario.getToken();

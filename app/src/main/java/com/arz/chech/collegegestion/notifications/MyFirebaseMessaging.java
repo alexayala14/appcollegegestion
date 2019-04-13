@@ -12,11 +12,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.widget.Switch;
 
 import com.arz.chech.collegegestion.activities.ChatActivity;
+import com.arz.chech.collegegestion.activities.ChatActivityGroup;
 import com.arz.chech.collegegestion.activities.MenuPrincipalActivity;
 import com.arz.chech.collegegestion.activities.NuevaPublicacionActivity;
 import com.arz.chech.collegegestion.entidades.Bandera;
+import com.arz.chech.collegegestion.fragments.GruposFragment;
 import com.arz.chech.collegegestion.preferences.Preferences;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -24,7 +27,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
-    Boolean bandera;
+    private String bandera;
     Boolean banderas;
     Boolean baaan;
     Class intt;
@@ -65,11 +68,13 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
-        Boolean bandera = Boolean.valueOf(remoteMessage.getData().get("bandera"));
+        //Boolean bandera = Boolean.valueOf(remoteMessage.getData().get("bandera"));
+        String bandera=remoteMessage.getData().get("bandera");
+        System.out.println("LA BANDERA ESSSSSSSSSSSSSSSSS:    "+bandera);
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-        if (bandera){
+        /*if (bandera){
             intt=ChatActivity.class;
 
 
@@ -78,9 +83,20 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         }else if(!bandera){
             intt=MenuPrincipalActivity.class;
+        }*/
+        assert bandera !=null;
+        switch(bandera){
+            case "1":
+                intt=ChatActivity.class;
+                break;
+            case "2":
+                intt=MenuPrincipalActivity.class;
+                break;
+            case "3":
+                intt= ChatActivityGroup.class;
+                break;
+
         }
-
-
 
         Intent intent = new Intent(this,intt);
         Bundle bundle = new Bundle();
@@ -113,20 +129,36 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
-        Boolean bandera = Boolean.valueOf(remoteMessage.getData().get("bandera"));
+        //Boolean bandera = Boolean.valueOf(remoteMessage.getData().get("bandera"));
+        String bandera=remoteMessage.getData().get("bandera");
+
 
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
 
-        if (bandera ){
+        /*if (bandera ){
             intt=ChatActivity.class;
 
 
 
         }else if(!bandera){
             intt=MenuPrincipalActivity.class;
-        }
+        }*/
+        assert bandera!=null;
+
+        switch (bandera) {
+                case "1":
+                    intt = ChatActivity.class;
+                    break;
+                case "2":
+                    intt = MenuPrincipalActivity.class;
+                    break;
+                case "3":
+                    intt = ChatActivityGroup.class;
+                    break;
+
+            }
 
 
         Intent intent = new Intent(this,intt);

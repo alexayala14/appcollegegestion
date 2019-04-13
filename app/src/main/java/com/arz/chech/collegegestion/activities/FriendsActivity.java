@@ -69,56 +69,14 @@ public class FriendsActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View action_bar_view = inflater.inflate(R.layout.friends_custom_bar, null);
         actionBar.setCustomView(action_bar_view);
-        grup = (FloatingActionButton) findViewById(R.id.my_grup);
-        grup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(),"Es un grupo nuevo",Toast.LENGTH_LONG).show();
-                //RequestNewGroup();
-                Intent intent = new Intent(FriendsActivity.this, NuevoGrupoActivity.class);
-                //Intent intent = new Intent(FriendsActivity.this, MensajesGruposActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
 
         //
         datosUsuarios = new ArrayList<>();
         groups =new ArrayList<>();
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
         mGroupsDatabase=FirebaseDatabase.getInstance().getReference().child("Groups");
-        /*mGroupsDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                groups.clear();
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    Grupo group = snapshot.getValue(Grupo.class);
-                    if (snapshot.child("estaEliminado").exists()){
-                        if (!mCurrent_user_id.equals(group.getToken())){
-                            if (!group.isEstaEliminado()){
-                                 if(mUsersDatabase.equals("d")) {
-                                    datosUsuarios.add(usuario);
-                                }
-                                groups.add(group);
-                            }
-                        }
-                    }else{
-                        if (!mCurrent_user_id.equals(group.getToken())){
-                            groups.add(group);
-                        }
-                    }
 
-                }
-                GrupoAdapter grupoAdapter = new GrupoAdapter(FriendsActivity.this, groups);
-                mGroupsList.setAdapter(grupoAdapter);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        }); */
 
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
 

@@ -29,8 +29,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class NuevoGrupoActivity extends AppCompatActivity {
     private FloatingActionButton addpersona;
@@ -47,50 +49,48 @@ public class NuevoGrupoActivity extends AppCompatActivity {
     private String userid;
     private String nom;
     private String ape;
-    private int request_code = 1;
-    public static Boolean bandera=true;
+
+    private int request_code = 2;
+    public  Boolean bandera=true;
     private TextView textView;
     private FloatingActionButton creargrupo;
     private EditText editText;
+    private HashSet<DatosUsuario>hashSet;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_grupo);
+
         addpersona = (FloatingActionButton) findViewById(R.id.idAddIntegrante);
         mLinearLayout = new LinearLayoutManager(this);
         agregadosList = (RecyclerView) findViewById(R.id.act_contactosagregados_list);
         agregadosList.setHasFixedSize(true);
         agregadosList.setLayoutManager(mLinearLayout);
+        final ContactosAgregadosAdapter agregadosAdapter = new ContactosAgregadosAdapter(NuevoGrupoActivity.this, datosUsuarios);
+        agregadosList.setAdapter(agregadosAdapter);
         textView =(TextView) findViewById(R.id.textView3);
         creargrupo =(FloatingActionButton)findViewById(R.id.crearGrupo);
         editText=(EditText)findViewById(R.id.editText);
-        //Intent intent = getIntent();
-        //userid=intent.getStringExtra("user_id");
-        //userid = intent.getStringExtra("user_id");
-        System.out.println(userid);
-        /*nom=intent.getStringExtra("user_name");
-        ape=intent.getStringExtra("user_apellido");
-        System.out.println(userid);
-        System.out.println(nom);
-        System.out.println(ape);*/
+
         RootRef = FirebaseDatabase.getInstance().getReference();
         btnCancel =(Button)findViewById(R.id.btncancelarr);
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NuevoGrupoActivity.this, FriendsActivity.class);
-                startActivity(intent);
-                finish();
+                /*Intent intent = new Intent(NuevoGrupoActivity.this, MenuPrincipalActivity.class);
+                startActivity(intent);*/
+               finish();
             }
         });
         addpersona.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(NuevoGrupoActivity.this,AgregarContactoActivity.class);
                 startActivityForResult(intent,request_code);
-                //onResume();
 
             }
         });
@@ -98,41 +98,50 @@ public class NuevoGrupoActivity extends AppCompatActivity {
 
 
         datosUsuarios = new ArrayList<>();
+
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
         if (userid!=null){
-            for (DatosUsuario mi:datosUsuarios){
+            System.out.println(datosUsuarios.toString());
+            for (DatosUsuario mi:datosUsuarios) {
 
                 if (userid.equals(mi.getToken())) {
 
-                    bandera=false;
+                    bandera = false;
+
+
+
+                } else {
+
+                    bandera = true;
 
                 }
-                else {
-                    //datosUsuarios.add(usuario);
-                    bandera=true;
-                }
             }
+
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 datosUsuarios.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                    DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
+                   final DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
                     if (snapshot.child("estaEliminado").exists()){
+                        assert usuario!=null;
                         if (userid.equals(usuario.getToken())){
                             if (!usuario.isEstaEliminado()){
                                 //if(mUsersDatabase.equals("d")) {
                                   //  datosUsuarios.add(usuario);
                                 //}
-                                datosUsuarios.add(usuario);
-                                System.out.println("usuario agregado por create");
+
+                                //datosUsuarios.add(usuario);
+
                                 if(bandera) {
 
                                     bandera=false;
+                                    datosUsuarios.add(usuario);
+
                                 }
                                 else{
-                                    System.out.println("El usuario esta repetido por create");
+
                                 }
 
                             }
@@ -144,8 +153,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     }*/
 
                 }
-                ContactosAgregadosAdapter agregadosAdapter = new ContactosAgregadosAdapter(NuevoGrupoActivity.this, datosUsuarios);
-                agregadosList.setAdapter(agregadosAdapter);
+
 
 
                 agregadosAdapter.notifyDataSetChanged();
@@ -157,7 +165,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
             }
         });
         }
-        String texto="Participantes: "+String.valueOf(datosUsuarios.size());
+        String texto="Participantes: "+String.valueOf(datosUsuarios.size()+1);
         textView.setText(texto);
 
         creargrupo.setOnClickListener(new View.OnClickListener() {
@@ -172,11 +180,14 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     intent.putExtra("datosUsuariosList", datosUsuarios);
                     intent.putExtra("nombreGrupo",nombreGrupo);
                     startActivity(intent);
+
                     finish();
+
 
                 }
             }
         });
+
 
     }
 
@@ -185,23 +196,32 @@ public class NuevoGrupoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if ((requestCode == request_code) && (resultCode == RESULT_OK)){
-            userid=data.getStringExtra("user_id");
-            System.out.println("es el valor:"+userid);
 
+        if (resultCode == RESULT_CANCELED) {
+            // Si es así mostramos mensaje de cancelado por pantalla.
+            Toast.makeText(this, "Resultado cancelado", Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            userid=data.getStringExtra("user_id");
 
         }
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();  // Always call the superclass method first
+
+
 
         addpersona = (FloatingActionButton) findViewById(R.id.idAddIntegrante);
         mLinearLayout = new LinearLayoutManager(this);
         agregadosList = (RecyclerView) findViewById(R.id.act_contactosagregados_list);
         agregadosList.setHasFixedSize(true);
         agregadosList.setLayoutManager(mLinearLayout);
+        final ContactosAgregadosAdapter agregadosAdapter = new ContactosAgregadosAdapter(NuevoGrupoActivity.this, datosUsuarios);
+        agregadosList.setAdapter(agregadosAdapter);
         RootRef = FirebaseDatabase.getInstance().getReference();
         addpersona.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,22 +233,27 @@ public class NuevoGrupoActivity extends AppCompatActivity {
             }
         });
 
-        for (DatosUsuario mi:datosUsuarios){
 
-            if (userid.equals(mi.getToken())) {
-
-                bandera=false;
-
-            }
-            else {
-                //datosUsuarios.add(usuario);
-                bandera=true;
-            }
-        }
+       // datosUsuarios = new ArrayList<>();
 
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
         if (userid!=null){
 
+            System.out.println(datosUsuarios.toString());
+            for (DatosUsuario mi:datosUsuarios) {
+
+                if (userid.equals(mi.getToken())) {
+
+                    bandera = false;
+
+
+                } else {
+
+                    bandera = true;
+
+
+                }
+            }
 
 
 
@@ -236,9 +261,10 @@ public class NuevoGrupoActivity extends AppCompatActivity {
             mUsersDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    //datosUsuarios.clear();
+
                     for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                        DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
+                       final DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
+                       assert usuario!=null;
                         if (snapshot.child("estaEliminado").exists()){
                             if (userid.equals(usuario.getToken())){
                                 if (!usuario.isEstaEliminado()){
@@ -246,13 +272,15 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                                     //  datosUsuarios.add(usuario);
                                     //}
                                     if(bandera) {
-                                        datosUsuarios.add(usuario);
                                         bandera=false;
-                                        System.out.println("El usuario esta agregado por resume");
+                                        datosUsuarios.add(usuario);
+
+
+                                    }else {
+
                                     }
-                                    else{
-                                        System.out.println("El usuario esta repetido por resume");
-                                    }
+
+
                                 }
                             }
                         }/*else{
@@ -264,8 +292,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                         }*/
 
                     }
-                    ContactosAgregadosAdapter agregadosAdapter = new ContactosAgregadosAdapter(NuevoGrupoActivity.this, datosUsuarios);
-                    agregadosList.setAdapter(agregadosAdapter);
+
 
                     agregadosAdapter.notifyDataSetChanged();
                 }
@@ -282,7 +309,8 @@ public class NuevoGrupoActivity extends AppCompatActivity {
 
 
 
-        String texto="Participantes: "+String.valueOf(datosUsuarios.size());
+
+        String texto="Participantes: "+String.valueOf(datosUsuarios.size()+1);
         textView.setText(texto);
         creargrupo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,7 +326,19 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     miUsuario.setRut(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_USUARIO));
                     miUsuario.setToken(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_TOKEN));
                     datosUsuarios.add(miUsuario);
-                    System.out.println("el usuario tiene los datos"+miUsuario.toString());
+                    for (int i =0;i<datosUsuarios.size();i++){
+                        int cont=0;
+                        for (int j =0;j<datosUsuarios.size()-1;j++){
+                            if ((datosUsuarios.get(i).getToken()).equals(datosUsuarios.get(j).getToken())){
+                                cont++;
+
+                            }
+                            if(cont==2){
+                                cont--;
+                                datosUsuarios.remove(i);
+                            }
+                        }
+                    }
                     DatabaseReference refGroup= RootRef.child("Groups").push();
                     refGroup.child("name").setValue(nombreGrupo);
                     refGroup.child("members").setValue(datosUsuarios);
@@ -306,16 +346,15 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     refGroup.child("groupId").setValue(refGroup.getKey());
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
-                    /*for(DatosUsuario i:datosUsuarios){
-                        intent.putExtra("user_id",i.getToken());
-
-                    }*/
                     intent.putExtra("nombreGrupo",refGroup.getKey());
-                    System.out.println("el valor essssss: "+ refGroup.getKey());
                     startActivity(intent);
+
                     finish();
 
+
+
                 }
+
             }
         });
     }

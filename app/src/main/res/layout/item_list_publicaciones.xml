@@ -24,27 +24,54 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.6"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/idNombre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nombre"
-                android:textSize="25sp"
-                android:textStyle="bold"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Asunto:"/>
+                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:text="asunto:"/>
                 <TextView
                     android:id="@+id/idInfo"
                     android:layout_marginLeft="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="20sp"
                     android:text="Descripcion"/>
             </LinearLayout>
+            <TextView
+                android:id="@+id/idNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre                                   "
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/time_text_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/name_text_layout"
+                    android:text="00:00 AM  "
+                    android:textSize="11sp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                <TextView
+                    android:id="@+id/fecha_text_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_toEndOf="@+id/time_text_layout"
+                    android:text="          22/11/18"
+                    android:textSize="11sp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
     <TextView
