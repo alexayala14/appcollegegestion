@@ -57,9 +57,10 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessagesGroupAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final MessagesGroupAdapter.ViewHolder viewHolder, int i) {
         final Grupo grupo = groupList.get(i);
         viewHolder.username.setText(grupo.getName());
+        //System.out.println("EL NOMBRE ESSSSS: "+username.getText());
         //ArrayList<DatosUsuario> us = new ArrayList<DatosUsuario>();
         for(DatosUsuario j:grupo.getMembers()){
             lastMessage(j.getToken(), viewHolder.message, viewHolder.display_time,groupList.get(i));
@@ -79,10 +80,11 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
 
 
                 }
-
+                nom=grupo.getName();
                 intent.putExtra("datosUsuariosList", mem);
                 intent.putExtra("nombreGrupo",grupo.getGroupId());
-                intent.putExtra("name", grupo.getName());
+                intent.putExtra("nombreG", grupo.getName());
+
 
 
 

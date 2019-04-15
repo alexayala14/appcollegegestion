@@ -225,14 +225,14 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, "Asunto: " + asunto, "Nueva Publicacion!", receiver,bandera);
+                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, "Asunto: " + asunto, "AppCollegeGestion", receiver,bandera);
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
                         @Override
                         public void onResponse(Call<MyResponse> call, retrofit2.Response<MyResponse> response) {
                             if (response.code() == 200){
                                 if (response.body().success != 1){
-                                    Toast.makeText(NuevaPublicacionActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(NuevaPublicacionActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 public class OreoNotification extends ContextWrapper {
 
@@ -55,6 +56,7 @@ public class OreoNotification extends ContextWrapper {
                 .setContentText(body)
                 .setSmallIcon(Integer.parseInt(icon))
                 .setSound(soundUri)
+                .setPriority(Notification.PRIORITY_MAX)
                 .setAutoCancel(true);
     }
 }

@@ -19,11 +19,13 @@ import com.arz.chech.collegegestion.activities.ChatActivityGroup;
 import com.arz.chech.collegegestion.activities.MenuPrincipalActivity;
 import com.arz.chech.collegegestion.activities.NuevaPublicacionActivity;
 import com.arz.chech.collegegestion.entidades.Bandera;
+import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.fragments.GruposFragment;
 import com.arz.chech.collegegestion.preferences.Preferences;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
@@ -31,6 +33,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     Boolean banderas;
     Boolean baaan;
     Class intt;
+
 
 
     @Override
@@ -68,32 +71,32 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
+        //String nomGrupo = remoteMessage.getData().get("nombreGrupo");
+        String nomGrupo = remoteMessage.getData().get("sented");
+        //String datosUsuarios =remoteMessage.getData().get("datosUsuariosList");
         //Boolean bandera = Boolean.valueOf(remoteMessage.getData().get("bandera"));
         String bandera=remoteMessage.getData().get("bandera");
-        System.out.println("LA BANDERA ESSSSSSSSSSSSSSSSS:    "+bandera);
+        String nombregrupo=remoteMessage.getData().get("nombregrupo");
+
+
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-        /*if (bandera){
-            intt=ChatActivity.class;
 
-
-
-
-
-        }else if(!bandera){
-            intt=MenuPrincipalActivity.class;
-        }*/
         assert bandera !=null;
         switch(bandera){
             case "1":
                 intt=ChatActivity.class;
+
                 break;
             case "2":
                 intt=MenuPrincipalActivity.class;
+
                 break;
             case "3":
+
                 intt= ChatActivityGroup.class;
+
                 break;
 
         }
@@ -101,7 +104,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Intent intent = new Intent(this,intt);
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user);
+        bundle.putString("nombreGrupo",user);
+        bundle.putString("nombreG",nombregrupo);
+        //bundle.putParcelableArrayList("datosUsuariosList",datosUsuarios);
         intent.putExtras(bundle);
+        //intent.putExtra("datosUsuariosList", datosUsuarios);
+
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(intent);
@@ -129,22 +137,18 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
+        //String nomGrupo = remoteMessage.getData().get("nombreGrupo");
+        String nomGrupo = remoteMessage.getData().get("sented");
+        //String datosUsuarios =remoteMessage.getData().get("datosUsuariosList");
         //Boolean bandera = Boolean.valueOf(remoteMessage.getData().get("bandera"));
         String bandera=remoteMessage.getData().get("bandera");
-
+        String nombregrupo=remoteMessage.getData().get("nombregrupo");
 
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
 
-        /*if (bandera ){
-            intt=ChatActivity.class;
 
-
-
-        }else if(!bandera){
-            intt=MenuPrincipalActivity.class;
-        }*/
         assert bandera!=null;
 
         switch (bandera) {
@@ -164,6 +168,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Intent intent = new Intent(this,intt);
         Bundle bundle = new Bundle();
         bundle.putString("user_id", user);
+        bundle.putString("nombreGrupo",user);
+        //bundle.putString("nombreGrupo",nomGrupo);
+        bundle.putString("nombreG",nombregrupo);
         intent.putExtras(bundle);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

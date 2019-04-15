@@ -10,21 +10,11 @@ public class Grupo {
     private List<DatosUsuario> members;
     private List<Messages> messages ;
 
-    public Grupo(String name) {
-        this.name = name;
-    }
     public Grupo(){
 
     }
 
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Grupo(String name, String groupId) {
         this.name = name;
@@ -66,6 +56,17 @@ public class Grupo {
     public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+
 
     @Override
     public String toString() {

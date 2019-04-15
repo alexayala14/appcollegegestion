@@ -58,6 +58,8 @@ import retrofit2.Response;
 
 public class ChatActivityGroup extends AppCompatActivity {
     private ArrayList<DatosUsuario>datosUsuarios;
+    private ArrayList<DatosUsuario>datosUsuarios1;
+
     private Toolbar mChatToolbar;
     private DatabaseReference mRootRef, reference;
     private CircleImageView mProfileImage;
@@ -70,6 +72,7 @@ public class ChatActivityGroup extends AppCompatActivity {
     private ChatAdapterGroup mAdapter;
     private static final int GALLERY_PICK = 1;
     private TextView displayName;
+    private TextView displayNameGroup;
     private String userid;
     private String userName;
     private String userApellido;
@@ -102,17 +105,21 @@ public class ChatActivityGroup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages_group);
         System.out.println("ESTAS EM EL CREATE");
-        datosUsuarios=getIntent().getParcelableArrayListExtra("datosUsuariosList");
-       // userid=getIntent().getStringExtra("user_id");
+
+        datosUsuarios = getIntent().getParcelableArrayListExtra("datosUsuariosList");
+
+        //datosUsuarios1=datosUsuarios;
+        nombreGrupo=getIntent().getStringExtra("nombreG");
+        System.out.println("EL NOMBRE DEL GRUPO EN  EL CHAT ES: "+nombreGrupo);
+        // userid=getIntent().getStringExtra("user_id");
         //System.out.println("el user id es el: "+ userid);
-        assert currentGroupName!=null;
+        assert currentGroupName != null;
         try {
-            currentGroupName=getIntent().getStringExtra("nombreGrupo");
+            currentGroupName = getIntent().getStringExtra("nombreGrupo");
+            System.out.println("El nombre del idgrupo es : "+currentGroupName);
 
-        }catch (Exception e){}
-
-
-
+        } catch (Exception e) {
+        }
 
 
         //TOOLBAR
@@ -139,15 +146,16 @@ public class ChatActivityGroup extends AppCompatActivity {
         //
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mCurrentUserId = Preferences.obtenerPreferenceString(ChatActivityGroup.this, Preferences.PREFERENCE_TOKEN);
-        nomape=Preferences.obtenerPreferenceString(ChatActivityGroup.this,Preferences.PREFERENCE_NOMBRE)+" "+Preferences.obtenerPreferenceString(ChatActivityGroup.this,Preferences.PREFERENCE_APELLIDO);
+        nomape = Preferences.obtenerPreferenceString(ChatActivityGroup.this, Preferences.PREFERENCE_NOMBRE) + " " + Preferences.obtenerPreferenceString(ChatActivityGroup.this, Preferences.PREFERENCE_APELLIDO);
         //mAuth= FirebaseAuth.getInstance();
         //mCurrentUserId=mAuth.getCurrentUser().getUid();
-        userRef=mRootRef.child("Users");
-        groupNameRef=mRootRef.child("Groups");
+        userRef = mRootRef.child("Users");
+        groupNameRef = mRootRef.child("Groups");
         btn_send = (ImageButton) findViewById(R.id.chat_send_btn);
         text_send = (EditText) findViewById(R.id.chat_message_view);
         displayName = (TextView) findViewById(R.id.display_name);
-
+        displayNameGroup = (TextView) findViewById(R.id.display_name_group);
+        acumMembers = "";
 
 
         //
@@ -159,22 +167,36 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
         //------- IMAGE STORAGE ---------
-       // mImageStorage = FirebaseStorage.getInstance().getReference();
+        // mImageStorage = FirebaseStorage.getInstance().getReference();
         //mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
         //displayName.setText(datosUsuarios.toString());
-        reference = FirebaseDatabase.getInstance().getReference("Groups").child(currentGroupName);
 
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if (currentGroupName != null) {
 
-                final Grupo grupo = dataSnapshot.getValue(Grupo.class);
-                assert grupo != null;
+            displayName.setText(nombreGrupo);
+            reference = FirebaseDatabase.getInstance().getReference("Groups");
+            if(datosUsuarios==null){
+                System.out.println("entro al ciclo");
+                datosUsuarios = new ArrayList<DatosUsuario>();
 
-                nombreGrupo = grupo.getName();
-                displayName.setText(nombreGrupo);
+                //reference.child(currentGroupName);
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        datosUsuarios.clear();
+                        for(DataSnapshot snapshot:dataSnapshot.getChildren()) {
+                            final Grupo grupo = snapshot.getValue(Grupo.class);
+                            assert grupo != null;
+
+                            datosUsuarios= (ArrayList<DatosUsuario>) grupo.getMembers();
+                            System.out.println(datosUsuarios);
+
+
+                        }
+
+
 
 
 
@@ -189,22 +211,39 @@ public class ChatActivityGroup extends AppCompatActivity {
                             mAdapter.enviarDatos(nombre,apellido);
                         }
                     }
-                }*/
+                }
+
+
+                        //mAdapter.enviarDatos(nombre, apellido);
+
+                    }*/
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                System.out.println("LOS USUARIOS SONnnnn: "+datosUsuarios.toString());
 
 
 
-
-
-
-                //mAdapter.enviarDatos(nombre, apellido);
 
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            try {
+                for (DatosUsuario i : datosUsuarios) {
+                    acumMembers = (String) acumMembers + i.getNombre() + ",";
+                }
+                miembrosGroup = acumMembers.substring(0, acumMembers.length() - 1);
+                displayNameGroup.setText(miembrosGroup);
+                System.out.println("LOS MIEMBROS SON: "+miembrosGroup);
+            } catch (Exception e) {
+                displayNameGroup.setText("integrantes");
             }
-        });
+
+
+
 
 
 
@@ -258,10 +297,6 @@ public class ChatActivityGroup extends AppCompatActivity {
         });*/
 
 
-
-
-
-
         //readMessages();
 
        /* mRootRef.child("Chat").child(mCurrentUserId).addValueEventListener(new ValueEventListener() {
@@ -313,7 +348,6 @@ public class ChatActivityGroup extends AppCompatActivity {
         });*/
 
 
-
         //displayName.setText(nombreGrupo);
         GetUserInfo();
         readMessages();
@@ -325,9 +359,10 @@ public class ChatActivityGroup extends AppCompatActivity {
                 SaveMessageInfoToDatabase();
 
 
-
             }
         });
+
+    }
 
 
 
@@ -571,46 +606,48 @@ public class ChatActivityGroup extends AppCompatActivity {
 
     private void readMessages(){
 
-        final DatabaseReference messageRef = reference.child("Messages");
+            final DatabaseReference messageRef = reference.child(currentGroupName).child("Messages");
 
 
-        messageRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                messagesList.clear();
-                for (final DataSnapshot snapshot: dataSnapshot.getChildren()){
+            messageRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    messagesList.clear();
+                    for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    messageRef.getRef().addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            messagesList.clear();
-                            for(final DataSnapshot snapshot1:dataSnapshot.getChildren()){
+                        messageRef.getRef().addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                messagesList.clear();
+                                for (final DataSnapshot snapshot1 : dataSnapshot.getChildren()) {
 
-                                Messages message = snapshot1.getValue(Messages.class);
-                                assert message !=null;
-                                messagesList.add(message);
+                                    Messages message = snapshot1.getValue(Messages.class);
+                                    assert message != null;
+                                    messagesList.add(message);
+
+                                }
+
+                                mAdapter.notifyDataSetChanged();
+                                mMessagesList.scrollToPosition(messagesList.size() - 1);
 
                             }
 
-                            mAdapter.notifyDataSetChanged();
-                            mMessagesList.scrollToPosition(messagesList.size()-1);
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
+                            }
+                        });
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
-
+                    }
 
                 }
 
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+
     }
 
 
@@ -692,7 +729,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }*/
 
-    private void sendNotification(String receiver, final String username, final String message,final String banderaNot){
+    private void sendNotification(final String receiver, final String username, final String nomape,final String nombreGrupo, final String message, final String banderaNot,final ArrayList<DatosUsuario> datosUsuarios){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -700,7 +737,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "Nuevo Mensaje!", userid,banderaNot);
+                    Data data = new Data(username, R.mipmap.ic_launcher, nombreGrupo+"  "+nomape+":"+message, "AppCollegeGestion",receiver,banderaNot,nombreGrupo,datosUsuarios);
                     Sender sender = new Sender(data, token.getToken());
 
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
@@ -754,64 +791,67 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
     private void SaveMessageInfoToDatabase() {
+
         String message = text_send.getText().toString();
         DatabaseReference mMensaje = groupNameRef.child(currentGroupName).child("Messages");
-        String messageKey =mMensaje.push().getKey();
+        String messageKey = mMensaje.push().getKey();
         banderaNot = "3";
-        if(TextUtils.isEmpty(message)){
-            Toast.makeText(this,"Por favor ingrese un mensaje",Toast.LENGTH_LONG).show();
-        }
-        else {
+        if (TextUtils.isEmpty(message)) {
+            Toast.makeText(this, "Por favor ingrese un mensaje", Toast.LENGTH_LONG).show();
+        } else {
             Calendar calForDate = Calendar.getInstance();
             SimpleDateFormat currentDateFormat = new SimpleDateFormat("MMM dd, YY");
-            currentDate =currentDateFormat.format(calForDate.getTime());
+            currentDate = currentDateFormat.format(calForDate.getTime());
 
             Calendar calForTime = Calendar.getInstance();
             SimpleDateFormat currentDateTime = new SimpleDateFormat("hh:mm: a");
-            currentTime =currentDateTime.format(calForTime.getTime());
+            currentTime = currentDateTime.format(calForTime.getTime());
 
-            HashMap<String,Object> groupMessageKey=new HashMap<>();
+            HashMap<String, Object> groupMessageKey = new HashMap<>();
             mMensaje.updateChildren(groupMessageKey);
 
 
             groupmessageKeyRef = mMensaje.child(messageKey);
 
-            HashMap<String,Object> messageInfoMap = new HashMap<>();
-                messageInfoMap.put("message",message.trim());
-                messageInfoMap.put("seen", false);
-                messageInfoMap.put("type", "text");
-                messageInfoMap.put("time", ServerValue.TIMESTAMP);
-                messageInfoMap.put("from",mCurrentUserId);
-                //messageInfoMap.put("nombre",currentUserName);
-                messageInfoMap.put("receiver", nomape);
-                //messageInfoMap.put("date",currentDate);
-                //messageInfoMap.put("time",currentTime);
-             groupmessageKeyRef.updateChildren(messageInfoMap);
-            }
+            HashMap<String, Object> messageInfoMap = new HashMap<>();
+            messageInfoMap.put("message", message.trim());
+            messageInfoMap.put("seen", false);
+            messageInfoMap.put("type", "text");
+            messageInfoMap.put("time", ServerValue.TIMESTAMP);
+            messageInfoMap.put("from", mCurrentUserId);
+            //messageInfoMap.put("nombre",currentUserName);
+            messageInfoMap.put("receiver", nomape);
+            //messageInfoMap.put("date",currentDate);
+            //messageInfoMap.put("time",currentTime);
+            groupmessageKeyRef.updateChildren(messageInfoMap);
+        }
         text_send.setText("");
 
 
-        mMessagesList.scrollToPosition(messagesList.size()-1);
+        mMessagesList.scrollToPosition(messagesList.size() - 1);
 
         final String msg = message.trim();
-
-        for(DatosUsuario dato:datosUsuarios) {
-            userid=dato.getToken();
-            System.out.println("EL VALOR DE NOTIFY ES: "+notify);
-                    if (notify && !(userid.equals(mCurrentUserId))) {
+        if (datosUsuarios != null) {
+            for (DatosUsuario dato : datosUsuarios) {
+                userid = dato.getToken();
+                System.out.println("EL VALOR DE NOTIFY ES: " + notify);
+                if (notify && !(userid.equals(mCurrentUserId))) {
 
                         /*SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant, MODE_PRIVATE);
                         SharedPreferences.Editor editor = ban.edit();
                         editor.putBoolean(prefbandera, banderaNot);
                         editor.apply();*/
-                        sendNotification(userid, nombreGrupo, msg, banderaNot);
+                    sendNotification(userid, currentGroupName, nomape, nombreGrupo, msg, banderaNot,datosUsuarios);
 
-                    }
+                }
 
 
+            }
+
+            notify = false;
         }
-        notify = false;
 
-        mMessagesList.scrollToPosition(messagesList.size()-1);
+            mMessagesList.scrollToPosition(messagesList.size() - 1);
+
     }
 }

@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.MensajesGruposActivity"/>
-        <activity android:name=".activities.ChatActivityGroup" />
+        <activity android:name=".activities.ChatActivityGroup"
+            android:parentActivityName=".activities.MenuPrincipalActivity"/>
         <activity android:name=".activities.AgregarContactoActivity" />
         <activity android:name=".activities.NuevoGrupoActivity"
             android:parentActivityName=".activities.MenuPrincipalActivity"/>

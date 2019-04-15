@@ -178,7 +178,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     RootRef.child("Groups").child(nombreGrupo).setValue("");
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
-                    intent.putExtra("nombreGrupo",nombreGrupo);
+                    intent.putExtra("user",nombreGrupo);
                     startActivity(intent);
 
                     finish();
@@ -346,6 +346,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     refGroup.child("groupId").setValue(refGroup.getKey());
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
+                    intent.putExtra("nombreG",nombreGrupo);
                     intent.putExtra("nombreGrupo",refGroup.getKey());
                     startActivity(intent);
 

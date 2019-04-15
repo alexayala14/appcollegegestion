@@ -59,12 +59,11 @@ public class AgregarContactoActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View action_bar_view = inflater.inflate(R.layout.friends_custom_bar, null);
         actionBar.setCustomView(action_bar_view);
-        /*btnCancel =(Button)findViewById(R.id.btncancelarr);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        btnCancel =(Button)findViewById(R.id.btncancelarr);
+        /*btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AgregarContactoActivity.this,NuevoGrupoActivity.class);
-                startActivity(intent);
+                finish();
             }
         });*/
         datosUsuarios = new ArrayList<>();
