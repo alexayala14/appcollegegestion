@@ -2,19 +2,28 @@ package com.arz.chech.collegegestion.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.ChatActivityGroup;
+import com.arz.chech.collegegestion.activities.PerfilGrupoActivity;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.entidades.Grupo;
 import com.arz.chech.collegegestion.entidades.Messages;
 import com.arz.chech.collegegestion.preferences.Preferences;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +34,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdapter.ViewHolder>{
 
@@ -62,28 +73,61 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     public void onBindViewHolder(@NonNull final MessagesGroupAdapter.ViewHolder viewHolder, int i) {
         final Grupo grupo = groupList.get(i);
         viewHolder.username.setText(grupo.getName());
+        final ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
         //System.out.println("EL NOMBRE ESSSSS: "+username.getText());
         //ArrayList<DatosUsuario> us = new ArrayList<DatosUsuario>();
         for(DatosUsuario j:grupo.getMembers()){
             lastMessage(j.getToken(), viewHolder.message, viewHolder.display_time,groupList.get(i));
-
-
-
+            mem.add(j);
         }
+        Glide
+                .with(mContext)
+                .load(grupo.getImagenurl())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        viewHolder.mProgressBar.setVisibility(View.GONE);
+                        viewHolder.imageView.setVisibility(View.VISIBLE);
+                        viewHolder.imageView.setImageResource(R.drawable.default_avatar);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        viewHolder.mProgressBar.setVisibility(View.GONE);
+                        viewHolder.imageView.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
+
+                .into(viewHolder.imageView);
+
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, PerfilGrupoActivity.class);
+
+                intent.putExtra("datosUsuariosList", mem);
+                intent.putExtra("nombreGrupo",grupo.getGroupId());
+                intent.putExtra("nombreG", grupo.getName());
+                intent.putExtra("imagenurl",grupo.getImagenurl());
+                mContext.startActivity(intent);
+            }
+        });
 
 
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ChatActivityGroup.class);
-                ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
+                //ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
                 acumMembers="";
                 miembrosGroup="";
-                for(DatosUsuario i:grupo.getMembers()){
+                /*for(DatosUsuario i:grupo.getMembers()){
                     mem.add(i);
 
 
-                }
+                }*/
                 for (DatosUsuario i : mem) {
                     if(i.getNombre()!=null) {
                         acumMembers = (String) acumMembers + i.getNombre() + ",";
@@ -95,6 +139,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                 intent.putExtra("nombreGrupo",grupo.getGroupId());
                 intent.putExtra("nombreG", grupo.getName());
                 intent.putExtra("participantes",miembrosGroup);
+
 
 
 
@@ -118,6 +163,9 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
         public TextView username;
         public TextView message;
         public TextView display_time;
+        public CircleImageView imageView;
+        public ProgressBar mProgressBar;
+        ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -125,6 +173,8 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
             username = itemView.findViewById(R.id.user_single_name);
             message = itemView.findViewById(R.id.user_single_status);
             display_time = itemView.findViewById(R.id.user_single_time);
+            imageView=itemView.findViewById(R.id.user_single_image);
+            mProgressBar=itemView.findViewById(R.id.idprogessbar);
         }
     }
 

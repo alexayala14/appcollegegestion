@@ -349,7 +349,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                         }
                     }
                     miembrosGroup = acumMembers.substring(0, acumMembers.length() - 1);
-                    System.out.println("LOS MIEMBROS SON: "+miembrosGroup);
+
                     DatabaseReference refGroup= RootRef.child("Groups").push();
                     refGroup.child("name").setValue(nombreGrupo);
                     refGroup.child("members").setValue(datosUsuarios);

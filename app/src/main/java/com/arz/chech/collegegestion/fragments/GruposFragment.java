@@ -20,6 +20,7 @@ import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.activities.FriendsActivity;
 import com.arz.chech.collegegestion.activities.MensajesGruposActivity;
 import com.arz.chech.collegegestion.activities.NuevoGrupoActivity;
+import com.arz.chech.collegegestion.activities.PerfilGrupoActivity;
 import com.arz.chech.collegegestion.adapters.MessagesGroupAdapter;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.entidades.Grupo;
@@ -87,8 +88,7 @@ public class GruposFragment extends Fragment {
                 //RequestNewGroup();
 
                 Intent intent = new Intent(getActivity(), NuevoGrupoActivity.class);
-                //Intent intent = new Intent(FriendsActivity.this, MensajesGruposActivity.class);
-                //intent.setFlags(intent.FLAG_ACTIVITY_SINGLE_TOP|intent.FLAG_ACTIVITY_CLEAR_TOP);
+
 
                 startActivity(intent);
 

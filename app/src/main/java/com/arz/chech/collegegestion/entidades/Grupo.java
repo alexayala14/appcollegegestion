@@ -9,6 +9,7 @@ public class Grupo {
     private String  groupId;
     private List<DatosUsuario> members;
     private List<Messages> messages ;
+    private String imagenurl;
 
     public Grupo(){
 
@@ -28,6 +29,21 @@ public class Grupo {
         this.messages = messages;
     }
 
+    public Grupo(String name, String groupId, List<DatosUsuario> members, List<Messages> messages, String imagenurl) {
+        this.name = name;
+        this.groupId = groupId;
+        this.members = members;
+        this.messages = messages;
+        this.imagenurl = imagenurl;
+    }
+
+    public String getImagenurl() {
+        return imagenurl;
+    }
+
+    public void setImagenurl(String imagenurl) {
+        this.imagenurl = imagenurl;
+    }
 
     public Grupo(List<DatosUsuario> members) {
         this.members = members;

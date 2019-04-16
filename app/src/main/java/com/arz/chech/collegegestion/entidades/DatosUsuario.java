@@ -10,6 +10,7 @@ public class DatosUsuario implements Parcelable {
     private String perfil;
     private String token;
     private boolean estaEliminado;
+    private String imagenurl;
 
     public DatosUsuario(String nombre, String apellido, String rut, String perfil, boolean estaEliminado, String token) {
         this.nombre = nombre;
@@ -20,8 +21,19 @@ public class DatosUsuario implements Parcelable {
         this.token = token;
     }
 
+    public DatosUsuario(String nombre, String apellido, String rut, String perfil, String token, boolean estaEliminado, String imagenurl) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.rut = rut;
+        this.perfil = perfil;
+        this.token = token;
+        this.estaEliminado = estaEliminado;
+        this.imagenurl = imagenurl;
+    }
+
     public DatosUsuario() {
     }
+
 
     protected DatosUsuario(Parcel in) {
         nombre = in.readString();
@@ -90,6 +102,14 @@ public class DatosUsuario implements Parcelable {
 
     public void setPerfil(String perfil) {
         this.perfil = perfil;
+    }
+
+    public String getImagenurl() {
+        return imagenurl;
+    }
+
+    public void setImagenurl(String imagenurl) {
+        this.imagenurl = imagenurl;
     }
 
     @Override
