@@ -37,6 +37,8 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
     private  String groupId;
     private String nom;
+    private String acumMembers;
+    private String  miembrosGroup;
 
     public MessagesGroupAdapter(Context context, ArrayList<Grupo> groupList){
         this.groupList = groupList;
@@ -75,15 +77,25 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ChatActivityGroup.class);
                 ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
+                acumMembers="";
+                miembrosGroup="";
                 for(DatosUsuario i:grupo.getMembers()){
                     mem.add(i);
 
 
                 }
+                for (DatosUsuario i : mem) {
+                    if(i.getNombre()!=null) {
+                        acumMembers = (String) acumMembers + i.getNombre() + ",";
+                    }
+                }
+                miembrosGroup = acumMembers.substring(0, acumMembers.length() - 1);
                 nom=grupo.getName();
                 intent.putExtra("datosUsuariosList", mem);
                 intent.putExtra("nombreGrupo",grupo.getGroupId());
                 intent.putExtra("nombreG", grupo.getName());
+                intent.putExtra("participantes",miembrosGroup);
+
 
 
 

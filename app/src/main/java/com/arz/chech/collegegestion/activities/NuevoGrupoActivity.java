@@ -56,6 +56,8 @@ public class NuevoGrupoActivity extends AppCompatActivity {
     private FloatingActionButton creargrupo;
     private EditText editText;
     private HashSet<DatosUsuario>hashSet;
+    private String acumMembers;
+    private String  miembrosGroup;
 
 
 
@@ -326,6 +328,8 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     miUsuario.setRut(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_USUARIO));
                     miUsuario.setToken(Preferences.obtenerPreferenceString(NuevoGrupoActivity.this,Preferences.PREFERENCE_TOKEN));
                     datosUsuarios.add(miUsuario);
+                    acumMembers="";
+                    miembrosGroup="";
                     for (int i =0;i<datosUsuarios.size();i++){
                         int cont=0;
                         for (int j =0;j<datosUsuarios.size()-1;j++){
@@ -339,6 +343,13 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    for (DatosUsuario i : datosUsuarios) {
+                        if(i.getNombre()!=null) {
+                            acumMembers = (String) acumMembers + i.getNombre() + ",";
+                        }
+                    }
+                    miembrosGroup = acumMembers.substring(0, acumMembers.length() - 1);
+                    System.out.println("LOS MIEMBROS SON: "+miembrosGroup);
                     DatabaseReference refGroup= RootRef.child("Groups").push();
                     refGroup.child("name").setValue(nombreGrupo);
                     refGroup.child("members").setValue(datosUsuarios);
@@ -348,6 +359,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                     intent.putExtra("datosUsuariosList", datosUsuarios);
                     intent.putExtra("nombreG",nombreGrupo);
                     intent.putExtra("nombreGrupo",refGroup.getKey());
+                    intent.putExtra("participantes",miembrosGroup);
                     startActivity(intent);
 
                     finish();

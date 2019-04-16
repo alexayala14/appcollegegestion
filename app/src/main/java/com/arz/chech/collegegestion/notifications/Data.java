@@ -12,7 +12,7 @@ public class Data {
     private String sented;
     private String bandera;
     private String nombregrupo;
-    private ArrayList<DatosUsuario>datosUsuarios;
+    private String participantes;
 
 
     public Data(String user, int icon, String body, String title, String sented, String bandera) {
@@ -40,7 +40,7 @@ public class Data {
         this.nombregrupo = nombregrupo;
     }
 
-    public Data(String user, int icon, String body, String title, String sented, String bandera, String nombregrupo, ArrayList<DatosUsuario> datosUsuarios) {
+    public Data(String user, int icon, String body, String title, String sented, String bandera, String nombregrupo, String participantes) {
         this.user = user;
         this.icon = icon;
         this.body = body;
@@ -48,9 +48,16 @@ public class Data {
         this.sented = sented;
         this.bandera = bandera;
         this.nombregrupo = nombregrupo;
-        this.datosUsuarios = datosUsuarios;
+        this.participantes = participantes;
     }
 
+    public String getParticipantes() {
+        return participantes;
+    }
+
+    public void setParticipantes(String participantes) {
+        this.participantes = participantes;
+    }
 
     public String getBandera() {
         return bandera;
@@ -108,25 +115,6 @@ public class Data {
         this.nombregrupo = nombregrupo;
     }
 
-    public ArrayList<DatosUsuario> getDatosUsuarios() {
-        return datosUsuarios;
-    }
 
-    public void setDatosUsuarios(ArrayList<DatosUsuario> datosUsuarios) {
-        this.datosUsuarios = datosUsuarios;
-    }
 
-    @Override
-    public String toString() {
-        return "Data{" +
-                "user='" + user + '\'' +
-                ", icon=" + icon +
-                ", body='" + body + '\'' +
-                ", title='" + title + '\'' +
-                ", sented='" + sented + '\'' +
-                ", bandera='" + bandera + '\'' +
-                ", nombregrupo='" + nombregrupo + '\'' +
-                ", datosUsuarios=" + datosUsuarios +
-                '}';
-    }
 }
