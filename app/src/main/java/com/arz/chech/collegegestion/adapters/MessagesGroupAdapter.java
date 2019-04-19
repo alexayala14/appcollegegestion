@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,6 +102,12 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                 })
 
                 .into(viewHolder.imageView);
+        /*Picasso.get()
+                .load(grupo.getImagenurl())
+                .placeholder(R.drawable.default_avatar)
+                .error(R.drawable.default_avatar)
+                .fit()
+                .into(viewHolder.imageView);*/
 
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +116,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
 
                 intent.putExtra("datosUsuariosList", mem);
                 intent.putExtra("nombreGrupo",grupo.getGroupId());
+                System.out.println("ENVIAR GRUPI ID: "+grupo.getGroupId());
                 intent.putExtra("nombreG", grupo.getName());
                 intent.putExtra("imagenurl",grupo.getImagenurl());
                 mContext.startActivity(intent);

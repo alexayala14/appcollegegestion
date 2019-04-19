@@ -21,8 +21,17 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.firebase.client.Firebase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+/*<ProgressBar
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:id="@+id/idprogessbar"
+        android:visibility="visible"/>*/
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -30,6 +39,7 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
 
     private ArrayList<DatosUsuario> datosUsuarioList;
     private Context mContext;
+    private DatabaseReference mrefGrupo;
 
     public AgregarIntegranteGrupoAdapter(Context mContext, ArrayList<DatosUsuario> mUsers){
 
@@ -58,6 +68,7 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
                         viewHolder.mProgressBar.setVisibility(View.GONE);
                         viewHolder.imageView.setVisibility(View.VISIBLE);
                         viewHolder.imageView.setImageResource(R.drawable.default_avatar);
+
                         return false;
                     }
 
@@ -70,6 +81,13 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
                 })
 
                 .into(viewHolder.imageView);
+
+
+       /* Picasso.get()
+                .load(datosUsuario.getImagenurl())
+                .placeholder(R.drawable.default_avatar)
+                .error(R.drawable.default_avatar)
+                .into(viewHolder.imageView);*/
 
 
         /*viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +113,8 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
                 intent.putExtra("user_apellido", datosUsuario.getApellido());*/
 
                 ((Activity)mContext).setResult(Activity.RESULT_OK,intent);
+                mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child("-Lco7IIZRZ5kRMIom0OG").child("members").child(datosUsuario.getToken());
+                mrefGrupo.setValue(datosUsuario);
                 //((Activity)mContext).setResult(50,intent);
 
                 ((Activity)mContext).finish();

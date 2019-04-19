@@ -33,6 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -54,7 +56,6 @@ public class GruposFragment extends Fragment {
     private DatabaseReference groupRef;
     private String groupId;
     private FloatingActionButton grup;
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -71,12 +72,17 @@ public class GruposFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_grupos, container, false);
+        groupList =new ArrayList<>();
+        usersList = new ArrayList<>();
+        mUsers = new ArrayList<>();
         recyclerView = view.findViewById(R.id.conv_list);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        messagesGroupAdapter = new MessagesGroupAdapter(getContext(),groupList);
+        recyclerView.setAdapter(messagesGroupAdapter);
         mCurrent_user_id = Preferences.obtenerPreferenceString(requireContext(), Preferences.PREFERENCE_TOKEN);
         noExistenMensajes = (TextView) view.findViewById(R.id.no_exist_msj_grupo);
 
@@ -97,34 +103,40 @@ public class GruposFragment extends Fragment {
             }
         });
 
-        groupList =new ArrayList<>();
-        usersList = new ArrayList<>();
-        mUsers = new ArrayList<>();
-        messagesGroupAdapter = new MessagesGroupAdapter(getContext(),groupList);
-        recyclerView.setAdapter(messagesGroupAdapter);
+
+
         groupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
         //
         databaseReference = FirebaseDatabase.getInstance().getReference("Groups");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.getRef().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 //groupList= new ArrayList<>();
                 //groupList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    final Grupo grupo = snapshot.getValue(Grupo.class);
+               if(dataSnapshot.exists()) {
+                   for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                       //groupList.add(snapshot.getValue(Grupo.class));
+                    /*final Grupo grupo = snapshot.getValue(Grupo.class);
                     assert grupo !=null;
                     groupId=grupo.getGroupId();
                     groupId = snapshot.getKey();
+
+
                     messagesGroupAdapter.enviarDatos(groupId);
-                    usersList.add(snapshot.getKey());
+                    usersList.add(snapshot.getKey());*/
+                       System.out.println(snapshot.getKey());
+
+                       groupId = snapshot.getKey();
+                       messagesGroupAdapter.enviarDatos(groupId);
+                       usersList.add(snapshot.getKey());
 
 
+                   }
+                   chatList();
 
-                }
-                chatList();
+                   //messagesGroupAdapter.notifyDataSetChanged();
 
-                //messagesGroupAdapter.notifyDataSetChanged();
-
-
+               }
             }
 
 
@@ -133,6 +145,7 @@ public class GruposFragment extends Fragment {
 
             }
         });
+
         return view;
     }
 
@@ -143,7 +156,13 @@ public class GruposFragment extends Fragment {
         }
     }
 
-   /* @Override
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //databaseReference.removeEventListener(ValueEventListener);
+    }
+
+    /* @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -184,36 +203,47 @@ public class GruposFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+               //if(dataSnapshot.exists()) {
+
+                Iterator<DataSnapshot> items=dataSnapshot.getChildren().iterator();
                 groupList.clear();
-                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
-                   final Grupo grupo = snapshot.getValue(Grupo.class);
-                    assert grupo !=null;
+                HashMap<String,Object>grupo=null;
+                while (items.hasNext()){
+                    DataSnapshot item=items.next();
+                    //grupo=(HashMap<String, Object>) item.getValue();
+                    Grupo grupo1=item.getValue(Grupo.class);
+
+                    //groupList.add(new Grupo(grupo.get("admin").toString(),grupo.get("groupId").toString(),grupo.get("members"),grupo.get("name").toString(),grupo.get("messages")));
+
+
 
 
                     try {
-                        for(DatosUsuario user:grupo.getMembers()) {
+                        for(DatosUsuario user:grupo1.getMembers()) {
                             assert user !=null;
 
 
                             if (Preferences.obtenerPreferenceString(requireContext(), Preferences.PREFERENCE_TOKEN).equals(user.getToken())){
-                                groupList.add(grupo);
+                                groupList.add(grupo1);
                             }
                         }
                     }catch (Exception e){
 
                     }
-
-
-
-
-
                 }
-                if (groupList.isEmpty()){
-                    noExistenMensajes.setVisibility(View.VISIBLE);
-                }else {
-                    noExistenMensajes.setVisibility(View.GONE);
-                }
-                messagesGroupAdapter.notifyDataSetChanged();
+
+
+
+
+                   if (groupList.isEmpty()) {
+                       noExistenMensajes.setVisibility(View.VISIBLE);
+                   } else {
+                       noExistenMensajes.setVisibility(View.GONE);
+                   }
+                   messagesGroupAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -227,4 +257,5 @@ public class GruposFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

@@ -3,8 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.arz.chech.collegegestion.activities.MenuPrincipalActivity">
     <item
+        android:id="@+id/action_perfil"
+        android:orderInCategory="100"
+        android:title="@string/perfil"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_cerrar_sesion"
         app:showAsAction="never" />
+
 </menu>

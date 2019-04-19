@@ -744,9 +744,9 @@ public class ChatActivityGroup extends AppCompatActivity {
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
                         @Override
                         public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                            if (response.code() == 200){
+                            if (response.code() == 20000){
                                 if (response.body().success != 1){
-                                    Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -835,7 +835,6 @@ public class ChatActivityGroup extends AppCompatActivity {
         if (datosUsuarios != null) {
             for (DatosUsuario dato : datosUsuarios) {
                 userid = dato.getToken();
-                System.out.println("EL VALOR DE NOTIFY ES: " + notify);
                 if (notify && !(userid.equals(mCurrentUserId))) {
 
                         /*SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant, MODE_PRIVATE);

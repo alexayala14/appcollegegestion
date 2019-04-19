@@ -1,9 +1,11 @@
 package com.arz.chech.collegegestion.entidades;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class Grupo {
+public class Grupo implements Serializable {
 
     private String name;
     private String  groupId;
@@ -45,9 +47,6 @@ public class Grupo {
         this.imagenurl = imagenurl;
     }
 
-    public Grupo(List<DatosUsuario> members) {
-        this.members = members;
-    }
 
     public List<DatosUsuario> getMembers() {
         return members;

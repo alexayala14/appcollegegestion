@@ -53,4 +53,8 @@
     </string-array>
 
     <string name="title_activity_registrar">Registrar</string>
+    <string name="apellido">Apellido:</string>
+    <string name="nombre">Nombre:</string>
+    <string name="Perfil">action_perfil</string>
+    <string name="perfil">Perfil</string>
 </resources>

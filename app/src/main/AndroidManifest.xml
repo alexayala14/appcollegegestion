@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.AgregarIntegranteGrupoActivity"></activity>
+        <activity android:name=".activities.PerfilUsuarioActivity"></activity>
+        <activity android:name=".activities.AgregarIntegranteGrupoActivity" />
         <activity android:name=".activities.PerfilGrupoActivity" />
         <activity android:name=".activities.MensajesGruposActivity" />
         <activity

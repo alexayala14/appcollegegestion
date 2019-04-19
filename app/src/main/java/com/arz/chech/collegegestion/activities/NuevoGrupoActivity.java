@@ -343,18 +343,21 @@ public class NuevoGrupoActivity extends AppCompatActivity {
                             }
                         }
                     }
+
+
+                    DatabaseReference refGroup= RootRef.child("Groups").push();
+                    refGroup.child("name").setValue(nombreGrupo);
+
+                    refGroup.child("admin").setValue(mCurrent_user_id);
+                    refGroup.child("groupId").setValue(refGroup.getKey());
+                    refGroup.child("members").setValue(datosUsuarios);
                     for (DatosUsuario i : datosUsuarios) {
                         if(i.getNombre()!=null) {
                             acumMembers = (String) acumMembers + i.getNombre() + ",";
                         }
+
                     }
                     miembrosGroup = acumMembers.substring(0, acumMembers.length() - 1);
-
-                    DatabaseReference refGroup= RootRef.child("Groups").push();
-                    refGroup.child("name").setValue(nombreGrupo);
-                    refGroup.child("members").setValue(datosUsuarios);
-                    refGroup.child("admin").setValue(mCurrent_user_id);
-                    refGroup.child("groupId").setValue(refGroup.getKey());
                     Intent intent = new Intent(NuevoGrupoActivity.this, ChatActivityGroup.class);
                     intent.putExtra("datosUsuariosList", datosUsuarios);
                     intent.putExtra("nombreG",nombreGrupo);

@@ -120,6 +120,12 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
             finish();
             return true;
         }
+        if(id==R.id.action_perfil){
+            Intent intent = new Intent(MenuPrincipalActivity.this,PerfilUsuarioActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

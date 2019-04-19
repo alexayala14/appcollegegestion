@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="wrap_content"
+android:layout_height="match_parent"
+tools:context=".activities.PerfilUsuarioActivity">
+    <include
+        android:id="@+id/main_app_bar_perfil"
+        layout="@layout/app_bar_layout_perfil" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constrai"
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_app_bar_perfil"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/idperfiluserimagen"
+            android:layout_width="312dp"
+            android:layout_height="222dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/md_pink_900"
+            android:padding="25px"
+            android:src="@drawable/default_avatar"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ProgressBar
+            android:id="@+id/idprogessbar12"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/idperfiluserimagen"
+            app:layout_constraintEnd_toEndOf="@+id/idperfiluserimagen"
+            app:layout_constraintStart_toStartOf="@+id/idperfiluserimagen"
+            app:layout_constraintTop_toTopOf="@+id/idperfiluserimagen"
+            app:layout_constraintVertical_bias="0.563" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/idbuttonagregarimagen1"
+            android:layout_width="57dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sharp_photo_camera_black_48"
+            app:layout_constraintBottom_toBottomOf="@+id/idperfiluserimagen"
+            app:layout_constraintEnd_toEndOf="@+id/idperfiluserimagen"
+            app:layout_constraintHorizontal_bias="0.901"
+            app:layout_constraintStart_toStartOf="@+id/idperfiluserimagen"
+            app:layout_constraintTop_toTopOf="@+id/idperfiluserimagen"
+            app:layout_constraintVertical_bias="0.923" />
+    </android.support.constraint.ConstraintLayout>
+
+<TextView
+    android:id="@+id/idnombreuserperfil"
+    android:layout_width="match_parent"
+    android:layout_height="47dp"
+    android:layout_below="@+id/constrai"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="4dp"
+    android:textSize="12pt"
+    android:layout_marginBottom="5dp"
+    android:text="@string/nombre" />
+
+    <TextView
+        android:id="@+id/idapellidouserperfil"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:layout_below="@+id/idnombreuserperfil"
+        android:layout_marginStart="8dp"
+        android:text="@string/apellido"
+        android:textSize="12pt"
+        tools:layout_editor_absoluteX="82dp"
+        tools:layout_editor_absoluteY="86dp" />
+
+
+
+</RelativeLayout>
+
+
+

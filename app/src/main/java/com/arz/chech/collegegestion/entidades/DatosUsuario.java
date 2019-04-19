@@ -3,7 +3,9 @@ package com.arz.chech.collegegestion.entidades;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class DatosUsuario implements Parcelable {
+import java.io.Serializable;
+
+public class DatosUsuario implements Parcelable, Serializable {
     private String nombre;
     private String apellido;
     private String rut;

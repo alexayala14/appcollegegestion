@@ -118,13 +118,13 @@ public class MensajesGruposActivity extends AppCompatActivity {
                     Grupo grupo = snapshot.getValue(Grupo.class);
                     assert grupo !=null;
 
-                    for(DatosUsuario user:grupo.getMembers()) {
+                    /*for(DatosUsuario user:grupo.getMembers()) {
 
 
                         if (Preferences.obtenerPreferenceString(MensajesGruposActivity.this, Preferences.PREFERENCE_TOKEN).equals(user.getToken())){
                             groupList.add(grupo);
                         }
-                    }
+                    }*/
 
 
                 }

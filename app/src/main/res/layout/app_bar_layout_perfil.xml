@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_app_bar_perfil"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="2dp"
+        android:id="@+id/imageflecha"
+        android:src="@drawable/outline_arrow_back_white_48"/>
+    <TextView
+        android:layout_width="65dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="35dp"
+        android:text="Perfil"
+        android:textSize="25dp"
+        android:textColor="@color/md_white_1000"/>
+
+
+</android.support.v7.widget.Toolbar>

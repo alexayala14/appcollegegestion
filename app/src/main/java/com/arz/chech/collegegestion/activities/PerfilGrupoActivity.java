@@ -19,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arz.chech.collegegestion.R;
+import com.arz.chech.collegegestion.adapters.AgregarIntegranteGrupoAdapter;
 import com.arz.chech.collegegestion.adapters.ContactosAgregadosAdapter;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.arz.chech.collegegestion.entidades.Grupo;
 import com.arz.chech.collegegestion.preferences.Preferences;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -39,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,7 +51,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
     private ImageView imageView;
     private FloatingActionButton floatingActionButton;
     private final int PICK_PHOTO=1;
-    private int request_code = 2;
+    private int request_code = 1;
     private Uri filepath;
     private StorageReference storageReference;
     private String mCurrent_user_id;
@@ -79,15 +82,17 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
         imageView=findViewById(R.id.idperfilgroupimagen);
         currentGroupName = getIntent().getStringExtra("nombreGrupo");
+        System.out.println("nombre del grupo token perfil "+currentGroupName);
         nombreGrupo=getIntent().getStringExtra("nombreG");
         datosUsuarios = getIntent().getParcelableArrayListExtra("datosUsuariosList");
         floatingActionButton =findViewById(R.id.idbuttonagregarimagen);
         textViewgrupo=findViewById(R.id.idnombregrupoperfil);
-        mProgressBar=findViewById(R.id.idprogessbar);
+        mProgressBar=findViewById(R.id.idprogessbar1);
 
         textView =(TextView) findViewById(R.id.textView3);
         textViewgrupo.setText(nombreGrupo);
         imagenurl=getIntent().getStringExtra("imagenurl");
+
 
 
         Glide
@@ -109,8 +114,13 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                         return false;
                     }
                 })
-
                 .into(imageView);
+       /* Picasso.get()
+                .load(imagenurl )
+                .placeholder(R.drawable.default_avatar)
+                .error(R.drawable.default_avatar)
+                .fit()
+                .into(imageView);*/
 
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +152,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         });
 
 
+
         // datosUsuarios = new ArrayList<>();
 
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
@@ -164,11 +175,12 @@ public class PerfilGrupoActivity extends AppCompatActivity {
             }
 
 
-
-            mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+            mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("members");
             mUsersDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    final Grupo grupo = dataSnapshot.getValue(Grupo.class);
+
 
                     for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                         final DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
@@ -182,6 +194,10 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                                     if(bandera) {
                                         bandera=false;
                                         datosUsuarios.add(usuario);
+                                        assert grupo!=null;
+                                        agregadosAdapter.enviarGrupo(grupo.getGroupId());
+                                        System.out.println("EL DATOOOOOOOO ES: " +grupo.getGroupId());
+
 
 
                                     }else {
@@ -200,6 +216,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                         }*/
 
                     }
+
 
 
                     agregadosAdapter.notifyDataSetChanged();
@@ -235,7 +252,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
 
     private void guardarFotoenfirebase(final Uri filepath){
         if(filepath!=null) {
-            final StorageReference fotoref = storageReference.child("Fotos").child(currentGroupName).child(filepath.getLastPathSegment());
+            final StorageReference fotoref = storageReference.child("FotosGrupo").child(currentGroupName).child(filepath.getLastPathSegment());
             fotoref.putFile(filepath).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -255,6 +272,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                         RootRef.child(currentGroupName).child("imagenurl").setValue(downloadlink.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(PerfilGrupoActivity.this, "Se cargo la imagen correctamente", Toast.LENGTH_SHORT).show();
                                 System.out.println("Se cargo correctamente");
 
                             }
@@ -262,6 +280,8 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 System.out.println("No se cargo correctamente");
+                                Toast.makeText(PerfilGrupoActivity.this, "No se cargo la imagen correctamente", Toast.LENGTH_SHORT).show();
+
                             }
                         });
                     }
@@ -289,6 +309,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                     Bitmap bitmapImagen = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
                     //FileOutputStream fOut = new FileOutputStream(filepath.toString());
                     //bitmapImagen.compress(Bitmap.CompressFormat.JPEG, 80, fOut);
+
                     imageView.setImageBitmap(bitmapImagen);
                 } catch (IOException e) {
                     e.printStackTrace();
