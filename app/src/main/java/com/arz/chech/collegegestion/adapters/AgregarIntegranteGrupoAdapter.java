@@ -62,24 +62,8 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
         Glide
                 .with(mContext)
                 .load(datosUsuario.getImagenurl())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        viewHolder.mProgressBar.setVisibility(View.GONE);
-                        viewHolder.imageView.setVisibility(View.VISIBLE);
-                        viewHolder.imageView.setImageResource(R.drawable.default_avatar);
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        viewHolder.mProgressBar.setVisibility(View.GONE);
-                        viewHolder.imageView.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })
-
+                .fitCenter()
+                .error(R.drawable.default_avatar)
                 .into(viewHolder.imageView);
 
 
@@ -113,8 +97,8 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
                 intent.putExtra("user_apellido", datosUsuario.getApellido());*/
 
                 ((Activity)mContext).setResult(Activity.RESULT_OK,intent);
-                mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child("-Lco7IIZRZ5kRMIom0OG").child("members").child(datosUsuario.getToken());
-                mrefGrupo.setValue(datosUsuario);
+               // mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child("-Lco7IIZRZ5kRMIom0OG").child("members").child(datosUsuario.getToken());
+                //mrefGrupo.setValue(datosUsuario);
                 //((Activity)mContext).setResult(50,intent);
 
                 ((Activity)mContext).finish();
@@ -135,14 +119,14 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
         View mView;
         public TextView username;
         public CircleImageView imageView;
-        public ProgressBar mProgressBar;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
             username = (TextView) mView.findViewById(R.id.user_single_name);
             imageView=itemView.findViewById(R.id.user_single_image);
-            mProgressBar=itemView.findViewById(R.id.idprogessbar);
+
         }
 
         public void setName(String name, String apellido){

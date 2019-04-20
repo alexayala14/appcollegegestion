@@ -37,8 +37,11 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -56,8 +59,8 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     private TextView textViewApellido;
     private FloatingActionButton floatingActionButtonImagenperfil;
     private FloatingActionButton floatingActionButton;
-    private final int PICK_PHOTO=1;
-    private int request_code = 1;
+    private final int PICK_PHOTO1=3;
+    private int request_code = 3;
     private Uri filepath;
     private StorageReference storageReference;
     private String mCurrent_user_id;
@@ -128,7 +131,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
         //imageViewPerfil=getIntent().getStringExtra("imagenurl");
 
 
-        cargarFotoGlide();
+
 
         floatingActionButtonImagenperfil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +145,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
                         if(options[seleccion]=="Tomar Foto"){
                             opencamara();
                             //guardarFotoenfirebase(filepath);
-                        }else if(options[seleccion]=="Elegir Galeria"){
+                        }else if(options[seleccion]=="Elegir de Galeria"){
                             abrirFotoGaleria();
                             //guardarFotoenfirebase(filepath);
                         }else  if(options[seleccion]=="Cancelar"){
@@ -160,6 +163,30 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
 
             }
         });
+
+        RootRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        RootRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    final DatosUsuario datosUsuario=snapshot.getValue(DatosUsuario.class);
+                    if(datosUsuario.getToken().equals(mCurrent_user_id)) {
+                        imagenurl =  datosUsuario.getImagenurl();
+                        System.out.println("LA IMAGEN ES: "+datosUsuario.getImagenurl());
+                        cargarFotoGlide(imagenurl);
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        //cargarFotoGlide();
 
 
     }
@@ -182,7 +209,7 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
         imageViewPerfil.setImageBitmap(bitmap);
     }
 
-    private void cargarFotoGlide() {
+    private void cargarFotoGlide(String imagenurl) {
         Glide
                 .with(this)
                 .load(imagenurl)
@@ -217,10 +244,10 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     }
 
     private void abrirFotoGaleria(){
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        Intent intent = new Intent();
         intent.setType("image/*");
-        //intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Seleccione una imagen"),PICK_PHOTO);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Seleccione una imagen"),PICK_PHOTO1);
 
 
     }
@@ -277,16 +304,27 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
                     .show();
         } else {
 
-            if(requestCode==1) {
+            if(requestCode==PICK_PHOTO1 && resultCode==RESULT_OK && data!=null && data.getData()!=null) {
                 filepath = data.getData();
 
-                try {
+                /*try {
                     Bitmap bitmapImagen = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
                     //FileOutputStream fOut = new FileOutputStream(filepath.toString());
                     //bitmapImagen.compress(Bitmap.CompressFormat.JPEG, 80, fOut);
 
                     imageViewPerfil.setImageBitmap(bitmapImagen);
                 } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
+                try {
+                    Glide
+                        .with(this)
+                        .load(filepath)
+                        .error(R.drawable.default_avatar)
+                        .fitCenter()
+                        .into(imageViewPerfil);
+                    guardarFotoenfirebase(filepath);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }else if(requestCode==PHOTO_CODE){

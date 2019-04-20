@@ -23,6 +23,7 @@ import com.arz.chech.collegegestion.entidades.Publicacion;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.fragments.DetalleFragment;
 import com.arz.chech.collegegestion.preferences.Preferences;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -36,6 +37,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     private Context mContext;
     FragmentManager fm;
     private DatabaseReference mPublicacionDatabase;
+    private String imagenurl="";
     private String mCurrentUserId;
     private static String dateFormat = "hh:mm a";
     private static String añoFormat = "dd-MM-yy";
@@ -118,7 +120,10 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
 
         //holder.txt_nombre.setText(publicacion.getNombre());
         //holder.txt_descripcion.setText(publicacion.getAsunto());
-        holder.foto.setImageResource(R.drawable.hombre);
+        //holder.foto.setImageResource(R.drawable.hombre);
+
+        System.out.println("La url en viewholdes es: "+imagenurl);
+        cargarImagenesGlide(holder);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,6 +153,15 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
                 return true;
             }
         });
+    }
+
+    private void cargarImagenesGlide(ViewHolder holder) {
+        Glide
+                .with(mContext)
+                .load(imagenurl)
+                .fitCenter()
+                .error(R.drawable.default_avatar)
+                .into(holder.foto);
     }
 
     private void mostrarOpciones(final Publicacion publicacion){
@@ -195,5 +209,12 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             show_hora = itemView.findViewById(R.id.time_text_layout);
             show_año = itemView.findViewById(R.id.fecha_text_layout);
         }
+    }
+    public void enviarImagenurl(String imagnurl){
+        imagenurl=imagnurl;
+        System.out.println("La url en adapter es: "+imagenurl);
+
+
+
     }
 }

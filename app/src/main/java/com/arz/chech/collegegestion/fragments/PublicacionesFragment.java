@@ -40,7 +40,7 @@ public class PublicacionesFragment extends Fragment{
     //PRUEBA BD
     private RecyclerView recyclerViewPublicaciones;
     private ArrayList<Publicacion> listaPublicaciones;
-    private ArrayList<String> listaUsuarios;
+    private ArrayList<DatosUsuario> listaUsuarios;
     private AdaptadorPublicaciones adaptadorPublicaciones;
     private String mCurrentUserId;
 
@@ -78,33 +78,39 @@ public class PublicacionesFragment extends Fragment{
                     if (!datosUsuario.isEstaEliminado()){
                         if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
 
-                            listaUsuarios.add(datosUsuario.getToken());
+                            listaUsuarios.add(datosUsuario);
+
 
                         }
 
                         if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
                             if (datosUsuario.getPerfil().equals("1")||datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")) {
-                                listaUsuarios.add(datosUsuario.getToken());
+                                listaUsuarios.add(datosUsuario);
                             }
                         }
 
                         if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
                             if (datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")) {
-                                listaUsuarios.add(datosUsuario.getToken());
+                                listaUsuarios.add(datosUsuario);
                             }
                         }
 
                         if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("4"))){
                             if (datosUsuario.getPerfil().equals("2")) {
-                                listaUsuarios.add(datosUsuario.getToken());
+                                listaUsuarios.add(datosUsuario);
                             }
                         }
 
                         if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("5"))){
                             if (datosUsuario.getPerfil().equals("3")) {
-                                listaUsuarios.add(datosUsuario.getToken());
+                                listaUsuarios.add(datosUsuario);
                             }
                         }
+                        /*if(datosUsuario.getToken().equals(datosUsuario.getToken())) {
+                            String imagenurl = datosUsuario.getImagenurl();
+                            adaptadorPublicaciones.enviarImagenurl(imagenurl);
+                        }*/
+
                     }
 
 
@@ -130,10 +136,13 @@ public class PublicacionesFragment extends Fragment{
                     Publicacion publicacion = snapshot.getValue(Publicacion.class);
                     if (!publicacion.isEstaEliminado()){
                         if (publicacion.getTokenUser() != null){
-                            for (String usuarios: listaUsuarios){
-                                if (publicacion.getTokenUser().equals(usuarios)){
+                            for (DatosUsuario usuarios: listaUsuarios){
+                                if (publicacion.getTokenUser().equals(usuarios.getToken())){
 
                                     listaPublicaciones.add(publicacion);
+
+                                    adaptadorPublicaciones.enviarImagenurl(usuarios.getImagenurl());
+                                    System.out.println("La url es: "+usuarios.getImagenurl());
                                 }
                             }
                         }

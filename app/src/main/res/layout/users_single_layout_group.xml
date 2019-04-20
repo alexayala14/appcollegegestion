@@ -12,13 +12,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:src="@drawable/default_avatar"
-        android:visibility="gone"/>
-
-    <ProgressBar
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:id="@+id/idprogessbar"
         android:visibility="visible"/>
+
+
     <TextView
         android:id="@+id/user_single_name"
         android:layout_width="wrap_content"

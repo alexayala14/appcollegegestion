@@ -1,13 +1,17 @@
 package com.arz.chech.collegegestion.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,6 +47,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,7 +92,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         datosUsuarios = getIntent().getParcelableArrayListExtra("datosUsuariosList");
         floatingActionButton =findViewById(R.id.idbuttonagregarimagen);
         textViewgrupo=findViewById(R.id.idnombregrupoperfil);
-        mProgressBar=findViewById(R.id.idprogessbar1);
+
 
         textView =(TextView) findViewById(R.id.textView3);
         textViewgrupo.setText(nombreGrupo);
@@ -95,39 +100,30 @@ public class PerfilGrupoActivity extends AppCompatActivity {
 
 
 
-        Glide
-                .with(this)
-                .load(imagenurl)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        imageView.setVisibility(View.VISIBLE);
-                        imageView.setImageResource(R.drawable.default_avatar);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        imageView.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })
-                .into(imageView);
-       /* Picasso.get()
-                .load(imagenurl )
-                .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.default_avatar)
-                .fit()
-                .into(imageView);*/
+        cargarFotoGlide(imagenurl);
 
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                abrirFotoGaleria();
-                guardarFotoenfirebase(filepath);
+                final CharSequence[] options={"Tomar Foto","Elegir de Galeria","Cancelar"};
+                final AlertDialog.Builder builder=new AlertDialog.Builder(PerfilGrupoActivity.this);
+                builder.setTitle("Elegir una Opcion: ");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int seleccion) {
+                        if(options[seleccion]=="Tomar Foto"){
+                            //opencamara();
+                            //guardarFotoenfirebase(filepath);
+                        }else if(options[seleccion]=="Elegir de Galeria"){
+                            abrirFotoGaleria();
+                            //guardarFotoenfirebase(filepath);
+                        }else  if(options[seleccion]=="Cancelar"){
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -241,6 +237,25 @@ public class PerfilGrupoActivity extends AppCompatActivity {
 
     }
 
+    private void opencamara() {
+        /*File file=new File(Environment.getExternalStorageDirectory(),MEDIA_DIRECTORY);
+        file.mkdir();
+
+        String path=Environment.getExternalStorageDirectory()+File.separator+MEDIA_DIRECTORY+File.separator+TEMPORAL_PICTURE_NAME;
+
+        File newFile = new File(path);
+        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,Uri.fromFile(newFile));
+        startActivityForResult(intent,PHOTO_CODE);*/
+    }
+
+    private void decodeBitmap(String dir){
+       /* Bitmap bitmap;
+        bitmap= BitmapFactory.decodeFile(dir);
+        imageViewPerfil.setImageBitmap(bitmap);*/
+    }
+
+
     private void abrirFotoGaleria(){
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -248,6 +263,32 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent,"Seleccione una imagen"),PICK_PHOTO);
 
 
+    }
+
+    private void cargarFotoGlide(String imagenurl) {
+        Glide
+                .with(this)
+                .load(imagenurl)
+                .error(R.drawable.default_avatar)
+                /*.listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        mProgressBar.setVisibility(View.GONE);
+                        imageViewPerfil.setImageResource(R.drawable.default_avatar);
+                        imageViewPerfil.setVisibility(View.VISIBLE);
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mProgressBar.setVisibility(View.GONE);
+                        imageViewPerfil.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })*/
+                .fitCenter()
+                .into(imageView);
     }
 
     private void guardarFotoenfirebase(final Uri filepath){
@@ -302,10 +343,22 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                     .show();
         } else {
 
-            if(requestCode==1) {
+            if(requestCode==PICK_PHOTO&& resultCode==RESULT_OK&&data!=null&&data.getData()!=null) {
                 filepath = data.getData();
 
                 try {
+                    Glide
+                            .with(this)
+                            .load(filepath)
+                            .error(R.drawable.default_avatar)
+                            .fitCenter()
+                            .into(imageView);
+                    guardarFotoenfirebase(filepath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                /*try {
                     Bitmap bitmapImagen = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
                     //FileOutputStream fOut = new FileOutputStream(filepath.toString());
                     //bitmapImagen.compress(Bitmap.CompressFormat.JPEG, 80, fOut);
@@ -313,7 +366,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                     imageView.setImageBitmap(bitmapImagen);
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
             if(requestCode==2){
                 userid=data.getStringExtra("user_id");

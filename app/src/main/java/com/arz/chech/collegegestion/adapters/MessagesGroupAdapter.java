@@ -84,7 +84,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
         Glide
                 .with(mContext)
                 .load(grupo.getImagenurl())
-                .listener(new RequestListener<Drawable>() {
+                /*.listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         viewHolder.mProgressBar.setVisibility(View.GONE);
@@ -99,8 +99,9 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                         viewHolder.imageView.setVisibility(View.VISIBLE);
                         return false;
                     }
-                })
-
+                })*/
+                .error(R.drawable.default_avatar)
+                .fitCenter()
                 .into(viewHolder.imageView);
         /*Picasso.get()
                 .load(grupo.getImagenurl())
@@ -182,7 +183,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
             message = itemView.findViewById(R.id.user_single_status);
             display_time = itemView.findViewById(R.id.user_single_time);
             imageView=itemView.findViewById(R.id.user_single_image);
-            mProgressBar=itemView.findViewById(R.id.idprogessbar);
+
         }
     }
 

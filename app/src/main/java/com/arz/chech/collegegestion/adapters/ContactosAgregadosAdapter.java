@@ -55,24 +55,8 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
         Glide
                 .with(mContext)
                 .load(datosUsuario.getImagenurl())
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        viewHolder.mProgressBar.setVisibility(View.GONE);
-                        viewHolder.imageView.setVisibility(View.VISIBLE);
-                        viewHolder.imageView.setImageResource(R.drawable.default_avatar);
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        viewHolder.mProgressBar.setVisibility(View.GONE);
-                        viewHolder.imageView.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })
-
+                .fitCenter()
+                .error(R.drawable.default_avatar)
                 .into(viewHolder.imageView);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Groups");
         //currentGroupName = getIntent().getStringExtra("nombreGrupo");
@@ -98,14 +82,14 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
         View mView;
         public TextView username;
         public CircleImageView imageView;
-        public ProgressBar mProgressBar;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
             username = (TextView) mView.findViewById(R.id.user_single_name);
             imageView=itemView.findViewById(R.id.user_single_image);
-            mProgressBar=itemView.findViewById(R.id.idprogessbar);
+
         }
 
         public void setName(String name, String apellido){
