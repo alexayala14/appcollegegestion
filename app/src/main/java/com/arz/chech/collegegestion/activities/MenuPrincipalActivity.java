@@ -123,7 +123,7 @@ public class MenuPrincipalActivity extends AppCompatActivity implements Publicac
         if(id==R.id.action_perfil){
             Intent intent = new Intent(MenuPrincipalActivity.this,PerfilUsuarioActivity.class);
             startActivity(intent);
-
+            finish();
             return true;
         }
 
