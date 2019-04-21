@@ -59,20 +59,7 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
         final DatosUsuario datosUsuario = datosUsuarioList.get(i);
         viewHolder.setName(datosUsuario.getNombre(), datosUsuario.getApellido());
 
-        Glide
-                .with(mContext)
-                .load(datosUsuario.getImagenurl())
-                .fitCenter()
-                .error(R.drawable.default_avatar)
-                .into(viewHolder.imageView);
-
-
-       /* Picasso.get()
-                .load(datosUsuario.getImagenurl())
-                .placeholder(R.drawable.default_avatar)
-                .error(R.drawable.default_avatar)
-                .into(viewHolder.imageView);*/
-
+        viewHolder.setImageView(datosUsuario.getImagenurl());
 
         /*viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +118,14 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
 
         public void setName(String name, String apellido){
             username.setText(name + " " + apellido);
+        }
+        public void setImageView(String imagenurl){
+            Glide
+                    .with(mContext)
+                    .load(imagenurl)
+                    .fitCenter()
+                    .error(R.drawable.default_avatar)
+                    .into(imageView);
         }
     }
 

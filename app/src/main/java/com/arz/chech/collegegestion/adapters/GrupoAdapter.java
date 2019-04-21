@@ -20,8 +20,11 @@ import static android.app.Activity.RESULT_OK;
 import com.arz.chech.collegegestion.activities.NuevoGrupoActivity;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.entidades.Grupo;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolder> {
 
@@ -45,6 +48,7 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         final DatosUsuario datosUsuario = datosUsuarioList.get(i);
         viewHolder.setName(datosUsuario.getNombre(), datosUsuario.getApellido());
+        viewHolder.setImageView(datosUsuario.getImagenurl());
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,15 +78,25 @@ public class GrupoAdapter extends RecyclerView.Adapter<GrupoAdapter.ViewHolder> 
 
         View mView;
         public TextView username;
+        public CircleImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
             username = (TextView) mView.findViewById(R.id.user_single_name);
+            imageView=mView.findViewById(R.id.user_single_image);
         }
 
         public void setName(String name, String apellido){
             username.setText(name + " " + apellido);
+        }
+        public void setImageView(String imagenurl){
+            Glide
+                    .with(mContext)
+                    .load(imagenurl)
+                    .fitCenter()
+                    .error(R.drawable.default_avatar)
+                    .into(imageView);
         }
     }
 

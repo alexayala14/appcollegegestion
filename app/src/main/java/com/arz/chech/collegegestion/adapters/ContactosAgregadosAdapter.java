@@ -52,12 +52,7 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         final DatosUsuario datosUsuario = datosUsuarioList.get(i);
         viewHolder.setName(datosUsuario.getNombre(), datosUsuario.getApellido());
-        Glide
-                .with(mContext)
-                .load(datosUsuario.getImagenurl())
-                .fitCenter()
-                .error(R.drawable.default_avatar)
-                .into(viewHolder.imageView);
+        viewHolder.setImageView(datosUsuario.getImagenurl());
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Groups");
         //currentGroupName = getIntent().getStringExtra("nombreGrupo");
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +90,15 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
         public void setName(String name, String apellido){
             String nomape=name + " " + apellido;
             username.setText(nomape);
+        }
+
+        public void setImageView(String imagenurl){
+            Glide
+                    .with(mContext)
+                    .load(imagenurl)
+                    .fitCenter()
+                    .error(R.drawable.default_avatar)
+                    .into(imageView);
         }
 
     }

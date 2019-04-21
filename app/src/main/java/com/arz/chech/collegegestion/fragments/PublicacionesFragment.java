@@ -76,40 +76,46 @@ public class PublicacionesFragment extends Fragment{
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario datosUsuario = snapshot.getValue(DatosUsuario.class);
                     if (!datosUsuario.isEstaEliminado()){
-                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getActivity(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
 
                             listaUsuarios.add(datosUsuario);
 
 
                         }
 
-                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getActivity(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("2"))){
                             if (datosUsuario.getPerfil().equals("1")||datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")) {
                                 listaUsuarios.add(datosUsuario);
+
                             }
                         }
 
-                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getActivity(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("3"))){
                             if (datosUsuario.getPerfil().equals("2")||datosUsuario.getPerfil().equals("3")) {
                                 listaUsuarios.add(datosUsuario);
+
                             }
                         }
 
-                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("4"))){
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getActivity(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("4"))){
                             if (datosUsuario.getPerfil().equals("2")) {
                                 listaUsuarios.add(datosUsuario);
+
                             }
                         }
 
-                        if((String.valueOf(Preferences.obtenerPreferenceInt(getContext(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("5"))){
+                        if((String.valueOf(Preferences.obtenerPreferenceInt(getActivity(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("5"))){
                             if (datosUsuario.getPerfil().equals("3")) {
                                 listaUsuarios.add(datosUsuario);
+
                             }
                         }
-                        /*if(datosUsuario.getToken().equals(datosUsuario.getToken())) {
+                        /*if(datosUsuario.getToken().equals(mCurrentUserId)) {
                             String imagenurl = datosUsuario.getImagenurl();
                             adaptadorPublicaciones.enviarImagenurl(imagenurl);
                         }*/
+                        /*adaptadorPublicaciones.enviarImagenurl(datosUsuario.getImagenurl());
+                        System.out.println("La url es: "+datosUsuario.getImagenurl());*/
 
                     }
 
@@ -122,6 +128,7 @@ public class PublicacionesFragment extends Fragment{
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+
 
         return view;
     }
@@ -141,8 +148,7 @@ public class PublicacionesFragment extends Fragment{
 
                                     listaPublicaciones.add(publicacion);
 
-                                    adaptadorPublicaciones.enviarImagenurl(usuarios.getImagenurl());
-                                    System.out.println("La url es: "+usuarios.getImagenurl());
+
                                 }
                             }
                         }
@@ -154,6 +160,17 @@ public class PublicacionesFragment extends Fragment{
                 }else {
                     noExistsPublicaciones.setVisibility(View.GONE);
                 }
+
+                for(DatosUsuario user:listaUsuarios){
+                    for(Publicacion publicacion:listaPublicaciones){
+                        if(user.getToken().equals(publicacion.getTokenUser())){
+                            String url=user.getImagenurl();
+                            System.out.println("LA URL ES DE PUPUPUPU: "+url);
+                            adaptadorPublicaciones.enviarImagenurl(url);
+                        }
+                    }
+                }
+
                 adaptadorPublicaciones.notifyDataSetChanged();
             }
 
@@ -162,6 +179,7 @@ public class PublicacionesFragment extends Fragment{
 
             }
         });
+
     }
 
     public interface OnFragmentInteractionListener {

@@ -87,6 +87,8 @@ public class MisPublicacionesFragment extends Fragment {
                         if (publicacion.getTokenUser() != null){
                             if (publicacion.getTokenUser().equals(mCurrentUserId)){
                                 listaPublicaciones.add(publicacion);
+
+
                             }
                         }
                     }
@@ -101,6 +103,26 @@ public class MisPublicacionesFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    DatosUsuario user = snapshot.getValue(DatosUsuario.class);
+
+                    if(user.getToken().equals(mCurrentUserId)){
+                        String urlImage=user.getImagenurl();
+                        adaptadorPublicaciones.enviarImagenurl(urlImage);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 

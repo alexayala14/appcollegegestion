@@ -119,6 +119,7 @@ public class MessageFragment extends Fragment{
                 mUsers.clear();
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario user = snapshot.getValue(DatosUsuario.class);
+
                     if (snapshot.child("estaEliminado").exists()){
                         for (String usuario: usersList){
                             if (user.getToken().equals(usuario)){

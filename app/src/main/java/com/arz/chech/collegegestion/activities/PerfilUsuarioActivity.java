@@ -136,14 +136,14 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
         floatingActionButtonImagenperfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] options={"Tomar Foto","Elegir de Galeria","Cancelar"};
+                final CharSequence[] options={/*"Tomar Foto",*/"Elegir de Galeria","Cancelar"};
                 final AlertDialog.Builder builder=new AlertDialog.Builder(PerfilUsuarioActivity.this);
                 builder.setTitle("Elegir una Opcion: ");
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int seleccion) {
                         if(options[seleccion]=="Tomar Foto"){
-                            opencamara();
+                            //opencamara();
                             //guardarFotoenfirebase(filepath);
                         }else if(options[seleccion]=="Elegir de Galeria"){
                             abrirFotoGaleria();
@@ -210,29 +210,16 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
     }
 
     private void cargarFotoGlide(String imagenurl) {
-        Glide
-                .with(this)
-                .load(imagenurl)
-                .error(R.drawable.default_avatar)
-                /*.listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        imageViewPerfil.setImageResource(R.drawable.default_avatar);
-                        imageViewPerfil.setVisibility(View.VISIBLE);
+        try {
+            Glide
+                    .with(this)
+                    .load(imagenurl)
+                    .error(R.drawable.default_avatar)
 
-                        return false;
-                    }
+                    .fitCenter()
+                    .into(imageViewPerfil);
+        }catch (Exception e){}
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        imageViewPerfil.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })*/
-                .fitCenter()
-                .into(imageViewPerfil);
     }
 
     @Override

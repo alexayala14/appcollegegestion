@@ -106,7 +106,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] options={"Tomar Foto","Elegir de Galeria","Cancelar"};
+                final CharSequence[] options={/*"Tomar Foto",*/"Elegir de Galeria","Cancelar"};
                 final AlertDialog.Builder builder=new AlertDialog.Builder(PerfilGrupoActivity.this);
                 builder.setTitle("Elegir una Opcion: ");
                 builder.setItems(options, new DialogInterface.OnClickListener() {

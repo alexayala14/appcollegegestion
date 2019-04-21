@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+//import com.bumptech.glide.annotation.GlideModule;
+//import com.bumptech.glide.module.AppGlideModule;
 import com.arz.chech.collegegestion.activities.ModifyPublicacionActivity;
 import com.arz.chech.collegegestion.activities.ModifyUsersActivity;
 import com.arz.chech.collegegestion.activities.NuevaPublicacionActivity;
@@ -37,7 +38,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
     private Context mContext;
     FragmentManager fm;
     private DatabaseReference mPublicacionDatabase;
-    private String imagenurl="";
+    private String imagenurl;
     private String mCurrentUserId;
     private static String dateFormat = "hh:mm a";
     private static String añoFormat = "dd-MM-yy";
@@ -118,11 +119,18 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             holder.show_año.setText(año);
         }
 
+
         //holder.txt_nombre.setText(publicacion.getNombre());
         //holder.txt_descripcion.setText(publicacion.getAsunto());
         //holder.foto.setImageResource(R.drawable.hombre);
 
         System.out.println("La url en viewholdes es: "+imagenurl);
+        /*if(imagenurl==null||imagenurl.isEmpty()){
+            holder.foto.setImageResource(R.drawable.default_avatar);
+        }else {
+            cargarImagenesGlide(holder);
+
+        }*/
         cargarImagenesGlide(holder);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,4 +225,11 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
 
 
     }
+    /*@GlideModule
+    public class MyGlideApp extends AppGlideModule {
+        @Override
+        public boolean isManifestParsingEnabled() {
+            return false;
+        }
+    }*/
 }

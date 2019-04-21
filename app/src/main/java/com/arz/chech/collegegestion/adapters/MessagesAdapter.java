@@ -14,6 +14,7 @@ import com.arz.chech.collegegestion.activities.ChatActivity;
 import com.arz.chech.collegegestion.entidades.Messages;
 import com.arz.chech.collegegestion.preferences.Preferences;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
     private Context mContext;
@@ -56,7 +59,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         final DatosUsuario datosUsuario = mUsers.get(i);
         viewHolder.username.setText(datosUsuario.getNombre() + " " + datosUsuario.getApellido());
         lastMessage(datosUsuario.getToken(), viewHolder.message, viewHolder.display_time);
-
+        viewHolder.setImageView(datosUsuario.getImagenurl());
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +83,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         public TextView username;
         public TextView message;
         public TextView display_time;
+        public CircleImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +91,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             username = itemView.findViewById(R.id.user_single_name);
             message = itemView.findViewById(R.id.user_single_status);
             display_time = itemView.findViewById(R.id.user_single_time);
+            imageView=mView.findViewById(R.id.user_single_image);
+        }
+        public void setImageView(String imagenurl){
+            Glide
+                    .with(mContext)
+                    .load(imagenurl)
+                    .fitCenter()
+                    .error(R.drawable.default_avatar)
+                    .into(imageView);
         }
     }
 
