@@ -76,6 +76,7 @@ public class PublicacionesFragment extends Fragment{
                 for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                     DatosUsuario datosUsuario = snapshot.getValue(DatosUsuario.class);
                     if (!datosUsuario.isEstaEliminado()){
+
                         if((String.valueOf(Preferences.obtenerPreferenceInt(getActivity(),Preferences.PREFERENCE_ESTADO_ID_PERFIL)).equals("1"))){
 
                             listaUsuarios.add(datosUsuario);
@@ -122,6 +123,7 @@ public class PublicacionesFragment extends Fragment{
 
                 }
                 publicacionesList();
+
             }
 
             @Override
@@ -147,9 +149,13 @@ public class PublicacionesFragment extends Fragment{
                                 if (publicacion.getTokenUser().equals(usuarios.getToken())){
 
                                     listaPublicaciones.add(publicacion);
+                                    String url = usuarios.getImagenurl();
+                                    System.out.println("LA URL ES DE PUPUPUPU: " + url);
+                                    adaptadorPublicaciones.enviarImagenurl(url);
 
 
                                 }
+
                             }
                         }
 
@@ -161,15 +167,7 @@ public class PublicacionesFragment extends Fragment{
                     noExistsPublicaciones.setVisibility(View.GONE);
                 }
 
-                for(DatosUsuario user:listaUsuarios){
-                    for(Publicacion publicacion:listaPublicaciones){
-                        if(user.getToken().equals(publicacion.getTokenUser())){
-                            String url=user.getImagenurl();
-                            System.out.println("LA URL ES DE PUPUPUPU: "+url);
-                            adaptadorPublicaciones.enviarImagenurl(url);
-                        }
-                    }
-                }
+
 
                 adaptadorPublicaciones.notifyDataSetChanged();
             }

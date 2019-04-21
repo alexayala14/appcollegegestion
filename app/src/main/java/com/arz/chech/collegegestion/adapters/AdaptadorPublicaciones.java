@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-//import com.bumptech.glide.annotation.GlideModule;
-//import com.bumptech.glide.module.AppGlideModule;
 import com.arz.chech.collegegestion.activities.ModifyPublicacionActivity;
 import com.arz.chech.collegegestion.activities.ModifyUsersActivity;
 import com.arz.chech.collegegestion.activities.NuevaPublicacionActivity;
@@ -131,7 +129,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             cargarImagenesGlide(holder);
 
         }*/
-        cargarImagenesGlide(holder);
+        holder.enviarImagen(imagenurl);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,14 +161,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
         });
     }
 
-    private void cargarImagenesGlide(ViewHolder holder) {
-        Glide
-                .with(mContext)
-                .load(imagenurl)
-                .fitCenter()
-                .error(R.drawable.default_avatar)
-                .into(holder.foto);
-    }
+
 
     private void mostrarOpciones(final Publicacion publicacion){
         CharSequence options[] = new CharSequence[]{"Modificar", "Eliminar"};
@@ -217,19 +208,26 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             show_hora = itemView.findViewById(R.id.time_text_layout);
             show_año = itemView.findViewById(R.id.fecha_text_layout);
         }
+
+        public void enviarImagen(String imagnurl){
+
+
+            Glide
+                    .with(mContext)
+                    .load(imagenurl)
+                    .fitCenter()
+                    .error(R.drawable.default_avatar)
+                    .into(foto);
+
+        }
+
+
     }
     public void enviarImagenurl(String imagnurl){
         imagenurl=imagnurl;
         System.out.println("La url en adapter es: "+imagenurl);
 
 
-
     }
-    /*@GlideModule
-    public class MyGlideApp extends AppGlideModule {
-        @Override
-        public boolean isManifestParsingEnabled() {
-            return false;
-        }
-    }*/
+
 }

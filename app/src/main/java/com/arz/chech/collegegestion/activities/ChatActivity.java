@@ -29,6 +29,7 @@ import com.arz.chech.collegegestion.notifications.MyResponse;
 import com.arz.chech.collegegestion.notifications.Sender;
 import com.arz.chech.collegegestion.notifications.Token;
 import com.arz.chech.collegegestion.preferences.Preferences;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,6 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     private boolean notify = false;
     private String banderaNot;
     Boolean bann;
+    private String urlimagen;
 
     public static final String prefGlobant="collegegestion.shared";
     public static final String prefbandera="collegegestion.bande";
@@ -114,6 +116,8 @@ public class ChatActivity extends AppCompatActivity {
         displayName = (TextView) findViewById(R.id.display_name);
         Intent intent = getIntent();
         userid = intent.getStringExtra("user_id");
+        urlimagen=intent.getStringExtra("urlimagen");
+        mProfileImage=findViewById(R.id.profile_imagen);
 
         //
 
@@ -122,7 +126,7 @@ public class ChatActivity extends AppCompatActivity {
         mRootRef.child("Chat").child(mCurrentUserId).child(userid).child("seen").setValue(true);
         //mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
 
-
+        setImageView(urlimagen);
         reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -209,6 +213,14 @@ public class ChatActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
+    }
+    public void setImageView(String imagenurl){
+        Glide
+                .with(ChatActivity.this)
+                .load(imagenurl)
+                .fitCenter()
+                .error(R.drawable.default_avatar)
+                .into(mProfileImage);
     }
 
 

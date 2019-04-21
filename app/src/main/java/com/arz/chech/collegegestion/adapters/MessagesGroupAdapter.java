@@ -148,6 +148,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
                 intent.putExtra("nombreGrupo",grupo.getGroupId());
                 intent.putExtra("nombreG", grupo.getName());
                 intent.putExtra("participantes",miembrosGroup);
+                intent.putExtra("imagenurl",grupo.getImagenurl());
 
 
 

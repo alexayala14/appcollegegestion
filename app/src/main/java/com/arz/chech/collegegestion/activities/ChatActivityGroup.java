@@ -30,6 +30,7 @@ import com.arz.chech.collegegestion.notifications.MyResponse;
 import com.arz.chech.collegegestion.notifications.Sender;
 import com.arz.chech.collegegestion.notifications.Token;
 import com.arz.chech.collegegestion.preferences.Preferences;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -92,6 +93,8 @@ public class ChatActivityGroup extends AppCompatActivity {
     private String Userrrr;
     private String nombre;
     private String apellido;
+    private String urlimagen;
+
 
     public static final String prefGlobant="collegegestion.shared";
     public static final String prefbandera="collegegestion.bande";
@@ -157,7 +160,9 @@ public class ChatActivityGroup extends AppCompatActivity {
         displayNameGroup = (TextView) findViewById(R.id.display_name_group);
         acumMembers = "";
         displayNameGroup.setText(miembrosGroup);
-
+        urlimagen=getIntent().getStringExtra("imagenurl");
+        mProfileImage=findViewById(R.id.profile_imagen);
+        setImageView(urlimagen);
 
         //
 
@@ -367,6 +372,15 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
 
+    }
+
+    public void setImageView(String imagenurl){
+        Glide
+                .with(ChatActivityGroup.this)
+                .load(imagenurl)
+                .fitCenter()
+                .error(R.drawable.default_avatar)
+                .into(mProfileImage);
     }
 
    /* @Override

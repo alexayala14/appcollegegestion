@@ -67,6 +67,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                 intent.putExtra("user_id", datosUsuario.getToken());
                 intent.putExtra("user_name", datosUsuario.getNombre());
                 intent.putExtra("user_apellido", datosUsuario.getApellido());
+                intent.putExtra("urlimagen",datosUsuario.getImagenurl());
                 mContext.startActivity(intent);
             }
         });
