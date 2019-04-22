@@ -744,7 +744,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }*/
 
-    private void sendNotification(final String receiver, final String username, final String nomape,final String nombreGrupo, final String message, final String banderaNot,final String participantes){
+    private void sendNotification(final String receiver, final String username, final String nomape,final String nombreGrupo, final String message, final String banderaNot,final String participantes,final String urlimagen){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -752,7 +752,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(username, R.mipmap.ic_launcher, nombreGrupo+"  "+nomape+":"+message, "AppCollegeGestion",receiver,banderaNot,nombreGrupo,participantes);
+                    Data data = new Data(username, R.mipmap.ic_launcher, nombreGrupo+"  "+nomape+":"+message, "AppCollegeGestion",receiver,banderaNot,nombreGrupo,participantes,urlimagen);
                     Sender sender = new Sender(data, token.getToken());
 
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
@@ -855,7 +855,7 @@ public class ChatActivityGroup extends AppCompatActivity {
                         SharedPreferences.Editor editor = ban.edit();
                         editor.putBoolean(prefbandera, banderaNot);
                         editor.apply();*/
-                    sendNotification(userid, currentGroupName, nomape, nombreGrupo, msg, banderaNot,miembrosGroup);
+                    sendNotification(userid, currentGroupName, nomape, nombreGrupo, msg, banderaNot,miembrosGroup,urlimagen);
 
                 }
 

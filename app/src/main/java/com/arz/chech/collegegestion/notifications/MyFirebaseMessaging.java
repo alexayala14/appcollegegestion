@@ -78,6 +78,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String bandera=remoteMessage.getData().get("bandera");
         String nombregrupo=remoteMessage.getData().get("nombregrupo");
         String participantes=remoteMessage.getData().get("participantes");
+        String urlimagen=remoteMessage.getData().get("urlimagen");
 
 
 
@@ -109,6 +110,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         bundle.putString("nombreGrupo",user);
         bundle.putString("nombreG",nombregrupo);
         bundle.putString("participantes",participantes);
+        bundle.putString("imagenurl",urlimagen);
         intent.putExtras(bundle);
         //intent.putExtra("datosUsuariosList", datosUsuarios);
 
@@ -146,6 +148,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String bandera=remoteMessage.getData().get("bandera");
         String nombregrupo=remoteMessage.getData().get("nombregrupo");
         String participantes=remoteMessage.getData().get("participantes");
+        String urlimagen=remoteMessage.getData().get("urlimagen");
 
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
@@ -175,6 +178,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         //bundle.putString("nombreGrupo",nomGrupo);
         bundle.putString("nombreG",nombregrupo);
         bundle.putString("participantes",participantes);
+        bundle.putString("imagenurl",urlimagen);
         intent.putExtras(bundle);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

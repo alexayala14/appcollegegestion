@@ -116,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
         displayName = (TextView) findViewById(R.id.display_name);
         Intent intent = getIntent();
         userid = intent.getStringExtra("user_id");
-        urlimagen=intent.getStringExtra("urlimagen");
+        urlimagen=intent.getStringExtra("imagenurl");
         mProfileImage=findViewById(R.id.profile_imagen);
 
         //
@@ -287,7 +287,7 @@ public class ChatActivity extends AppCompatActivity {
                     System.out.println("bandera antes del mensaje:"+ban.getBoolean(prefbandera,false));*/
 
 
-                    sendNotification(userid, user.getNombre() + " " + user.getApellido(), msg,banderaNot);
+                    sendNotification(userid, user.getNombre() + " " + user.getApellido(), msg,banderaNot,user.getImagenurl());
 
                 }
                 notify = false;
@@ -302,7 +302,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }
 
-    private void sendNotification(String receiver, final String username, final String message,final String banderaNot){
+    private void sendNotification(String receiver, final String username, final String message,final String banderaNot,final String urlimagen){
         DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
         Query query = tokens.orderByKey().equalTo(receiver);
         query.addValueEventListener(new ValueEventListener() {
@@ -310,7 +310,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "AppCollegeGestion", userid,banderaNot);
+                    Data data = new Data(mCurrentUserId, R.mipmap.ic_launcher, username+": "+message, "AppCollegeGestion", userid,banderaNot,urlimagen);
 
                     Sender sender = new Sender(data, token.getToken());
                     apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {

@@ -255,14 +255,14 @@ public class PerfilUsuarioActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
                     if(task.isSuccessful()){
-                        Uri downloadlink=task.getResult();
+                        final Uri downloadlink=task.getResult();
                         //aca van los datos para cargar en la base de datos el link
                         RootRef = FirebaseDatabase.getInstance().getReference().child("Users");
                         RootRef.child(mCurrent_user_id).child("imagenurl").setValue(downloadlink.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(PerfilUsuarioActivity.this, "Se cargo la imagen correctamente", Toast.LENGTH_SHORT).show();
-                                System.out.println("Se cargo correctamente");
+                                Preferences.savePreferenceString(PerfilUsuarioActivity.this, downloadlink.toString(), Preferences.PREFERENCE_IMAGENURL);
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {

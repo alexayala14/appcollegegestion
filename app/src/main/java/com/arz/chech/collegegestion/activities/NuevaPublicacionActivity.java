@@ -55,6 +55,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
     private String userApellido;
     private String mCurrentUserId;
     private String banderaNots;
+    private String imagenurl;
 
     public static final String prefGlobants="collegegestion.shareds";
     public static final String prefbanderas="collegegestion.bandes";
@@ -82,6 +83,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
         textPublicacion = (EditText) findViewById(R.id.editTextPublicacion);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         btnPublicar = (Button) findViewById(R.id.btnPublicar);
+        imagenurl= Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_IMAGENURL);
         
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mUsersDatabase = FirebaseDatabase.getInstance().getReference("Users");
@@ -147,6 +149,7 @@ public class NuevaPublicacionActivity extends AppCompatActivity {
                     mRootRef.child("Publicaciones").child(push_id).child("tokenUser").setValue(mCurrentUserId);
                     mRootRef.child("Publicaciones").child(push_id).child("bandera").setValue(banderaNots);
                     mRootRef.child("Publicaciones").child(push_id).child("tokenPubli").setValue(push_id);
+                    mRootRef.child("Publicaciones").child(push_id).child("imagenurl").setValue(imagenurl);
 
                     mUsersDatabase.addValueEventListener(new ValueEventListener() {
                         @Override

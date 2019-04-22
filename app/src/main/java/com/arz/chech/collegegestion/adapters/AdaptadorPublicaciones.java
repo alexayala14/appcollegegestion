@@ -86,6 +86,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             final String año = formatearAño(time);
             holder.show_hora.setText(hora);
             holder.show_año.setText(año);
+            holder.enviarImagen(imagenurl);
 
         }
         if(publicacion.getPrioridad()==2){
@@ -101,6 +102,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             final String año = formatearAño(time);
             holder.show_hora.setText(hora);
             holder.show_año.setText(año);
+            holder.enviarImagen(imagenurl);
         }
         if(publicacion.getPrioridad()==3){
             holder.mView.setBackgroundColor(Color.parseColor("#9FA8DA"));
@@ -115,6 +117,7 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             final String año = formatearAño(time);
             holder.show_hora.setText(hora);
             holder.show_año.setText(año);
+            holder.enviarImagen(imagenurl);
         }
 
 
@@ -129,7 +132,8 @@ public class AdaptadorPublicaciones extends RecyclerView.Adapter<AdaptadorPublic
             cargarImagenesGlide(holder);
 
         }*/
-        holder.enviarImagen(imagenurl);
+
+        //holder.enviarImagen(imagenurl);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

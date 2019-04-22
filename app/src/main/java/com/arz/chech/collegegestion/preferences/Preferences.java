@@ -12,6 +12,7 @@ public class Preferences {
     public static final String PREFERENCE_TOKEN = "collegegestion.sesion.token";
     public static final String PREFERENCE_NOMBRE = "collegegestion.sesion.nombre";
     public static final String PREFERENCE_APELLIDO = "collegegestion.sesion.apellido";
+    public static final String PREFERENCE_IMAGENURL = "collegegestion.sesion.imagenurl";
 
 
     public static void savePreferenceInt(Context c, int b, String key){

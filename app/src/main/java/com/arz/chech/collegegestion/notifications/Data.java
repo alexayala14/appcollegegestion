@@ -13,6 +13,7 @@ public class Data {
     private String bandera;
     private String nombregrupo;
     private String participantes;
+    private String urlimagen;
 
 
     public Data(String user, int icon, String body, String title, String sented, String bandera) {
@@ -24,20 +25,24 @@ public class Data {
         this.bandera = bandera;
     }
 
+    public Data() {
+
+    }
+
 
 
     public Data(String username, int ic_launcher, String s, String appCollegeGestion, String banderaNot){
 
     }
 
-    public Data(String user, int icon, String body, String title, String sented, String bandera, String nombregrupo) {
+    public Data(String user, int icon, String body, String title, String sented, String bandera, String urlimagen) {
         this.user = user;
         this.icon = icon;
         this.body = body;
         this.title = title;
         this.sented = sented;
         this.bandera = bandera;
-        this.nombregrupo = nombregrupo;
+        this.urlimagen = urlimagen;
     }
 
     public Data(String user, int icon, String body, String title, String sented, String bandera, String nombregrupo, String participantes) {
@@ -49,6 +54,26 @@ public class Data {
         this.bandera = bandera;
         this.nombregrupo = nombregrupo;
         this.participantes = participantes;
+    }
+
+    public Data(String user, int icon, String body, String title, String sented, String bandera, String nombregrupo, String participantes, String urlimagen) {
+        this.user = user;
+        this.icon = icon;
+        this.body = body;
+        this.title = title;
+        this.sented = sented;
+        this.bandera = bandera;
+        this.nombregrupo = nombregrupo;
+        this.participantes = participantes;
+        this.urlimagen = urlimagen;
+    }
+
+    public String getUrlimagen() {
+        return urlimagen;
+    }
+
+    public void setUrlimagen(String urlimagen) {
+        this.urlimagen = urlimagen;
     }
 
     public String getParticipantes() {

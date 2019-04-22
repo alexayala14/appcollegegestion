@@ -9,6 +9,7 @@ public class Publicacion{
     private String tokenUser;
     private String tokenPubli;
     private int prioridad;
+    private String imagenurl;
 
     public Publicacion(){
     }
@@ -22,6 +23,26 @@ public class Publicacion{
         this.estaEliminado = estaEliminado;
         this.tokenUser = tokenUser;
         this.tokenPubli = tokenPubli;
+    }
+
+    public Publicacion(String nombre, String asunto, String descripcion, boolean estaEliminado, long timestamp, String tokenUser, String tokenPubli, int prioridad, String imagenurl) {
+        this.nombre = nombre;
+        this.asunto = asunto;
+        this.descripcion = descripcion;
+        this.estaEliminado = estaEliminado;
+        this.timestamp = timestamp;
+        this.tokenUser = tokenUser;
+        this.tokenPubli = tokenPubli;
+        this.prioridad = prioridad;
+        this.imagenurl = imagenurl;
+    }
+
+    public String getImagenurl() {
+        return imagenurl;
+    }
+
+    public void setImagenurl(String imagenurl) {
+        this.imagenurl = imagenurl;
     }
 
     public int getPrioridad() {
