@@ -2,6 +2,7 @@ package com.arz.chech.collegegestion.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -160,9 +161,10 @@ public class ChatActivityGroup extends AppCompatActivity {
         displayNameGroup = (TextView) findViewById(R.id.display_name_group);
         acumMembers = "";
         displayNameGroup.setText(miembrosGroup);
-        urlimagen=getIntent().getStringExtra("imagenurl");
+            urlimagen=getIntent().getStringExtra("imagenurl");
         mProfileImage=findViewById(R.id.profile_imagen);
         setImageView(urlimagen);
+
 
         //
 
@@ -188,7 +190,7 @@ public class ChatActivityGroup extends AppCompatActivity {
                 datosUsuarios = new ArrayList<DatosUsuario>();
 
                 //reference.child(currentGroupName);
-                reference.addValueEventListener(new ValueEventListener() {
+                reference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         datosUsuarios.clear();
@@ -197,7 +199,7 @@ public class ChatActivityGroup extends AppCompatActivity {
                             assert grupo != null;
 
                             datosUsuarios= (ArrayList<DatosUsuario>) grupo.getMembers();
-                            System.out.println(datosUsuarios);
+                            System.out.println("LOS USUARIOS EN EL CICLO SON: "+datosUsuarios);
 
 
                         }
@@ -342,19 +344,18 @@ public class ChatActivityGroup extends AppCompatActivity {
 
 
 
-        /*
-        mChatAddBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent galleryIntent = new Intent();
-                galleryIntent.setType("image/*");
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
-            }
-        });*/
+       mProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(ChatActivityGroup.this, PerfilGrupoActivity.class);
 
-
-        //displayName.setText(nombreGrupo);
+                    intent.putExtra("datosUsuariosList", datosUsuarios);
+                    intent.putExtra("nombreGrupo",currentGroupName);
+                    intent.putExtra("nombreG", nombreGrupo);
+                    intent.putExtra("imagenurl",urlimagen);
+                    startActivity(intent);
+                }
+       });
         GetUserInfo();
         readMessages();
 
@@ -362,6 +363,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 notify = true;
+
                 SaveMessageInfoToDatabase();
 
 
@@ -577,7 +579,7 @@ public class ChatActivityGroup extends AppCompatActivity {
 
     }*/
 
-    private void displayMessage(DataSnapshot dataSnapshot) {
+   /* private void displayMessage(DataSnapshot dataSnapshot) {
 
         Iterator iterator = dataSnapshot.getChildren().iterator();
         messagesList.clear();
@@ -591,7 +593,7 @@ public class ChatActivityGroup extends AppCompatActivity {
             String rut = (String) ((DataSnapshot)iterator.next()).getValue();
             String token = (String) ((DataSnapshot)iterator.next()).getValue();
             mAdapter.enviarDatos(userName, userApellido);
-            System.out.println("desde display:"+userName+" "+userApellido);*/
+            System.out.println("desde display:"+userName+" "+userApellido);
 
             String messages =(String) ((DataSnapshot)iterator.next()).getValue();
             Boolean seen = (Boolean) ((DataSnapshot)iterator.next()).getValue();
@@ -617,7 +619,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         //mAdapter.notifyDataSetChanged();
         //mMessagesList.scrollToPosition(messagesList.size()-1);
 
-    }
+    }*/
 
     private void readMessages(){
 
@@ -744,37 +746,7 @@ public class ChatActivityGroup extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size()-1);
     }*/
 
-    private void sendNotification(final String receiver, final String username, final String nomape,final String nombreGrupo, final String message, final String banderaNot,final String participantes,final String urlimagen){
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = tokens.orderByKey().equalTo(receiver);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    Token token = snapshot.getValue(Token.class);
-                    Data data = new Data(username, R.mipmap.ic_launcher, nombreGrupo+"  "+nomape+":"+message, "AppCollegeGestion",receiver,banderaNot,nombreGrupo,participantes,urlimagen);
-                    Sender sender = new Sender(data, token.getToken());
 
-                    apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
-                        @Override
-                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                            if (response.code() == 20000){
-                                if (response.body().success != 1){
-                                    //Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<MyResponse> call, Throwable t) {
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
 
 
     private void GetUserInfo(){
@@ -846,15 +818,13 @@ public class ChatActivityGroup extends AppCompatActivity {
         mMessagesList.scrollToPosition(messagesList.size() - 1);
 
         final String msg = message.trim();
+        //new enviarMensajeTask().execute(msg);
         if (datosUsuarios != null) {
             for (DatosUsuario dato : datosUsuarios) {
                 userid = dato.getToken();
                 if (notify && !(userid.equals(mCurrentUserId))) {
 
-                        /*SharedPreferences ban = getApplication().getSharedPreferences(prefGlobant, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = ban.edit();
-                        editor.putBoolean(prefbandera, banderaNot);
-                        editor.apply();*/
+
                     sendNotification(userid, currentGroupName, nomape, nombreGrupo, msg, banderaNot,miembrosGroup,urlimagen);
 
                 }
@@ -865,7 +835,96 @@ public class ChatActivityGroup extends AppCompatActivity {
             notify = false;
         }
 
-            mMessagesList.scrollToPosition(messagesList.size() - 1);
+
+        mMessagesList.scrollToPosition(messagesList.size() - 1);
 
     }
+
+
+    private void sendNotification(final String receiver, final String username, final String nomape,final String nombreGrupo, final String message, final String banderaNot,final String participantes,final String urlimagen){
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(username, R.mipmap.ic_launcher, nombreGrupo+"  "+nomape+":"+message, "AppCollegeGestion",receiver,banderaNot,nombreGrupo,participantes,urlimagen);
+                    Sender sender = new Sender(data, token.getToken());
+
+                    apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+                        @Override
+                        public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                            if (response.code() == 20000){
+                                if (response.body().success != 1){
+                                    //Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<MyResponse> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+
+    //Asynctask en segundo plano
+
+
+    private class enviarMensajeTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+           /*final String msg= strings[0];
+            try {
+                if (datosUsuarios != null) {
+                    for (DatosUsuario dato : datosUsuarios) {
+                        userid = dato.getToken();
+                        if (notify && !(userid.equals(mCurrentUserId))) {
+
+
+                            sendNotification(userid, currentGroupName, nomape, nombreGrupo, msg, banderaNot,miembrosGroup,urlimagen);
+
+                        }
+
+
+                    }
+
+                    notify = false;
+                }
+
+                mMessagesList.scrollToPosition(messagesList.size() - 1);
+            }catch (Exception e){
+
+            }*/
+
+            return "Se Envio el mensaje Correctamente";
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Toast.makeText(ChatActivityGroup.this, s, Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
+
 }

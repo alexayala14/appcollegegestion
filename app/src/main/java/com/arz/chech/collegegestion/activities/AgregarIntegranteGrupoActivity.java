@@ -29,11 +29,15 @@ public class AgregarIntegranteGrupoActivity extends AppCompatActivity {
     private Toolbar mChatToolbar;
     private RecyclerView mContactosList;
     private ArrayList<DatosUsuario> datosUsuarios;
+    private ArrayList<DatosUsuario> datosUsuarios1;
     private String mCurrent_user_id;
     private LinearLayoutManager mLinearLayout;
     private DatabaseReference mUsersDatabase;
     private DatabaseReference RootRef;
     private Button btnCancel;
+    private String currentGroupName;
+    private String nombreGrupo;
+    private String imagenurl;
 
 
     @Override
@@ -61,6 +65,12 @@ public class AgregarIntegranteGrupoActivity extends AppCompatActivity {
         View action_bar_view = inflater.inflate(R.layout.friends_custom_bar, null);
         actionBar.setCustomView(action_bar_view);
         btnCancel =(Button)findViewById(R.id.btncancelarr);
+        currentGroupName = getIntent().getStringExtra("nombreGrupo");
+
+        nombreGrupo=getIntent().getStringExtra("nombreG");
+        datosUsuarios = getIntent().getParcelableArrayListExtra("datosUsuariosList");
+        imagenurl=getIntent().getStringExtra("imagenurl");
+        datosUsuarios1=datosUsuarios;
         /*btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +134,7 @@ public class AgregarIntegranteGrupoActivity extends AppCompatActivity {
                 }
                 AgregarIntegranteGrupoAdapter friendsAdapter = new AgregarIntegranteGrupoAdapter(AgregarIntegranteGrupoActivity.this, datosUsuarios);
                 mContactosList.setAdapter(friendsAdapter);
+                friendsAdapter.enviarGrupo(currentGroupName,datosUsuarios1,nombreGrupo,imagenurl);
             }
 
             @Override

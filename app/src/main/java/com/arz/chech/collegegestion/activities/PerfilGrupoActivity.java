@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.arz.chech.collegegestion.R;
 import com.arz.chech.collegegestion.adapters.AgregarIntegranteGrupoAdapter;
 import com.arz.chech.collegegestion.adapters.ContactosAgregadosAdapter;
+import com.arz.chech.collegegestion.adapters.ContactosAgregadosPerfilGrupoAdapter;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.arz.chech.collegegestion.entidades.Grupo;
 import com.arz.chech.collegegestion.preferences.Preferences;
@@ -66,6 +67,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
     private String currentGroupName;
     private String nombreGrupo;
     private ArrayList<DatosUsuario> datosUsuarios;
+    private ArrayList<DatosUsuario> datosUsuarios1;
     private TextView textViewgrupo;
     public ProgressBar mProgressBar;
     private String imagenurl;
@@ -90,6 +92,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         System.out.println("nombre del grupo token perfil "+currentGroupName);
         nombreGrupo=getIntent().getStringExtra("nombreG");
         datosUsuarios = getIntent().getParcelableArrayListExtra("datosUsuariosList");
+        System.out.println("USUARIOS:"+datosUsuarios.toString());
         floatingActionButton =findViewById(R.id.idbuttonagregarimagen);
         textViewgrupo=findViewById(R.id.idnombregrupoperfil);
 
@@ -134,14 +137,20 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         agregadosList = (RecyclerView) findViewById(R.id.act_contactosagregados_list);
         agregadosList.setHasFixedSize(true);
         agregadosList.setLayoutManager(mLinearLayout);
-        final ContactosAgregadosAdapter agregadosAdapter = new ContactosAgregadosAdapter(PerfilGrupoActivity.this, datosUsuarios);
+        datosUsuarios1=datosUsuarios;
+        final ContactosAgregadosPerfilGrupoAdapter agregadosAdapter = new ContactosAgregadosPerfilGrupoAdapter(PerfilGrupoActivity.this, datosUsuarios1);
         agregadosList.setAdapter(agregadosAdapter);
-        RootRef1 = FirebaseDatabase.getInstance().getReference();
+        //RootRef1 = FirebaseDatabase.getInstance().getReference();
         addpersona.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PerfilGrupoActivity.this,AgregarIntegranteGrupoActivity.class);
-                startActivityForResult(intent,request_code);
+                intent.putExtra("datosUsuariosList", datosUsuarios);
+                intent.putExtra("nombreGrupo",currentGroupName);
+                intent.putExtra("nombreG", nombreGrupo);
+                intent.putExtra("imagenurl",imagenurl);
+                //startActivityForResult(intent,request_code);
+                startActivity(intent);
                 //onResume();
 
             }
@@ -212,8 +221,31 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                         }*/
 
                     }
+                    agregadosAdapter.notifyDataSetChanged();
 
 
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+           /* RootRef1=FirebaseDatabase.getInstance().getReference("Users");
+            RootRef1.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    datosUsuarios1.clear();
+                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                        final DatosUsuario user=snapshot.getValue(DatosUsuario.class);
+                        for(DatosUsuario datosUsuario:datosUsuarios){
+                            if(datosUsuario.getToken().equals(user.getToken())){
+                                datosUsuarios1.add(user);
+                            }
+                        }
+                    }
 
                     agregadosAdapter.notifyDataSetChanged();
                 }
@@ -222,7 +254,10 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });}
+            });*/
+
+
+        }
 
 
 
@@ -231,7 +266,10 @@ public class PerfilGrupoActivity extends AppCompatActivity {
 
 
 
-        String texto="Participantes: "+String.valueOf(datosUsuarios.size()+1);
+
+
+        //String texto="Participantes: "+String.valueOf(datosUsuarios.size()+1);
+        String texto="Participantes: "+String.valueOf(datosUsuarios.size());
         textView.setText(texto);
 
 
@@ -270,23 +308,6 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                 .with(this)
                 .load(imagenurl)
                 .error(R.drawable.default_avatar)
-                /*.listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        imageViewPerfil.setImageResource(R.drawable.default_avatar);
-                        imageViewPerfil.setVisibility(View.VISIBLE);
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        imageViewPerfil.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })*/
                 .fitCenter()
                 .into(imageView);
     }
@@ -368,7 +389,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }*/
             }
-            if(requestCode==2){
+            else {
                 userid=data.getStringExtra("user_id");
 
             }

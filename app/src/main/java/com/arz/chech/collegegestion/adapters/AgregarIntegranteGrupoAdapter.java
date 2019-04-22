@@ -38,8 +38,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarIntegranteGrupoAdapter.ViewHolder> {
 
     private ArrayList<DatosUsuario> datosUsuarioList;
+    private ArrayList<DatosUsuario> datosUsuarios1;
     private Context mContext;
     private DatabaseReference mrefGrupo;
+    private String currentGroupName;
+    private String imagenurl;
+    private String nombreGrupo;
 
     public AgregarIntegranteGrupoAdapter(Context mContext, ArrayList<DatosUsuario> mUsers){
 
@@ -78,16 +82,35 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
             @Override
             public void onClick(View v) {
 
-                Intent intent = ((Activity)mContext).getIntent();
-                intent.putExtra("user_id", datosUsuario.getToken());
+                //Intent intent = new Intent(mContext, PerfilGrupoActivity.class);
+                //intent.putExtra("user_id", datosUsuario.getToken());
                 /*intent.putExtra("user_name", datosUsuario.getNombre());
                 intent.putExtra("user_apellido", datosUsuario.getApellido());*/
 
-                ((Activity)mContext).setResult(Activity.RESULT_OK,intent);
-               // mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child("-Lco7IIZRZ5kRMIom0OG").child("members").child(datosUsuario.getToken());
-                //mrefGrupo.setValue(datosUsuario);
-                //((Activity)mContext).setResult(50,intent);
+                //((Activity)mContext).setResult(Activity.RESULT_OK,intent);
+                datosUsuarios1.add(datosUsuario);
+                for (int i =0;i<datosUsuarios1.size();i++){
+                    int cont=0;
+                    for (int j =0;j<datosUsuarios1.size()-1;j++){
+                        if ((datosUsuarios1.get(i).getToken()).equals(datosUsuarios1.get(j).getToken())){
+                            cont++;
 
+                        }
+                        if(cont==2){
+                            cont--;
+                            datosUsuarios1.remove(i);
+                        }
+                    }
+                }
+
+                mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("members");
+                mrefGrupo.setValue(datosUsuarios1);
+                Intent intent = new Intent(mContext, PerfilGrupoActivity.class);
+                intent.putExtra("datosUsuariosList", datosUsuarios1);
+                intent.putExtra("nombreGrupo",currentGroupName);
+                intent.putExtra("nombreG", nombreGrupo);
+                intent.putExtra("imagenurl",imagenurl);
+                ((Activity)mContext).startActivity(intent);
                 ((Activity)mContext).finish();
                 //userid=datosUsuario.getToken();
                 //((Activity)mContext).onBackPressed();
@@ -127,6 +150,14 @@ public class AgregarIntegranteGrupoAdapter extends RecyclerView.Adapter<AgregarI
                     .error(R.drawable.default_avatar)
                     .into(imageView);
         }
+    }
+
+    public void enviarGrupo(String currentGroupName1,ArrayList<DatosUsuario> datosUsuarios,String nombreGrupo1,String imagenurl1){
+        currentGroupName=currentGroupName1;
+        datosUsuarios1=datosUsuarios;
+        nombreGrupo=nombreGrupo1;
+        imagenurl=imagenurl1;
+        System.out.println("el valor es en adapterintegrante: "+currentGroupName);
     }
 
 

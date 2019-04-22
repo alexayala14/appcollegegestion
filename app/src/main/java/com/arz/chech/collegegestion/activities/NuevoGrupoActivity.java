@@ -1,11 +1,13 @@
 package com.arz.chech.collegegestion.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class NuevoGrupoActivity extends AppCompatActivity {
     private FloatingActionButton addpersona;
     private Button btnCancel;
@@ -58,6 +62,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
     private HashSet<DatosUsuario>hashSet;
     private String acumMembers;
     private String  miembrosGroup;
+    private CircleImageView circleImageView;
 
 
 
@@ -76,6 +81,7 @@ public class NuevoGrupoActivity extends AppCompatActivity {
         textView =(TextView) findViewById(R.id.textView3);
         creargrupo =(FloatingActionButton)findViewById(R.id.crearGrupo);
         editText=(EditText)findViewById(R.id.editText);
+        circleImageView=findViewById(R.id.profile_imagen2);
 
         RootRef = FirebaseDatabase.getInstance().getReference();
         btnCancel =(Button)findViewById(R.id.btncancelarr);
@@ -96,6 +102,8 @@ public class NuevoGrupoActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
 

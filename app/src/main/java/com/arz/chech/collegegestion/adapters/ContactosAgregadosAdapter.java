@@ -53,6 +53,8 @@ public class ContactosAgregadosAdapter extends RecyclerView.Adapter<ContactosAgr
         final DatosUsuario datosUsuario = datosUsuarioList.get(i);
         viewHolder.setName(datosUsuario.getNombre(), datosUsuario.getApellido());
         viewHolder.setImageView(datosUsuario.getImagenurl());
+        System.out.println("LAS IMAGENES EN ADPTERCONTACTOS ES: "+datosUsuario.getImagenurl());
+        System.out.println(datosUsuario.getNombre());
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Groups");
         //currentGroupName = getIntent().getStringExtra("nombreGrupo");
         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
