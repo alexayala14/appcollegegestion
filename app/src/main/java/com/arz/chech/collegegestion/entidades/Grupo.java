@@ -12,6 +12,7 @@ public class Grupo implements Serializable {
     private List<DatosUsuario> members;
     private List<Messages> messages ;
     private String imagenurl;
+    private String admin;
 
     public Grupo(){
 
@@ -22,6 +23,15 @@ public class Grupo implements Serializable {
     public Grupo(String name, String groupId) {
         this.name = name;
         this.groupId = groupId;
+    }
+
+    public Grupo(String name, String groupId, List<DatosUsuario> members, List<Messages> messages, String imagenurl, String admin) {
+        this.name = name;
+        this.groupId = groupId;
+        this.members = members;
+        this.messages = messages;
+        this.imagenurl = imagenurl;
+        this.admin = admin;
     }
 
     public Grupo(String name, String groupId, List<DatosUsuario> members, List<Messages> messages) {
@@ -37,6 +47,14 @@ public class Grupo implements Serializable {
         this.members = members;
         this.messages = messages;
         this.imagenurl = imagenurl;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
     public String getImagenurl() {

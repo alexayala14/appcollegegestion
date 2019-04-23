@@ -1,10 +1,12 @@
 package com.arz.chech.collegegestion.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,9 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
     private String nom;
     private String acumMembers;
     private String  miembrosGroup;
+    private String currentGroupName;
+    private DatabaseReference mrefGrupo;
+    private String mCurrent_user_id;
 
     public MessagesGroupAdapter(Context context, ArrayList<Grupo> groupList){
         this.groupList = groupList;
@@ -75,6 +80,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
         final Grupo grupo = groupList.get(i);
         viewHolder.username.setText(grupo.getName());
         final ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
+        mCurrent_user_id = Preferences.obtenerPreferenceString(mContext, Preferences.PREFERENCE_TOKEN);
         //System.out.println("EL NOMBRE ESSSSS: "+username.getText());
         //ArrayList<DatosUsuario> us = new ArrayList<DatosUsuario>();
         for(DatosUsuario j:grupo.getMembers()){
@@ -84,22 +90,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
         Glide
                 .with(mContext)
                 .load(grupo.getImagenurl())
-                /*.listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        viewHolder.mProgressBar.setVisibility(View.GONE);
-                        viewHolder.imageView.setVisibility(View.VISIBLE);
-                        viewHolder.imageView.setImageResource(R.drawable.default_avatar);
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        viewHolder.mProgressBar.setVisibility(View.GONE);
-                        viewHolder.imageView.setVisibility(View.VISIBLE);
-                        return false;
-                    }
-                })*/
                 .error(R.drawable.default_avatar)
                 .fitCenter()
                 .into(viewHolder.imageView);
@@ -130,6 +121,7 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, ChatActivityGroup.class);
                 //ArrayList<DatosUsuario> mem = new ArrayList<DatosUsuario>();
+
                 acumMembers="";
                 miembrosGroup="";
                 /*for(DatosUsuario i:grupo.getMembers()){
@@ -159,6 +151,34 @@ public class MessagesGroupAdapter extends RecyclerView.Adapter<MessagesGroupAdap
 
             }
         });
+
+            if(grupo.getAdmin().equals(mCurrent_user_id)){
+                viewHolder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        final CharSequence[] options={"Eliminar","Cancelar"};
+                        final AlertDialog.Builder builder=new AlertDialog.Builder(mContext);
+                        builder.setTitle("Elegir una Opcion: ");
+                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int seleccion) {
+                                if(options[seleccion]=="Eliminar"){
+                                    currentGroupName=grupo.getGroupId();
+                                    mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName);
+                                    mrefGrupo.removeValue();
+
+                                }else  if(options[seleccion]=="Cancelar"){
+                                    dialog.dismiss();
+                                }
+                        }
+                    });
+                    builder.show();
+                    return false;
+                }
+            });
+       }
+
 
     }
 
