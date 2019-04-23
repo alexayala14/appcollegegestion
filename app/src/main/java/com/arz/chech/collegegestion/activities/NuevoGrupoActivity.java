@@ -164,9 +164,29 @@ public class NuevoGrupoActivity extends AppCompatActivity {
 
                 }
 
+                try {
+                    for (int i =0;i<datosUsuarios.size();i++){
+                        int cont=0;
+                        for (int j =0;j<datosUsuarios.size()-1;j++){
+                            if ((datosUsuarios.get(i).getToken()).equals(datosUsuarios.get(j).getToken())){
+                                cont++;
+
+                            }
+                            if(cont==2){
+                                cont--;
+                                datosUsuarios.remove(i);
+                            }
+                        }
+                    }
+
+                }catch (Exception e){
+
+                }
+
 
 
                 agregadosAdapter.notifyDataSetChanged();
+                agregadosList.scrollToPosition(agregadosAdapter.getItemCount() - 1);
             }
 
             @Override
@@ -303,8 +323,28 @@ public class NuevoGrupoActivity extends AppCompatActivity {
 
                     }
 
+                    try {
+                        for (int i =0;i<datosUsuarios.size();i++){
+                            int cont=0;
+                            for (int j =0;j<datosUsuarios.size()-1;j++){
+                                if ((datosUsuarios.get(i).getToken()).equals(datosUsuarios.get(j).getToken())){
+                                    cont++;
+
+                                }
+                                if(cont==2){
+                                    cont--;
+                                    datosUsuarios.remove(i);
+                                }
+                            }
+                        }
+
+                    }catch (Exception e){
+
+                    }
+
 
                     agregadosAdapter.notifyDataSetChanged();
+                    agregadosList.scrollToPosition(agregadosAdapter.getItemCount() - 1);
                 }
 
                 @Override

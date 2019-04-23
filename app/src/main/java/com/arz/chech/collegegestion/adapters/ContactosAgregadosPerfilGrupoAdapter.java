@@ -59,6 +59,23 @@ public class ContactosAgregadosPerfilGrupoAdapter extends RecyclerView.Adapter<C
                 intent.putExtra("user_apellido", datosUsuario.getApellido());
                 mContext.startActivity(intent);
                 ((Activity)mContext).finish();*/
+
+
+                for (int i =0;i<datosUsuarioList.size();i++){
+                    int cont=0;
+                    for (int j =0;j<datosUsuarioList.size()-1;j++){
+                        if ((datosUsuarioList.get(i).getToken()).equals(datosUsuarioList.get(j).getToken())){
+                            cont++;
+
+                        }
+                        if(cont==2){
+                            cont--;
+                            datosUsuarioList.remove(i);
+                        }
+                    }
+                }
+
+
                 final CharSequence[] options={"Eliminar","Cancelar"};
                 final AlertDialog.Builder builder=new AlertDialog.Builder(mContext);
                 builder.setTitle("Elegir una Opcion: ");
@@ -80,8 +97,8 @@ public class ContactosAgregadosPerfilGrupoAdapter extends RecyclerView.Adapter<C
                                     if(user.getToken().equals(datosUsuario.getToken())){
                                         String indice = String.valueOf(i);
                                         //System.out.println("VA A ELIMINAR NOMBRE GRUPO: "+currentGroupName);
-                                       // mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("members").child(indice).child("estaEliminado");
-                                       // mrefGrupo.setValue(true);
+                                       mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("members").child(indice).child("estaEliminado");
+                                       mrefGrupo.setValue(true);
                                     }
                                     i++;
                                 }
