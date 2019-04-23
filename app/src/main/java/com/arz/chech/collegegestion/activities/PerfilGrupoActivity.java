@@ -51,6 +51,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class PerfilGrupoActivity extends AppCompatActivity {
@@ -137,9 +138,9 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         agregadosList = (RecyclerView) findViewById(R.id.act_contactosagregados_list);
         agregadosList.setHasFixedSize(true);
         agregadosList.setLayoutManager(mLinearLayout);
+        //datosUsuarios1=new ArrayList<DatosUsuario>();
+
         datosUsuarios1=datosUsuarios;
-        final ContactosAgregadosPerfilGrupoAdapter agregadosAdapter = new ContactosAgregadosPerfilGrupoAdapter(PerfilGrupoActivity.this, datosUsuarios1);
-        agregadosList.setAdapter(agregadosAdapter);
         //RootRef1 = FirebaseDatabase.getInstance().getReference();
         addpersona.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +162,7 @@ public class PerfilGrupoActivity extends AppCompatActivity {
         // datosUsuarios = new ArrayList<>();
 
         mCurrent_user_id = Preferences.obtenerPreferenceString(this, Preferences.PREFERENCE_TOKEN);
-        if (userid!=null){
+        /*if (userid!=null){
 
             System.out.println(datosUsuarios.toString());
             for (DatosUsuario mi:datosUsuarios) {
@@ -177,50 +178,58 @@ public class PerfilGrupoActivity extends AppCompatActivity {
 
 
                 }
-            }
+            }*/
 
 
             mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("members");
             mUsersDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    final Grupo grupo = dataSnapshot.getValue(Grupo.class);
-
+                    //final Grupo grupo = dataSnapshot.getValue(Grupo.class);
+                    //datosUsuarios.clear();
 
                     for (DataSnapshot snapshot: dataSnapshot.getChildren()){
                         final DatosUsuario usuario = snapshot.getValue(DatosUsuario.class);
                         assert usuario!=null;
-                        if (snapshot.child("estaEliminado").exists()){
-                            if (userid.equals(usuario.getToken())){
-                                if (!usuario.isEstaEliminado()){
-                                    //if(mUsersDatabase.equals("d")) {
-                                    //  datosUsuarios.add(usuario);
-                                    //}
-                                    if(bandera) {
-                                        bandera=false;
-                                        datosUsuarios.add(usuario);
-                                        assert grupo!=null;
-                                        agregadosAdapter.enviarGrupo(grupo.getGroupId());
-                                        System.out.println("EL DATOOOOOOOO ES: " +grupo.getGroupId());
+                        try {
+                            for(DatosUsuario user:datosUsuarios1){
+                                if (snapshot.child("estaEliminado").exists()){
+                                    if (user.getToken().equals(usuario.getToken())){
+                                        if (!usuario.isEstaEliminado()){
+                                            //if(mUsersDatabase.equals("d")) {
+                                            //  datosUsuarios.add(usuario);
+                                            //}
+                                            datosUsuarios.add(usuario);
+
+                                            System.out.println("ESTAS ADENTROOOOOOO"+usuario.getNombre());
+
+                                        /*if(bandera) {
+                                            bandera=false;
+                                            datosUsuarios.add(usuario);
+                                            assert grupo!=null;
+                                            //agregadosAdapter.enviarGrupo(currentGroupName,datosUsuarios1,nombreGrupo,imagenurl);
+                                            System.out.println("ESTOY ADENTROOOOOOOOOOOO");
 
 
 
-                                    }else {
+                                        }else {
 
+                                        }*/
+
+
+                                        }
                                     }
-
-
                                 }
-                            }
-                        }/*else{
-                            if (userid.equals(usuario.getToken())){
-                                datosUsuarios.add(usuario);
-                                System.out.println("por dos");
 
                             }
-                        }*/
+                        }catch (Exception e){
+
+                        }
 
                     }
+                    final ContactosAgregadosPerfilGrupoAdapter agregadosAdapter = new ContactosAgregadosPerfilGrupoAdapter(PerfilGrupoActivity.this, datosUsuarios1);
+                    agregadosList.setAdapter(agregadosAdapter);
+                    agregadosAdapter.enviarGrupo(currentGroupName,datosUsuarios1,nombreGrupo,imagenurl);
                     agregadosAdapter.notifyDataSetChanged();
 
 
@@ -233,31 +242,9 @@ public class PerfilGrupoActivity extends AppCompatActivity {
                 }
             });
 
-           /* RootRef1=FirebaseDatabase.getInstance().getReference("Users");
-            RootRef1.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    datosUsuarios1.clear();
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                        final DatosUsuario user=snapshot.getValue(DatosUsuario.class);
-                        for(DatosUsuario datosUsuario:datosUsuarios){
-                            if(datosUsuario.getToken().equals(user.getToken())){
-                                datosUsuarios1.add(user);
-                            }
-                        }
-                    }
-
-                    agregadosAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });*/
 
 
-        }
+
 
 
 

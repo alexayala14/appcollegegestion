@@ -2,8 +2,10 @@ package com.arz.chech.collegegestion.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.arz.chech.collegegestion.activities.PerfilGrupoActivity;
 import com.arz.chech.collegegestion.entidades.DatosUsuario;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,10 @@ public class ContactosAgregadosPerfilGrupoAdapter extends RecyclerView.Adapter<C
     private Context mContext;
     private DatabaseReference mUsersDatabase;
     private String currentGroupName;
+    private DatabaseReference mrefGrupo;
+    private String imagenurl;
+    private String nombreGrupo;
+    private ArrayList<DatosUsuario> datosUsuarios1;
 
     public ContactosAgregadosPerfilGrupoAdapter(Context mContext, ArrayList<DatosUsuario> mUsers){
         this.mContext = mContext;
@@ -43,17 +50,57 @@ public class ContactosAgregadosPerfilGrupoAdapter extends RecyclerView.Adapter<C
     public void onBindViewHolder(@NonNull ContactosAgregadosPerfilGrupoAdapter.ViewHolder viewHolder, int i) {
         final DatosUsuario datosUsuario = datosUsuarioList.get(i);
         viewHolder.setName(datosUsuario.getNombre(), datosUsuario.getApellido());
-        /*viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, PerfilGrupoActivity.class);
+                /*Intent intent = new Intent(mContext, PerfilGrupoActivity.class);
                 intent.putExtra("user_id", datosUsuario.getToken());
                 intent.putExtra("user_name", datosUsuario.getNombre());
                 intent.putExtra("user_apellido", datosUsuario.getApellido());
                 mContext.startActivity(intent);
-                ((Activity)mContext).finish();
+                ((Activity)mContext).finish();*/
+                final CharSequence[] options={"Eliminar","Cancelar"};
+                final AlertDialog.Builder builder=new AlertDialog.Builder(mContext);
+                builder.setTitle("Elegir una Opcion: ");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int seleccion) {
+                        if(options[seleccion]=="Eliminar"){
+                            int i=0;
+                            System.out.println("VA A ELIMINAR NOMBRE GRUPO: "+currentGroupName);
+                            System.out.println("EL USUARIO ES: "+datosUsuario.getNombre());
+                            //String indice=String.valueOf(i);
+                            //mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("members").child(indice).child("estaEliminado");
+                            //mrefGrupo.setValue(true);
+
+
+
+                            try {
+                                for(DatosUsuario user:datosUsuarios1){
+                                    if(user.getToken().equals(datosUsuario.getToken())){
+                                        String indice = String.valueOf(i);
+                                        //System.out.println("VA A ELIMINAR NOMBRE GRUPO: "+currentGroupName);
+                                       // mrefGrupo= FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName).child("members").child(indice).child("estaEliminado");
+                                       // mrefGrupo.setValue(true);
+                                    }
+                                    i++;
+                                }
+                            }catch (Exception e){
+
+                            }
+
+
+
+                        }else  if(options[seleccion]=="Cancelar"){
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.show();
             }
-        });*/
+        });
+
+
     }
 
     @Override
@@ -79,8 +126,11 @@ public class ContactosAgregadosPerfilGrupoAdapter extends RecyclerView.Adapter<C
         }
 
     }
-    public void enviarGrupo(String currentGroupName1){
+    public void enviarGrupo(String currentGroupName1,ArrayList<DatosUsuario> datosUsuarios,String nombreGrupo1,String imagenurl1){
         currentGroupName=currentGroupName1;
-        System.out.println("el valor es: "+currentGroupName);
+        datosUsuarios1=datosUsuarios;
+        nombreGrupo=nombreGrupo1;
+        imagenurl=imagenurl1;
+        System.out.println("el valor es en adapterintegrante: "+currentGroupName);
     }
 }
